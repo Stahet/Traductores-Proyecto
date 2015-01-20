@@ -1,10 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-'''
 
+import ply.lex as lexi
 import expresiones
 
+analizador = lexi.lex(module = expresiones)
 
-expresiones.analizador.input("program 1ola\nint 1a1")
+analizador.input("program hola\nint 1a1\n")
 
-for token in expresiones.analizador:
-    print(token)
+tokens = []
+
+for token in analizador:  # @UndefinedVariable
+    tokens.append(token.value[1])
+
+if not expresiones.ERROR_:
+    for t in tokens:
+        print(t)
