@@ -6,7 +6,7 @@ import expresiones
 
 analizador = lexi.lex(module = expresiones)
 
-analizador.input("program hola\nint 1a1\n")
+analizador.input("program {hola\nint a1\n}")
 
 tokens = []
 
