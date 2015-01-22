@@ -1,0 +1,7 @@
+program {
+    using
+        int n;
+    in
+        scan n;
+        print n * n;
+}

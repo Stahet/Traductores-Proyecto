@@ -5,7 +5,7 @@ Created on 19/1/2015
 @author: manuggz
 '''
 
-from clases_tokens import *
+from tokens import *
 
 ERROR_ = False
 
@@ -42,11 +42,11 @@ simbolos = {
 }
 
 op_mapeados = {
-   '<+>' : ('CORCHETE_AB',TokenMapSuma),
-   '<->' : ('CORCHETE_CE',TokenMapSubstract),
-   '<*>' : ('PUNTO_COMA',TokenMapMulti),
-   '</>' : ('COMA',TokenMapIntDivision),
-   '<%>':('IGUAL',TokenMapRest),
+   '<+>' : ('MAP_SUMA',TokenMapSuma),
+   '<->' : ('MAP_RESTA',TokenMapSubstract),
+   '<*>' : ('MAP_MULTI',TokenMapMulti),
+   '</>' : ('MAP_DIVISION',TokenMapIntDivision),
+   '<%>':('MAP_REST',TokenMapRest),
 }
 
 unarios_conjuntos = {
@@ -91,26 +91,26 @@ def t_SIMBOLOS_CON_IGUAL(t):
     
 
 def t_UNARIO_CONJUNTO(t):
-    r'[<>$]?'
+    r'[<>\$]\?'
     valor = unarios_conjuntos[t.value]
     t.type = valor[0]    # Check for reserved words
     t.value = (t.value,valor[1](t))
     return t
 
 def t_MAPEADO(t):
-    r'<[+-*/%]>'
+    r'<[\+\-\*/%]>'
     valor = op_mapeados[t.value]
     t.type = valor[0]    # Check for reserved words
     t.value = (t.value,valor[1](t))
     return t
 
 def t_DOUBLE_PLUS(t):
-    '++'
+    r'\+\+'
     t.value = (t.value,TokenDoublePlus(t))
     return t
 
 def t_SIMBOLO(t):
-    r'[' + "".join(simbolos.keys()) + ']'
+    r'[{};,=\*\+\-/%\\<>@\(\):]'
     valor = simbolos[t.value]
     t.type = valor[0]    # Check for reserved words
     t.value = (t.value,valor[1](t))
