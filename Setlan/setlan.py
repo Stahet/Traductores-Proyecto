@@ -25,8 +25,8 @@ def setlan():
         
     for token in analizador:  # @UndefinedVariable
         print token.type,
-        if token.type in ('TokenID',''):
-            print "\"" + token.value + "\"" ,
+        #if token.type in ('TokenID',''):
+        print "\"" + token.value + "\"" ,
         print "(Línea %d , Columna %d)" % (token.lineno,expresiones.obtener_columna(token))
 
 if __name__ == '__main__':

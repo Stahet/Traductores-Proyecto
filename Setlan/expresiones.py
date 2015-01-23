@@ -11,14 +11,29 @@ ERROR_ = False
 
 # Palabras reservadas
 reservadas = {
+   'program':'PROGRAM',
+   'using' : 'USING',
+   'in' : 'IN',
    'if' : 'IF',
    'then': 'THEN',
    'else' : 'ELSE',
+   'for' : 'FOR',
+   'do' : 'DO',
+   'min' : 'MIN',
+   'max' : 'MAX',
+   'repeat'  :  'REPEAT',
    'while' :'WHILE',
-   'program':'PROGRAM',
    'int' :'INT',
-   'bool':'BOOL',
    'set':'SET',
+   'bool':'BOOL',
+   'and' :'AND',
+   'or'  :'OR',
+   'not' :'NOT'
+}
+
+booleanos = {
+   'true' : 'TRUE',
+   'false': 'FALSE'
 }
 
 simbolos = {
@@ -62,20 +77,29 @@ simbolos_igual = {
    '/=' :'TokenDifferent',
 }
 
-tokens = ['TokenID' , 'SIMBOLO' , 'MAPEADO','TokenDoublePlus' , 'UNARIO_CONJUNTO',\
+tokens = ['TokenID', 'INTEGER', 'SIMBOLO' , 'MAPEADO','TokenDoublePlus' , 'UNARIO_CONJUNTO',\
           'SIMBOLOS_CON_IGUAL','TokenInterseccion','TokenArrow']  + reservadas.values() + \
          simbolos.values() + op_mapeados.values() + \
-         unarios_conjuntos.values()
+         unarios_conjuntos.values() + booleanos.values()
 
 
 t_ignore = ' \t'
 
-def t_TokenInterseccion(t):
-    '><'
+def t_INTEGER(t):
+    r'[0-9]+'
+    return t
+
+def t_booleanos(t):
+    r'true|false'
+    t.type = booleanos[t.value]
+    return t
+
+def t_TokenInterseccion(t):        
+    r'><'
     return t
 
 def t_TokenArrow(t):
-    '->'
+    r'->'
     return t
 
 def t_SIMBOLOS_CON_IGUAL(t):
@@ -84,7 +108,6 @@ def t_SIMBOLOS_CON_IGUAL(t):
     t.type = valor    # Check for reserved words
     return t
     
-
 def t_UNARIO_CONJUNTO(t):
     r'[<>\$]\?'
     valor = unarios_conjuntos[t.value]
@@ -140,4 +163,3 @@ def t_error(t):
 
     print('Error: se encontró  un caracter inesperado "%s" en la línea %d, Columna %d.' % (t.value,t.lineno,obtener_columna(t)))
     t.lexer.skip(1)
-    ERROR_ = True
