@@ -30,6 +30,7 @@ reservadas = {
    'or'  :'OR',
    'not' :'NOT',
    'scan':'SCAN',
+   'print':'PRINT',
    'println':'PRINTLN'
 }
 
@@ -50,12 +51,11 @@ simbolos = {
    '/' :'INTDIVISION',
    '%' :'RESTDIVISION',
    '\\':'COUNTERSLASH',
-   '<' :'GREATERTHAN',
-   '>' :'LESSTHAN',
+   '<' :'LESSTHAN',
+   '>' :'GREATERTHAN',
    '@' :'CONCATSETS',
    '(' :'LPARENTHESIS',
    ')' :'RPARENTHESIS',
-   '$' :'asd',
     ':' :'COLON'
 }
 
@@ -133,7 +133,7 @@ def t_DOUBLEPLUS(t):
     return t
 
 def t_SIMBOLO(t):
-    r'[{};,=\*\+\-/%\\<>@\(\):$]'
+    r'[{};,=\*\+\-/%\\<>@\(\):]'
     valor = simbolos[t.value]
     t.type = valor    # Check for reserved words
     return t
@@ -167,6 +167,6 @@ def obtener_columna(token):
 # Manejador de errores
 def t_error(t):
     global ERROR_
-    print('Error: se encontró  un caracter inesperado "%s" en la línea %d, Columna %d.' % (t.value,t.lineno,obtener_columna(t)))
+    print('Error: se encontró  un caracter inesperado "%s" en la línea %d, Columna %d.' % (t.value[0],t.lineno,obtener_columna(t)))
     ERROR_ = True
     t.lexer.skip(1)
