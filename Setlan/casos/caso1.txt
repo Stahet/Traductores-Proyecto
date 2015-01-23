@@ -3,6 +3,7 @@ program {
  int x,y,z;
  in
 
+
  scan x;
  println "Hola, soy la variable x, valgo: ", x;
  y = x+2;

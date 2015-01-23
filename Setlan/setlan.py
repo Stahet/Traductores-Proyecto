@@ -7,6 +7,7 @@ import expresiones
 
 
 def setlan():
+    
     analizador = lexi.lex(module = expresiones)
     
     if len(argumentos_consola) != 2:
@@ -22,17 +23,11 @@ def setlan():
         print("Error: Compruebe que el archivo existe o tiene permisos de lectura")
         exit(-1)
         
-    tokens = []
-    
     for token in analizador:  # @UndefinedVariable
-        tokens.append(token.value[1])
-    
-    #Comentado para debug
-    #===============================================================================
-    # if not expresiones.ERROR_:
-    #===============================================================================
-    for t in tokens:
-        print(t)
+        print token.type,
+        if token.type in ('TokenID',''):
+            print "\"" + token.value + "\"" ,
+        print "(Línea %d , Columna %d)" % (token.lineno,expresiones.obtener_columna(token))
 
 if __name__ == '__main__':
     setlan()
