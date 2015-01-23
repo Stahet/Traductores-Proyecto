@@ -22,12 +22,17 @@ def setlan():
         print(e)
         print("Error: Compruebe que el archivo existe o tiene permisos de lectura")
         exit(-1)
-        
+    
+    tokens = []
     for token in analizador:  # @UndefinedVariable
-        print token.type,
-        #if token.type in ('TokenID',''):
-        print "\"" + token.value + "\"" ,
-        print "(Línea %d , Columna %d)" % (token.lineno,expresiones.obtener_columna(token))
+        tokens.append(token)
+    
+    
+    if not expresiones.ERROR_:
+        for token in tokens:
+            print 'token',token.type,' '*(20 - len(token.type)),
+            print "value (" + token.value + ") at line ",token.lineno,\
+                 ", column " , expresiones.obtener_columna(token)
 
 if __name__ == '__main__':
     setlan()

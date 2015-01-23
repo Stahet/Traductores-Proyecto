@@ -1,0 +1,16 @@
+Manuel Gonzalez 11-10390
+Jonathan 11-10199
+
+
+Decisiones
+
+  se considero usar diccionarios para la mayoria de tokens para hacerlo un poco mas facil de manejar
+  
+ Estado actual del proyecto
+ 
+ 	Actualmente solo analiza lexicograficamente el programa y da una salida que no concuerda con la exigida en el enunciado
+ 
+ Problemas presentes
+ 	la salida cuando se muestra un error no coincide con la del enunciado
+ 
+ 
