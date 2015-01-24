@@ -29,15 +29,19 @@ reservadas = {
    'and' :'AND',
    'or'  :'OR',
    'not' :'NOT',
+   'false' : 'FALSE',
+   'true' : 'TRUE',
    'scan':'SCAN',
    'print':'PRINT',
    'println':'PRINTLN'
 }
 
-booleanos = {
-   'true' : 'TRUE',
-   'false': 'FALSE'
-}
+#===============================================================================
+# booleanos = {
+#    'true' : 'TRUE',
+#    'false': 'FALSE'
+# }
+#===============================================================================
 
 simbolos = {
    '{' :'LCURLY',
@@ -83,8 +87,7 @@ simbolos_igual = {
 tokens = ['IDENTIFIER', 'INTEGER', 'SIMBOLO' , 'MAPEADO','DOUBLEPLUS' , 'UNARIO_CONJUNTO',\
           'SIMBOLOS_CON_IGUAL','INTERSECCION','ARROW','STRING']  + reservadas.values() + \
          simbolos.values() + op_mapeados.values() + \
-         unarios_conjuntos.values() + booleanos.values() + \
-         simbolos_igual.values()
+         unarios_conjuntos.values() + simbolos_igual.values()
 
 
 t_ignore = ' \t'
@@ -93,13 +96,20 @@ def t_STRING(t):
     r'".*"'
     return t
 
+def t_IDENTIFIER(t):
+    r'[a-zA-Z_][a-zA-Z\d_]*'    
+    valor = reservadas.get(t.value,'IDENTIFIER')
+    t.type = valor    # Check for reserved words
+    return t
+
 def t_INTEGER(t):
     r'[0-9]+'
     return t
 
-def t_booleanos(t):
-    r'true|false'
-    t.type = booleanos[t.value]
+def t_MAPEADO(t):
+    r'<[\+\-\*/%]>'
+    valor = op_mapeados[t.value]
+    t.type = valor    # Check for reserved words
     return t
 
 def t_INTERSECCION(t):        
@@ -122,12 +132,6 @@ def t_UNARIO_CONJUNTO(t):
     t.type = valor    # Check for reserved words
     return t
 
-def t_MAPEADO(t):
-    r'<[\+\-\*/%]>'
-    valor = op_mapeados[t.value]
-    t.type = valor    # Check for reserved words
-    return t
-
 def t_DOUBLEPLUS(t):
     r'\+\+'
     return t
@@ -135,13 +139,6 @@ def t_DOUBLEPLUS(t):
 def t_SIMBOLO(t):
     r'[{};,=\*\+\-/%\\<>@\(\):]'
     valor = simbolos[t.value]
-    t.type = valor    # Check for reserved words
-    return t
-
-
-def t_IDENTIFIER(t):
-    r'[a-zA-Z][a-zA-Z\d_]*'    
-    valor = reservadas.get(t.value,'IDENTIFIER')
     t.type = valor    # Check for reserved words
     return t
 
