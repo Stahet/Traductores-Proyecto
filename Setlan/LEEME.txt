@@ -1,16 +1,37 @@
+Leeme.txt  Version 2.0
+Grupo 13
+
 Manuel Gonzalez 11-10390
-Jonathan 11-10199
+Jonathan Ng 11-10199
 
+Decisiones de Diseño
 
-Decisiones
+    Basicamente se utilizo el formato para redactar analizadores lexicograficos
+que se especifica en la documentacion de PLY, incluyendo la creacion de expresiones 
+regulares que esta requiere. Además se aprovecho la estructura de diccionario 
+de Python que recomienda la documentacion de PLY para agrupar palabras 
+reservadas. Esta idea se uso de la misma forma para agrupar otros operadores 
+con características similares y asi poder facilitar el reconocimiento de las
+expresiones requeridas en el lenguaje setlan.
 
-  se considero usar diccionarios para la mayoria de tokens para hacerlo un poco mas facil de manejar
-  
- Estado actual del proyecto
+Estado Actual del Proyecto
  
- 	Actualmente solo analiza lexicograficamente el programa y da una salida que no concuerda con la exigida en el enunciado
- 
+     Actualmente solamente se analiza lexicograficamente los archivos de setlan
+y devuelve la salida requerida por el Enunciado 1 
+
  Problemas presentes
- 	la salida cuando se muestra un error no coincide con la del enunciado
  
+      *
+Comentarios
+     
+     Nos pareció que tuvo al principio su dificultad ya que intentabamos enfocarlo 
+     con la teoria, como por ejemplo los diagramas de estado pero luego al ver que 
+     solo debiamos generar expresiones regulares para los tokens o entes a reconocer 
+     nos parecio mucho mas facil. Ademas el modulo PLY es una herramienta facil de manejar
+     cuando se requiere crear un analizador lexicografico
+     
+     Nota: Hubo una confusion en la entrega, ya que se creyo que la entrega era hasta
+las 11:50 AM, pero nos dimos cuenta que es hasta el 23/01/2015 a las 11:50 PM. La primera 
+entrega fue incompleta pero esa version no la consideren, esta es la entrega principal.
+Muchas Gracias
  

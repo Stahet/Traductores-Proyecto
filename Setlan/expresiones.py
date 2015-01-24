@@ -2,7 +2,8 @@
 '''
 Created on 19/1/2015
 
-@author: manuggz
+@author: Manuel Gonzalez 11-10390
+         Jonathan Ng 11-10199
 '''
 
 
@@ -35,13 +36,6 @@ reservadas = {
    'print':'PRINT',
    'println':'PRINTLN'
 }
-
-#===============================================================================
-# booleanos = {
-#    'true' : 'TRUE',
-#    'false': 'FALSE'
-# }
-#===============================================================================
 
 simbolos = {
    '{' :'LCURLY',
@@ -93,7 +87,7 @@ tokens = ['IDENTIFIER', 'INTEGER', 'SIMBOLO' , 'MAPEADO','DOUBLEPLUS' , 'UNARIO_
 t_ignore = ' \t'
 
 def t_STRING(t):
-    r'".*"'
+    r'"[^"\\\r\n]*(?:\\.[^"\\\r\n]*)*"'
     return t
 
 def t_IDENTIFIER(t):
@@ -109,7 +103,7 @@ def t_INTEGER(t):
 def t_MAPEADO(t):
     r'<[\+\-\*/%]>'
     valor = op_mapeados[t.value]
-    t.type = valor    # Check for reserved words
+    t.type = valor
     return t
 
 def t_INTERSECCION(t):        
@@ -123,13 +117,13 @@ def t_ARROW(t):
 def t_SIMBOLOS_CON_IGUAL(t):
     r'[><=/]='
     valor = simbolos_igual[t.value]
-    t.type = valor    # Check for reserved words
+    t.type = valor
     return t
     
 def t_UNARIO_CONJUNTO(t):
     r'[<>\$]\?'
     valor = unarios_conjuntos[t.value]
-    t.type = valor    # Check for reserved words
+    t.type = valor
     return t
 
 def t_DOUBLEPLUS(t):
@@ -139,7 +133,7 @@ def t_DOUBLEPLUS(t):
 def t_SIMBOLO(t):
     r'[{};,=\*\+\-/%\\<>@\(\):]'
     valor = simbolos[t.value]
-    t.type = valor    # Check for reserved words
+    t.type = valor
     return t
 
 def t_COMMENTARIO(t):
