@@ -72,8 +72,8 @@ op_mapeados = {
 }
 
 unarios_conjuntos = {
-   '<?' :'MAXVALORSET',
-   '>?' :'MINVALORSET',
+   '>?' :'MAXVALORSET',
+   '<?' :'MINVALORSET',
    '$?' :'SIZESET',
 }
 
