@@ -79,9 +79,9 @@ simbolos_igual = {
 }
 
 tokens = ['IDENTIFIER', 'INTEGER', 'SIMBOLO' , 'MAPEADO','DOUBLEPLUS' , 'UNARIO_CONJUNTO',\
-          'SIMBOLOS_CON_IGUAL','INTERSECCION','ARROW','STRING']  + reservadas.values() + \
-         simbolos.values() + op_mapeados.values() + \
-         unarios_conjuntos.values() + simbolos_igual.values()
+          'SIMBOLOS_CON_IGUAL','INTERSECCION','ARROW','STRING']  + list(reservadas.values()) + \
+         list(simbolos.values()) + list(op_mapeados.values()) + \
+         list(unarios_conjuntos.values()) + list(simbolos_igual.values())
 
 
 t_ignore = ' \t'
@@ -158,6 +158,6 @@ def obtener_columna(token):
 # Manejador de errores
 def t_error(t):
     global ERROR_
-    print('Error: se encontró  un caracter inesperado "%s" en la línea %d, Columna %d.' % (t.value[0],t.lineno,obtener_columna(t)))
+    print 'Error: se encontró  un caracter inesperado "%s" en la línea %d, Columna %d.' % (t.value[0],t.lineno,obtener_columna(t)) 
     ERROR_ = True
     t.lexer.skip(1)

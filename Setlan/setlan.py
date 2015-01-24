@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-'''
 from  sys import argv as argumentos_consola
 import ply.lex as lexi
@@ -11,7 +10,7 @@ def setlan():
     analizador = lexi.lex(module = expresiones)
     
     if len(argumentos_consola) != 2:
-        print("ERROR: Ejecute el interprete de la forma: setlan <dir_archivo>")
+        print "ERROR: Ejecute el interprete de la forma: setlan <dir_archivo>"
         exit(-1)
     
     try:
@@ -19,8 +18,8 @@ def setlan():
             analizador.input(entrada.read())
             entrada.close()
     except IOError as e :
-        print(e)
-        print("Error: Compruebe que el archivo existe o tiene permisos de lectura")
+        print e
+        print "Error: Compruebe que el archivo existe o tiene permisos de lectura"
         exit(-1)
     
     tokens = []
@@ -37,6 +36,6 @@ def setlan():
 if __name__ == '__main__':
     setlan()
 else:
-    print("¡No lo importe!")
-    print("ERROR: Ejecute el interprete de la forma: setlan <dir_archivo>")
+    print "¡No lo importe!"
+    print "ERROR: Ejecute el interprete de la forma: setlan <dir_archivo>"
     exit(-1)

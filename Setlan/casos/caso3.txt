@@ -4,4 +4,5 @@ program {
     in
         scan n;
         print n * n;
+        "falsewhile"
 }
