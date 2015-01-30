@@ -42,7 +42,7 @@ simbolos = {
    '}' :'RCURLY',
    ';' :'SEMICOLON',
    ',' :'COMMA',
-   '=' :'EQUALS',
+   '=' :'ASSIGN',
    '*' :'ASTERISK',
    '+' :'PLUS',
    '-' :'DASH',
@@ -53,8 +53,7 @@ simbolos = {
    '>' :'GREATERTHAN',
    '@' :'CONCATSETS',
    '(' :'LPARENTHESIS',
-   ')' :'RPARENTHESIS',
-    ':' :'COLON'
+   ')' :'RPARENTHESIS'
 }
 
 op_mapeados = {
@@ -131,7 +130,7 @@ def t_DOUBLEPLUS(t):
     return t
 
 def t_SIMBOLO(t):
-    r'[{};,=\*\+\-/%\\<>@\(\):]'
+    r'[{};,=\*\+\-/%\\<>@\(\)]'
     valor = simbolos[t.value]
     t.type = valor
     return t

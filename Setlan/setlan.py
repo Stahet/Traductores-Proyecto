@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-'''
 from  sys import argv as argumentos_consola
 import ply.lex as lexi
@@ -23,7 +24,7 @@ def setlan():
         exit(-1)
     
     tokens = []
-    for token in analizador:  # @UndefinedVariable
+    for token in analizador:
         tokens.append(token)
     
     
