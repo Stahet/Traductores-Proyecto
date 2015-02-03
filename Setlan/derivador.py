@@ -28,6 +28,7 @@ def contarTerminales(lista_texto):
         if esTerminal(i): j += 1
     
     return j
+
 def derivarIzquierda(lista_texto,orden_producion,entrada,producciones,alfabeto):
     'Deriva un texto por la izquierda'
     i = 0
@@ -67,18 +68,10 @@ def parsear(entrada):
     if not esTerminal(entrada[0],alfabeto):
         raise ValueError(entrada[0] + 'must be a terminal')
     
-    iniciales = buscarInicialesDerivacion(entrada[0],producciones['S'])
-    print(entrada,iniciales)
     orden = []
-    for semilla in iniciales:
-        orden.append((semilla,producciones['S'].index(semilla)))
-        if derivarIzquierda(list(semilla),orden,entrada,producciones,alfabeto) == entrada:
-            print 'Orden:',orden
-            break
-        else:
-            orden.pop()
-    
+    if derivarIzquierda(list('S'),orden,entrada,producciones,alfabeto) == entrada:
+        print 'Orden:',orden    
         
 
-parsear('(x+y)*x') 
+parsear('(x+y)*x-z') 
     

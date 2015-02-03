@@ -1,10 +1,6 @@
 program {
     using
-        int x,y,z;
+        int y;
     in
-
-    scan x;
-    println "Hola, soy la variable x, valgo: ", x;
-    y = x+2;
-    # Hola, soy un comentario y no un token. Seamos amigos, :).
+    y = 2+2;
 }
