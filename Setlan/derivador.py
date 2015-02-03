@@ -10,18 +10,6 @@ Grupo 13
 def esTerminal(a , alfabeto):
     return a in alfabeto
 
-def buscarInicialesDerivacion(terminal,producciones):
-    'Regresa una lista con las producciones mas probables a coincidir'
-    iniciales = []
-    finales = []
-    for pro in producciones:
-        if pro[0] == terminal:
-            iniciales.append(pro)
-        else:
-            finales.append(pro)
-            
-    return iniciales + finales
-
 def contarTerminales(lista_texto):
     j = 0
     for i in lista_texto:
