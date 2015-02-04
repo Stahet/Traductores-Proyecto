@@ -1,0 +1,69 @@
+Gramatica Para el Parser de SetLan
+
+simbolo de partida = PROGRAM
+
+PROGRAM -> 'program' STATEMENT
+
+STATEMENT -> IDENTIFIER '=' EXPRESSION 
+		   | '{' DECLARE STATEMENT_LIST '}'                       #Preg: ¿Tiene sentido hacer bloques de bloques? Caso2.txt     
+           | 'scan' 'identifier'                  
+           | 'scan' COMMA_LIST
+           | 'print' COMMA_LIST
+           | 'println' COMMA_LIST
+           | 'if' '('EXPRESSION')' STATEMENT 'else' STATEMENT
+           | 'if' '('EXPRESSION')' STATEMENT
+           | 'for' 'identifier' 'direccion' EXPRESSION 'do' STATEMENT
+           | 'repeat' STATEMENT 'while' '('EXPRESSION')' 'do' STATEMENT
+           | 'while' '('EXPRESSION')' 'do' STATEMENT
+           | 'repeat' STATEMENT 'while' '('EXPRESSION')'
+                       
+EXPRESSION -> 'integer'
+			| 'false'
+			| 'true'
+			| 'string'
+			| 'identifier'
+			| '(' EXPRESSION ')'
+			| '{' SET_LIST '}'
+			| EXPRESSION '+' EXPRESSION
+            | EXPRESSION '-' EXPRESSION
+            | EXPRESSION '*' EXPRESSION
+            | EXPRESSION '/' EXPRESSION
+            | EXPRESSION '%' EXPRESSION
+            | '-'EXPRESSION
+            | EXPRESSION '==' EXPRESSION
+            | EXPRESSION '/=' EXPRESSION
+            | EXPRESSION '<' EXPRESSION
+			| EXPRESSION '<=' EXPRESSION
+			| EXPRESSION '>' EXPRESSION
+			| EXPRESSION '>=' EXPRESSION
+			| EXPRESSION '@' EXPRESSION
+            | EXPRESSION '++' EXPRESSION
+            | EXPRESSION '\' EXPRESSION
+            | EXPRESSION '><' EXPRESSION
+            | EXPRESSION '<+>' EXPRESSION
+            | EXPRESSION '<->' EXPRESSION
+            | EXPRESSION '<*>' EXPRESSION
+            | EXPRESSION '</>' EXPRESSION
+            | EXPRESSION '<%>' EXPRESSION
+            | >? EXPRESSION
+            | <? EXPRESSION
+            | $? EXPRESSION
+
+SET_LIST -> 'integer'
+          |  'integer' ',' SET_LIST                 # Un set solo contiene enteros o contiene expresiones?
+
+COMMA_LIST -> EXPRESSION
+            | EXPRESSION ',' COMMA_LIST
+           
+STATEMENT_LIST -> STATEMENT;
+				| STATEMENT ; STATEMENT_LIST
+				
+DECLARE -> 'using' DECLARE_LIST 'in'
+         |  EMPTY
+         
+DECLARE_LIST -> TYPE 'identifier';
+              | TYPE 'identifier'; DECLARE_LIST  
+     
+TYPE -> 'int'
+	  | 'bool'
+	  | 'set'

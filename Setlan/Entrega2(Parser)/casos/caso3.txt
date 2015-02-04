@@ -1,0 +1,10 @@
+# Caso, un set tiene solo enteros o tambien expresiones?
+
+program {
+	using 
+		set y;
+		set x;
+	in
+	y = {0 + 1,1};
+	x = {2<+>{1,2,3},4,8};
+}

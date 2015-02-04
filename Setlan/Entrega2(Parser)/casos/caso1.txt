@@ -1,0 +1,10 @@
+# Se ejecuta una sola instruccion si no tiene llave
+
+int main(){
+    printf("Hello, World!\n");
+    if (0)
+        if(1){
+            print("Hello");
+        }
+    printf("jajaja\n");
+}

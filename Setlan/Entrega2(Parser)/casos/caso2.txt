@@ -1,0 +1,12 @@
+# Caso2 ejemplo de bloques de bloques
+
+int main(){
+    printf("Hello, World!\n");
+    { printf("Bloque1\n");
+      printf("Bloque1\n");
+        { printf("Bloque2\n");
+        	{ printf("hola3\n");
+        	};
+         };
+     };
+}
