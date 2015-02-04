@@ -12,7 +12,7 @@ STATEMENT -> IDENTIFIER '=' EXPRESSION
            | 'println' COMMA_LIST
            | 'if' '('EXPRESSION')' STATEMENT 'else' STATEMENT
            | 'if' '('EXPRESSION')' STATEMENT
-           | 'for' 'identifier' 'direccion' EXPRESSION 'do' STATEMENT
+           | 'for' 'identifier' DIRECTION EXPRESSION 'do' STATEMENT
            | 'repeat' STATEMENT 'while' '('EXPRESSION')' 'do' STATEMENT
            | 'while' '('EXPRESSION')' 'do' STATEMENT
            | 'repeat' STATEMENT 'while' '('EXPRESSION')'
@@ -63,7 +63,10 @@ DECLARE -> 'using' DECLARE_LIST 'in'
          
 DECLARE_LIST -> TYPE 'identifier';
               | TYPE 'identifier'; DECLARE_LIST  
-     
+
+DIRECTION -> 'min'
+		   | 'max'
+		           
 TYPE -> 'int'
 	  | 'bool'
 	  | 'set'
