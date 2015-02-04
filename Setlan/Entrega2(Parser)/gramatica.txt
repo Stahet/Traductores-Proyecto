@@ -23,12 +23,12 @@ EXPRESSION -> 'integer'
 			| 'string'
 			| 'identifier'
 			| '(' EXPRESSION ')'
-			| '{' SET_LIST '}'
-			| EXPRESSION '+' EXPRESSION
-            | EXPRESSION '-' EXPRESSION
-            | EXPRESSION '*' EXPRESSION
-            | EXPRESSION '/' EXPRESSION
-            | EXPRESSION '%' EXPRESSION
+			| '{' COMMA_LIST '}'
+			| EXPRESSION '+' EXPRESSION            *
+            | EXPRESSION '-' EXPRESSION            * 
+            | EXPRESSION '*' EXPRESSION            *
+            | EXPRESSION '/' EXPRESSION            *
+            | EXPRESSION '%' EXPRESSION            *
             | '-'EXPRESSION
             | EXPRESSION '==' EXPRESSION
             | EXPRESSION '/=' EXPRESSION
@@ -48,9 +48,6 @@ EXPRESSION -> 'integer'
             | >? EXPRESSION
             | <? EXPRESSION
             | $? EXPRESSION
-
-SET_LIST -> 'integer'
-          |  'integer' ',' SET_LIST                 # Un set solo contiene enteros o contiene expresiones?
 
 COMMA_LIST -> EXPRESSION
             | EXPRESSION ',' COMMA_LIST
