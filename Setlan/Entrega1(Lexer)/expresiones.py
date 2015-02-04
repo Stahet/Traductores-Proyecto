@@ -97,6 +97,7 @@ def t_IDENTIFIER(t):
 
 def t_INTEGER(t):
     r'[0-9]+'
+    t.value = int(t.value)
     return t
 
 def t_MAPEADO(t):

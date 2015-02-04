@@ -31,7 +31,7 @@ def setlan():
     if not expresiones.ERROR_:
         for token in tokens:
             print 'token',token.type,' '*(20 - len(token.type)),
-            print "value (" + token.value + ") at line ",token.lineno,\
+            print "value (" + str(token.value) + ") at line ",token.lineno,\
                  ", column " , expresiones.obtener_columna(token)
 
 if __name__ == '__main__':
