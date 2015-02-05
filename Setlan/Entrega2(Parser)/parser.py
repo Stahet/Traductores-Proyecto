@@ -6,10 +6,10 @@ Created on 4/2/2015
          Manuel Gonzalez 11-10399
 '''
 import ply.yacc as yacc
-import expresiones
+from expresiones import tokens
 from AST import *
+from expresiones import LAST_FILE
 
-tokens = expresiones.tokens
 
 def p_expression_binary(p):
     '''expression : expression PLUS expression
@@ -27,13 +27,14 @@ def p_integer(p):
     '''expression : INTEGER'''
     p[0] = Int(p[1])
     
-import ply.lex as lexi
+#import ply.lex as lexi
 
-files = open('casos/caso4.txt')
-lexer = lexi.lex(module=expresiones)
+#files = open('casos/caso4.txt')
+#lexer = lexi.lex(module=expresiones)
 parser = yacc.yacc()
-parser.parse(files.read(),lexer=lexer)
-a = []
-files.close()
-if __name__ == '__main__':
-    pass
+input_file = open(LAST_FILE)
+print parser.parse(input_file.read())
+input_file.close()
+
+
+

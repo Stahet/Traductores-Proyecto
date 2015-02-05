@@ -7,6 +7,7 @@ Created on 19/1/2015
 '''
 
 ERROR_ = False
+LAST_FILE = ""
 
 # Palabras reservadas
 reservadas = {
