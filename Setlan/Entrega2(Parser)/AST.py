@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-'''
 '''
 Created on 4/2/2015
 
-@author: Jonnathan
+@author: Jonathan Ng 11-10199
+         Manuel Gonzalez 11-10390
 '''
 
 class Int:
