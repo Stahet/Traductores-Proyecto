@@ -11,28 +11,28 @@ ERROR_ = False
 # Palabras reservadas
 reservadas = {
    'program':'PROGRAM',
-   'using' : 'USING',
-   'in' : 'IN',
-   'if' : 'IF',
-   'then': 'THEN',
-   'else' : 'ELSE',
-   'for' : 'FOR',
-   'do' : 'DO',
-   'min' : 'MIN',
-   'max' : 'MAX',
-   'repeat'  :  'REPEAT',
-   'while' :'WHILE',
-   'int' :'INT',
-   'set':'SET',
-   'bool':'BOOL',
-   'and' :'AND',
-   'or'  :'OR',
-   'not' :'NOT',
-   'false' : 'FALSE',
-   'true' : 'TRUE',
-   'scan':'SCAN',
-   'print':'PRINT',
-   'println':'PRINTLN'
+   'using'  : 'USING' ,
+   'in'     : 'IN',
+   'if'     : 'IF',
+   'then'   : 'THEN' ,
+   'else'   : 'ELSE' ,
+   'for'    : 'FOR'  ,
+   'do'     : 'DO' ,
+   'min'    : 'MIN',
+   'max'    : 'MAX',
+   'repeat' :  'REPEAT',
+   'while'  : 'WHILE'  ,
+   'int'    : 'INT'  , 
+   'set'    : 'SET'  ,
+   'bool'   : 'BOOL' ,
+   'and'    : 'AND'  ,
+   'or'     : 'OR'   ,
+   'not'    : 'NOT'  ,
+   'false'  : 'FALSE',
+   'true'   : 'TRUE' ,
+   'scan'   : 'SCAN' ,
+   'print'  : 'PRINT',
+   'println': 'PRINTLN'
 }
 
 simbolos = {
@@ -75,8 +75,7 @@ simbolos_igual = {
    '/=' :'DIFFERENT',
 }
 
-tokens = ['IDENTIFIER', 'INTEGER', 'SIMBOLO' , 'MAPEADO','DOUBLEPLUS' , 'UNARIO_CONJUNTO',\
-          'SIMBOLOS_CON_IGUAL','INTERSECCION','ARROW','STRING']  + list(reservadas.values()) + \
+tokens = ['IDENTIFIER', 'INTEGER','DOUBLEPLUS','ARROW','STRING','INTERSECCION']  + list(reservadas.values()) + \
          list(simbolos.values()) + list(op_mapeados.values()) + \
          list(unarios_conjuntos.values()) + list(simbolos_igual.values())
 

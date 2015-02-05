@@ -1,0 +1,6 @@
+program {
+    using
+        int y;
+    in
+    y = 2+2;
+}

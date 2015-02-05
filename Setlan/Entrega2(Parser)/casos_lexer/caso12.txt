@@ -1,0 +1,7 @@
+programUsing program using scan 4scan scan4 if54 else54 for 45
+{hola { hola hola} hola;
+int bool set intbool intset boolset setbool intset boolint2
+= == === ==== =====
+<+>> exp1<->exp2
+
+print "¡Hola, mundo! \nEsto es una comilla escapada \" y un backslash \\"
