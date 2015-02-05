@@ -42,17 +42,17 @@ simbolos = {
    ';' :'SEMICOLON',
    ',' :'COMMA',
    '=' :'ASSIGN',
-   '*' :'ASTERISK',
+   '*' :'TIMES',
    '+' :'PLUS',
-   '-' :'DASH',
+   '-' :'MINUS',
    '/' :'INTDIVISION',
    '%' :'RESTDIVISION',
    '\\':'COUNTERSLASH',
    '<' :'LESSTHAN',
    '>' :'GREATERTHAN',
    '@' :'CONCATSETS',
-   '(' :'LPARENTHESIS',
-   ')' :'RPARENTHESIS'
+   '(' :'LPARENT',
+   ')' :'RPARENT'
 }
 
 op_mapeados = {

@@ -6,35 +6,34 @@ Created on 4/2/2015
          Manuel Gonzalez 11-10399
 '''
 import ply.yacc as yacc
-from expresiones import tokens
-from AST import *
-from expresiones import LAST_FILE
+import ply.lex as lexi
 
+import expresiones
+from AST import *
+
+tokens = expresiones.tokens
 
 def p_expression_binary(p):
     '''expression : expression PLUS expression
-                  | expression DASH expression
+                  | expression MINUS expression
                   | expression INTDIVISION expression
                   | expression RESTDIVISION expression 
-                  | expression ASTERISK expression'''
+                  | expression TIMES expression'''
     p[0] = BinaryIntOp(p[1],p[2],p[3])        
 
 def p_expression_unary(p):
-    '''expression : DASH expression'''
+    '''expression : MINUS expression'''
     p[0] = UnaryIntOp(p[1],p[2])
     
 def p_integer(p):
     '''expression : INTEGER'''
     p[0] = Int(p[1])
-    
-#import ply.lex as lexi
 
-#files = open('casos/caso4.txt')
-#lexer = lexi.lex(module=expresiones)
+
+
+files = open('casos_parser/caso1.txt')
+lexer = lexi.lex(module=expresiones)
 parser = yacc.yacc()
-input_file = open(LAST_FILE)
-print parser.parse(input_file.read())
-input_file.close()
-
-
-
+print parser.parse(files.read())
+#a = []
+files.close()

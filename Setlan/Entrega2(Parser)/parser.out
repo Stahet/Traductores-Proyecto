@@ -13,16 +13,14 @@ Unused terminals:
     PROGRAM
     DOUBLEPLUS
     PRINT
-    SIMBOLO
-    SIZESET
+    TRUE
     CONCATSETS
     SET
     SEMICOLON
     RCURLY
-    TRUE
     SCAN
     MAPMULTI
-    RPARENTHESIS
+    RPARENT
     IDENTIFIER
     ASSIGN
     DIFFERENT
@@ -30,14 +28,13 @@ Unused terminals:
     STRING
     FOR
     EQUALBOOL
-    LPARENTHESIS
+    MAPREST
     ELSE
+    LPARENT
     GREATERTHAN
     ARROW
     IN
-    UNARIO_CONJUNTO
-    SIMBOLOS_CON_IGUAL
-    MAPREST
+    SIZESET
     IF
     AND
     FALSE
@@ -54,7 +51,6 @@ Unused terminals:
     NOT
     USING
     COMMA
-    MAPEADO
     OR
     MAPSUM
 
@@ -62,11 +58,11 @@ Grammar
 
 Rule 0     S' -> expression
 Rule 1     expression -> expression PLUS expression
-Rule 2     expression -> expression DASH expression
+Rule 2     expression -> expression MINUS expression
 Rule 3     expression -> expression INTDIVISION expression
 Rule 4     expression -> expression RESTDIVISION expression
-Rule 5     expression -> expression ASTERISK expression
-Rule 6     expression -> DASH expression
+Rule 5     expression -> expression TIMES expression
+Rule 6     expression -> MINUS expression
 Rule 7     expression -> INTEGER
 
 Terminals, with rules where they appear
@@ -74,12 +70,10 @@ Terminals, with rules where they appear
 AND                  : 
 ARROW                : 
 ASSIGN               : 
-ASTERISK             : 5
 BOOL                 : 
 COMMA                : 
 CONCATSETS           : 
 COUNTERSLASH         : 
-DASH                 : 2 6
 DIFFERENT            : 
 DO                   : 
 DOUBLEPLUS           : 
@@ -99,8 +93,7 @@ INTERSECCION         :
 LCURLY               : 
 LESSOREQUALTHAN      : 
 LESSTHAN             : 
-LPARENTHESIS         : 
-MAPEADO              : 
+LPARENT              : 
 MAPINTDIVISION       : 
 MAPMULTI             : 
 MAPREST              : 
@@ -109,6 +102,7 @@ MAPSUM               :
 MAX                  : 
 MAXVALORSET          : 
 MIN                  : 
+MINUS                : 2 6
 MINVALORSET          : 
 NOT                  : 
 OR                   : 
@@ -119,17 +113,15 @@ PROGRAM              :
 RCURLY               : 
 REPEAT               : 
 RESTDIVISION         : 4
-RPARENTHESIS         : 
+RPARENT              : 
 SCAN                 : 
 SEMICOLON            : 
 SET                  : 
-SIMBOLO              : 
-SIMBOLOS_CON_IGUAL   : 
 SIZESET              : 
 STRING               : 
 THEN                 : 
+TIMES                : 5
 TRUE                 : 
-UNARIO_CONJUNTO      : 
 USING                : 
 WHILE                : 
 error                : 
@@ -144,339 +136,339 @@ state 0
 
     (0) S' -> . expression
     (1) expression -> . expression PLUS expression
-    (2) expression -> . expression DASH expression
+    (2) expression -> . expression MINUS expression
     (3) expression -> . expression INTDIVISION expression
     (4) expression -> . expression RESTDIVISION expression
-    (5) expression -> . expression ASTERISK expression
-    (6) expression -> . DASH expression
+    (5) expression -> . expression TIMES expression
+    (6) expression -> . MINUS expression
     (7) expression -> . INTEGER
 
-    DASH            shift and go to state 1
-    INTEGER         shift and go to state 2
+    MINUS           shift and go to state 3
+    INTEGER         shift and go to state 1
 
-    expression                     shift and go to state 3
+    expression                     shift and go to state 2
 
 state 1
-
-    (6) expression -> DASH . expression
-    (1) expression -> . expression PLUS expression
-    (2) expression -> . expression DASH expression
-    (3) expression -> . expression INTDIVISION expression
-    (4) expression -> . expression RESTDIVISION expression
-    (5) expression -> . expression ASTERISK expression
-    (6) expression -> . DASH expression
-    (7) expression -> . INTEGER
-
-    DASH            shift and go to state 1
-    INTEGER         shift and go to state 2
-
-    expression                     shift and go to state 4
-
-state 2
 
     (7) expression -> INTEGER .
 
     PLUS            reduce using rule 7 (expression -> INTEGER .)
-    DASH            reduce using rule 7 (expression -> INTEGER .)
+    MINUS           reduce using rule 7 (expression -> INTEGER .)
     INTDIVISION     reduce using rule 7 (expression -> INTEGER .)
     RESTDIVISION    reduce using rule 7 (expression -> INTEGER .)
-    ASTERISK        reduce using rule 7 (expression -> INTEGER .)
+    TIMES           reduce using rule 7 (expression -> INTEGER .)
     $end            reduce using rule 7 (expression -> INTEGER .)
+
+
+state 2
+
+    (0) S' -> expression .
+    (1) expression -> expression . PLUS expression
+    (2) expression -> expression . MINUS expression
+    (3) expression -> expression . INTDIVISION expression
+    (4) expression -> expression . RESTDIVISION expression
+    (5) expression -> expression . TIMES expression
+
+    PLUS            shift and go to state 6
+    MINUS           shift and go to state 7
+    INTDIVISION     shift and go to state 4
+    RESTDIVISION    shift and go to state 8
+    TIMES           shift and go to state 5
 
 
 state 3
 
-    (0) S' -> expression .
-    (1) expression -> expression . PLUS expression
-    (2) expression -> expression . DASH expression
-    (3) expression -> expression . INTDIVISION expression
-    (4) expression -> expression . RESTDIVISION expression
-    (5) expression -> expression . ASTERISK expression
+    (6) expression -> MINUS . expression
+    (1) expression -> . expression PLUS expression
+    (2) expression -> . expression MINUS expression
+    (3) expression -> . expression INTDIVISION expression
+    (4) expression -> . expression RESTDIVISION expression
+    (5) expression -> . expression TIMES expression
+    (6) expression -> . MINUS expression
+    (7) expression -> . INTEGER
 
-    PLUS            shift and go to state 8
-    DASH            shift and go to state 7
-    INTDIVISION     shift and go to state 6
-    RESTDIVISION    shift and go to state 9
-    ASTERISK        shift and go to state 5
+    MINUS           shift and go to state 3
+    INTEGER         shift and go to state 1
 
+    expression                     shift and go to state 9
 
 state 4
 
-    (6) expression -> DASH expression .
-    (1) expression -> expression . PLUS expression
-    (2) expression -> expression . DASH expression
-    (3) expression -> expression . INTDIVISION expression
-    (4) expression -> expression . RESTDIVISION expression
-    (5) expression -> expression . ASTERISK expression
-
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for DASH resolved as shift
-  ! shift/reduce conflict for INTDIVISION resolved as shift
-  ! shift/reduce conflict for RESTDIVISION resolved as shift
-  ! shift/reduce conflict for ASTERISK resolved as shift
-    $end            reduce using rule 6 (expression -> DASH expression .)
-    PLUS            shift and go to state 8
-    DASH            shift and go to state 7
-    INTDIVISION     shift and go to state 6
-    RESTDIVISION    shift and go to state 9
-    ASTERISK        shift and go to state 5
-
-  ! PLUS            [ reduce using rule 6 (expression -> DASH expression .) ]
-  ! DASH            [ reduce using rule 6 (expression -> DASH expression .) ]
-  ! INTDIVISION     [ reduce using rule 6 (expression -> DASH expression .) ]
-  ! RESTDIVISION    [ reduce using rule 6 (expression -> DASH expression .) ]
-  ! ASTERISK        [ reduce using rule 6 (expression -> DASH expression .) ]
-
-
-state 5
-
-    (5) expression -> expression ASTERISK . expression
+    (3) expression -> expression INTDIVISION . expression
     (1) expression -> . expression PLUS expression
-    (2) expression -> . expression DASH expression
+    (2) expression -> . expression MINUS expression
     (3) expression -> . expression INTDIVISION expression
     (4) expression -> . expression RESTDIVISION expression
-    (5) expression -> . expression ASTERISK expression
-    (6) expression -> . DASH expression
+    (5) expression -> . expression TIMES expression
+    (6) expression -> . MINUS expression
     (7) expression -> . INTEGER
 
-    DASH            shift and go to state 1
-    INTEGER         shift and go to state 2
+    MINUS           shift and go to state 3
+    INTEGER         shift and go to state 1
 
     expression                     shift and go to state 10
 
-state 6
+state 5
 
-    (3) expression -> expression INTDIVISION . expression
+    (5) expression -> expression TIMES . expression
     (1) expression -> . expression PLUS expression
-    (2) expression -> . expression DASH expression
+    (2) expression -> . expression MINUS expression
     (3) expression -> . expression INTDIVISION expression
     (4) expression -> . expression RESTDIVISION expression
-    (5) expression -> . expression ASTERISK expression
-    (6) expression -> . DASH expression
+    (5) expression -> . expression TIMES expression
+    (6) expression -> . MINUS expression
     (7) expression -> . INTEGER
 
-    DASH            shift and go to state 1
-    INTEGER         shift and go to state 2
+    MINUS           shift and go to state 3
+    INTEGER         shift and go to state 1
 
     expression                     shift and go to state 11
 
-state 7
-
-    (2) expression -> expression DASH . expression
-    (1) expression -> . expression PLUS expression
-    (2) expression -> . expression DASH expression
-    (3) expression -> . expression INTDIVISION expression
-    (4) expression -> . expression RESTDIVISION expression
-    (5) expression -> . expression ASTERISK expression
-    (6) expression -> . DASH expression
-    (7) expression -> . INTEGER
-
-    DASH            shift and go to state 1
-    INTEGER         shift and go to state 2
-
-    expression                     shift and go to state 12
-
-state 8
+state 6
 
     (1) expression -> expression PLUS . expression
     (1) expression -> . expression PLUS expression
-    (2) expression -> . expression DASH expression
+    (2) expression -> . expression MINUS expression
     (3) expression -> . expression INTDIVISION expression
     (4) expression -> . expression RESTDIVISION expression
-    (5) expression -> . expression ASTERISK expression
-    (6) expression -> . DASH expression
+    (5) expression -> . expression TIMES expression
+    (6) expression -> . MINUS expression
     (7) expression -> . INTEGER
 
-    DASH            shift and go to state 1
-    INTEGER         shift and go to state 2
+    MINUS           shift and go to state 3
+    INTEGER         shift and go to state 1
+
+    expression                     shift and go to state 12
+
+state 7
+
+    (2) expression -> expression MINUS . expression
+    (1) expression -> . expression PLUS expression
+    (2) expression -> . expression MINUS expression
+    (3) expression -> . expression INTDIVISION expression
+    (4) expression -> . expression RESTDIVISION expression
+    (5) expression -> . expression TIMES expression
+    (6) expression -> . MINUS expression
+    (7) expression -> . INTEGER
+
+    MINUS           shift and go to state 3
+    INTEGER         shift and go to state 1
 
     expression                     shift and go to state 13
 
-state 9
+state 8
 
     (4) expression -> expression RESTDIVISION . expression
     (1) expression -> . expression PLUS expression
-    (2) expression -> . expression DASH expression
+    (2) expression -> . expression MINUS expression
     (3) expression -> . expression INTDIVISION expression
     (4) expression -> . expression RESTDIVISION expression
-    (5) expression -> . expression ASTERISK expression
-    (6) expression -> . DASH expression
+    (5) expression -> . expression TIMES expression
+    (6) expression -> . MINUS expression
     (7) expression -> . INTEGER
 
-    DASH            shift and go to state 1
-    INTEGER         shift and go to state 2
+    MINUS           shift and go to state 3
+    INTEGER         shift and go to state 1
 
     expression                     shift and go to state 14
 
-state 10
+state 9
 
-    (5) expression -> expression ASTERISK expression .
+    (6) expression -> MINUS expression .
     (1) expression -> expression . PLUS expression
-    (2) expression -> expression . DASH expression
+    (2) expression -> expression . MINUS expression
     (3) expression -> expression . INTDIVISION expression
     (4) expression -> expression . RESTDIVISION expression
-    (5) expression -> expression . ASTERISK expression
+    (5) expression -> expression . TIMES expression
 
   ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for DASH resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for INTDIVISION resolved as shift
   ! shift/reduce conflict for RESTDIVISION resolved as shift
-  ! shift/reduce conflict for ASTERISK resolved as shift
-    $end            reduce using rule 5 (expression -> expression ASTERISK expression .)
-    PLUS            shift and go to state 8
-    DASH            shift and go to state 7
-    INTDIVISION     shift and go to state 6
-    RESTDIVISION    shift and go to state 9
-    ASTERISK        shift and go to state 5
+  ! shift/reduce conflict for TIMES resolved as shift
+    $end            reduce using rule 6 (expression -> MINUS expression .)
+    PLUS            shift and go to state 6
+    MINUS           shift and go to state 7
+    INTDIVISION     shift and go to state 4
+    RESTDIVISION    shift and go to state 8
+    TIMES           shift and go to state 5
 
-  ! PLUS            [ reduce using rule 5 (expression -> expression ASTERISK expression .) ]
-  ! DASH            [ reduce using rule 5 (expression -> expression ASTERISK expression .) ]
-  ! INTDIVISION     [ reduce using rule 5 (expression -> expression ASTERISK expression .) ]
-  ! RESTDIVISION    [ reduce using rule 5 (expression -> expression ASTERISK expression .) ]
-  ! ASTERISK        [ reduce using rule 5 (expression -> expression ASTERISK expression .) ]
+  ! PLUS            [ reduce using rule 6 (expression -> MINUS expression .) ]
+  ! MINUS           [ reduce using rule 6 (expression -> MINUS expression .) ]
+  ! INTDIVISION     [ reduce using rule 6 (expression -> MINUS expression .) ]
+  ! RESTDIVISION    [ reduce using rule 6 (expression -> MINUS expression .) ]
+  ! TIMES           [ reduce using rule 6 (expression -> MINUS expression .) ]
+
+
+state 10
+
+    (3) expression -> expression INTDIVISION expression .
+    (1) expression -> expression . PLUS expression
+    (2) expression -> expression . MINUS expression
+    (3) expression -> expression . INTDIVISION expression
+    (4) expression -> expression . RESTDIVISION expression
+    (5) expression -> expression . TIMES expression
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for INTDIVISION resolved as shift
+  ! shift/reduce conflict for RESTDIVISION resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+    $end            reduce using rule 3 (expression -> expression INTDIVISION expression .)
+    PLUS            shift and go to state 6
+    MINUS           shift and go to state 7
+    INTDIVISION     shift and go to state 4
+    RESTDIVISION    shift and go to state 8
+    TIMES           shift and go to state 5
+
+  ! PLUS            [ reduce using rule 3 (expression -> expression INTDIVISION expression .) ]
+  ! MINUS           [ reduce using rule 3 (expression -> expression INTDIVISION expression .) ]
+  ! INTDIVISION     [ reduce using rule 3 (expression -> expression INTDIVISION expression .) ]
+  ! RESTDIVISION    [ reduce using rule 3 (expression -> expression INTDIVISION expression .) ]
+  ! TIMES           [ reduce using rule 3 (expression -> expression INTDIVISION expression .) ]
 
 
 state 11
 
-    (3) expression -> expression INTDIVISION expression .
+    (5) expression -> expression TIMES expression .
     (1) expression -> expression . PLUS expression
-    (2) expression -> expression . DASH expression
+    (2) expression -> expression . MINUS expression
     (3) expression -> expression . INTDIVISION expression
     (4) expression -> expression . RESTDIVISION expression
-    (5) expression -> expression . ASTERISK expression
+    (5) expression -> expression . TIMES expression
 
   ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for DASH resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for INTDIVISION resolved as shift
   ! shift/reduce conflict for RESTDIVISION resolved as shift
-  ! shift/reduce conflict for ASTERISK resolved as shift
-    $end            reduce using rule 3 (expression -> expression INTDIVISION expression .)
-    PLUS            shift and go to state 8
-    DASH            shift and go to state 7
-    INTDIVISION     shift and go to state 6
-    RESTDIVISION    shift and go to state 9
-    ASTERISK        shift and go to state 5
+  ! shift/reduce conflict for TIMES resolved as shift
+    $end            reduce using rule 5 (expression -> expression TIMES expression .)
+    PLUS            shift and go to state 6
+    MINUS           shift and go to state 7
+    INTDIVISION     shift and go to state 4
+    RESTDIVISION    shift and go to state 8
+    TIMES           shift and go to state 5
 
-  ! PLUS            [ reduce using rule 3 (expression -> expression INTDIVISION expression .) ]
-  ! DASH            [ reduce using rule 3 (expression -> expression INTDIVISION expression .) ]
-  ! INTDIVISION     [ reduce using rule 3 (expression -> expression INTDIVISION expression .) ]
-  ! RESTDIVISION    [ reduce using rule 3 (expression -> expression INTDIVISION expression .) ]
-  ! ASTERISK        [ reduce using rule 3 (expression -> expression INTDIVISION expression .) ]
+  ! PLUS            [ reduce using rule 5 (expression -> expression TIMES expression .) ]
+  ! MINUS           [ reduce using rule 5 (expression -> expression TIMES expression .) ]
+  ! INTDIVISION     [ reduce using rule 5 (expression -> expression TIMES expression .) ]
+  ! RESTDIVISION    [ reduce using rule 5 (expression -> expression TIMES expression .) ]
+  ! TIMES           [ reduce using rule 5 (expression -> expression TIMES expression .) ]
 
 
 state 12
 
-    (2) expression -> expression DASH expression .
+    (1) expression -> expression PLUS expression .
     (1) expression -> expression . PLUS expression
-    (2) expression -> expression . DASH expression
+    (2) expression -> expression . MINUS expression
     (3) expression -> expression . INTDIVISION expression
     (4) expression -> expression . RESTDIVISION expression
-    (5) expression -> expression . ASTERISK expression
+    (5) expression -> expression . TIMES expression
 
   ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for DASH resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for INTDIVISION resolved as shift
   ! shift/reduce conflict for RESTDIVISION resolved as shift
-  ! shift/reduce conflict for ASTERISK resolved as shift
-    $end            reduce using rule 2 (expression -> expression DASH expression .)
-    PLUS            shift and go to state 8
-    DASH            shift and go to state 7
-    INTDIVISION     shift and go to state 6
-    RESTDIVISION    shift and go to state 9
-    ASTERISK        shift and go to state 5
+  ! shift/reduce conflict for TIMES resolved as shift
+    $end            reduce using rule 1 (expression -> expression PLUS expression .)
+    PLUS            shift and go to state 6
+    MINUS           shift and go to state 7
+    INTDIVISION     shift and go to state 4
+    RESTDIVISION    shift and go to state 8
+    TIMES           shift and go to state 5
 
-  ! PLUS            [ reduce using rule 2 (expression -> expression DASH expression .) ]
-  ! DASH            [ reduce using rule 2 (expression -> expression DASH expression .) ]
-  ! INTDIVISION     [ reduce using rule 2 (expression -> expression DASH expression .) ]
-  ! RESTDIVISION    [ reduce using rule 2 (expression -> expression DASH expression .) ]
-  ! ASTERISK        [ reduce using rule 2 (expression -> expression DASH expression .) ]
+  ! PLUS            [ reduce using rule 1 (expression -> expression PLUS expression .) ]
+  ! MINUS           [ reduce using rule 1 (expression -> expression PLUS expression .) ]
+  ! INTDIVISION     [ reduce using rule 1 (expression -> expression PLUS expression .) ]
+  ! RESTDIVISION    [ reduce using rule 1 (expression -> expression PLUS expression .) ]
+  ! TIMES           [ reduce using rule 1 (expression -> expression PLUS expression .) ]
 
 
 state 13
 
-    (1) expression -> expression PLUS expression .
+    (2) expression -> expression MINUS expression .
     (1) expression -> expression . PLUS expression
-    (2) expression -> expression . DASH expression
+    (2) expression -> expression . MINUS expression
     (3) expression -> expression . INTDIVISION expression
     (4) expression -> expression . RESTDIVISION expression
-    (5) expression -> expression . ASTERISK expression
+    (5) expression -> expression . TIMES expression
 
   ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for DASH resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for INTDIVISION resolved as shift
   ! shift/reduce conflict for RESTDIVISION resolved as shift
-  ! shift/reduce conflict for ASTERISK resolved as shift
-    $end            reduce using rule 1 (expression -> expression PLUS expression .)
-    PLUS            shift and go to state 8
-    DASH            shift and go to state 7
-    INTDIVISION     shift and go to state 6
-    RESTDIVISION    shift and go to state 9
-    ASTERISK        shift and go to state 5
+  ! shift/reduce conflict for TIMES resolved as shift
+    $end            reduce using rule 2 (expression -> expression MINUS expression .)
+    PLUS            shift and go to state 6
+    MINUS           shift and go to state 7
+    INTDIVISION     shift and go to state 4
+    RESTDIVISION    shift and go to state 8
+    TIMES           shift and go to state 5
 
-  ! PLUS            [ reduce using rule 1 (expression -> expression PLUS expression .) ]
-  ! DASH            [ reduce using rule 1 (expression -> expression PLUS expression .) ]
-  ! INTDIVISION     [ reduce using rule 1 (expression -> expression PLUS expression .) ]
-  ! RESTDIVISION    [ reduce using rule 1 (expression -> expression PLUS expression .) ]
-  ! ASTERISK        [ reduce using rule 1 (expression -> expression PLUS expression .) ]
+  ! PLUS            [ reduce using rule 2 (expression -> expression MINUS expression .) ]
+  ! MINUS           [ reduce using rule 2 (expression -> expression MINUS expression .) ]
+  ! INTDIVISION     [ reduce using rule 2 (expression -> expression MINUS expression .) ]
+  ! RESTDIVISION    [ reduce using rule 2 (expression -> expression MINUS expression .) ]
+  ! TIMES           [ reduce using rule 2 (expression -> expression MINUS expression .) ]
 
 
 state 14
 
     (4) expression -> expression RESTDIVISION expression .
     (1) expression -> expression . PLUS expression
-    (2) expression -> expression . DASH expression
+    (2) expression -> expression . MINUS expression
     (3) expression -> expression . INTDIVISION expression
     (4) expression -> expression . RESTDIVISION expression
-    (5) expression -> expression . ASTERISK expression
+    (5) expression -> expression . TIMES expression
 
   ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for DASH resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for INTDIVISION resolved as shift
   ! shift/reduce conflict for RESTDIVISION resolved as shift
-  ! shift/reduce conflict for ASTERISK resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
     $end            reduce using rule 4 (expression -> expression RESTDIVISION expression .)
-    PLUS            shift and go to state 8
-    DASH            shift and go to state 7
-    INTDIVISION     shift and go to state 6
-    RESTDIVISION    shift and go to state 9
-    ASTERISK        shift and go to state 5
+    PLUS            shift and go to state 6
+    MINUS           shift and go to state 7
+    INTDIVISION     shift and go to state 4
+    RESTDIVISION    shift and go to state 8
+    TIMES           shift and go to state 5
 
   ! PLUS            [ reduce using rule 4 (expression -> expression RESTDIVISION expression .) ]
-  ! DASH            [ reduce using rule 4 (expression -> expression RESTDIVISION expression .) ]
+  ! MINUS           [ reduce using rule 4 (expression -> expression RESTDIVISION expression .) ]
   ! INTDIVISION     [ reduce using rule 4 (expression -> expression RESTDIVISION expression .) ]
   ! RESTDIVISION    [ reduce using rule 4 (expression -> expression RESTDIVISION expression .) ]
-  ! ASTERISK        [ reduce using rule 4 (expression -> expression RESTDIVISION expression .) ]
+  ! TIMES           [ reduce using rule 4 (expression -> expression RESTDIVISION expression .) ]
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for PLUS in state 4 resolved as shift
-WARNING: shift/reduce conflict for DASH in state 4 resolved as shift
-WARNING: shift/reduce conflict for INTDIVISION in state 4 resolved as shift
-WARNING: shift/reduce conflict for RESTDIVISION in state 4 resolved as shift
-WARNING: shift/reduce conflict for ASTERISK in state 4 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 9 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 9 resolved as shift
+WARNING: shift/reduce conflict for INTDIVISION in state 9 resolved as shift
+WARNING: shift/reduce conflict for RESTDIVISION in state 9 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 9 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 10 resolved as shift
-WARNING: shift/reduce conflict for DASH in state 10 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 10 resolved as shift
 WARNING: shift/reduce conflict for INTDIVISION in state 10 resolved as shift
 WARNING: shift/reduce conflict for RESTDIVISION in state 10 resolved as shift
-WARNING: shift/reduce conflict for ASTERISK in state 10 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 10 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 11 resolved as shift
-WARNING: shift/reduce conflict for DASH in state 11 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 11 resolved as shift
 WARNING: shift/reduce conflict for INTDIVISION in state 11 resolved as shift
 WARNING: shift/reduce conflict for RESTDIVISION in state 11 resolved as shift
-WARNING: shift/reduce conflict for ASTERISK in state 11 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 11 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 12 resolved as shift
-WARNING: shift/reduce conflict for DASH in state 12 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 12 resolved as shift
 WARNING: shift/reduce conflict for INTDIVISION in state 12 resolved as shift
 WARNING: shift/reduce conflict for RESTDIVISION in state 12 resolved as shift
-WARNING: shift/reduce conflict for ASTERISK in state 12 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 12 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 13 resolved as shift
-WARNING: shift/reduce conflict for DASH in state 13 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 13 resolved as shift
 WARNING: shift/reduce conflict for INTDIVISION in state 13 resolved as shift
 WARNING: shift/reduce conflict for RESTDIVISION in state 13 resolved as shift
-WARNING: shift/reduce conflict for ASTERISK in state 13 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 13 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 14 resolved as shift
-WARNING: shift/reduce conflict for DASH in state 14 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 14 resolved as shift
 WARNING: shift/reduce conflict for INTDIVISION in state 14 resolved as shift
 WARNING: shift/reduce conflict for RESTDIVISION in state 14 resolved as shift
-WARNING: shift/reduce conflict for ASTERISK in state 14 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 14 resolved as shift
