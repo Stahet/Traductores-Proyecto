@@ -2,16 +2,15 @@ Gramatica Para el Parser de SetLan
 
 simbolo de partida = PROGRAM
 
-PROGRAM -> 'program' STATEMENT
+PROGRAM -> PROGRAM STATEMENT
 
-STATEMENT -> IDENTIFIER '=' EXPRESSION 
-		   | '{' DECLARE STATEMENT_LIST '}'                       #Preg: ¿Tiene sentido hacer bloques de bloques? Caso2.txt     
-           | 'scan' 'identifier'                  
-           | 'scan' COMMA_LIST
+STATEMENT -> IDENTIFIER ASSIGN EXPRESSION 
+		   | LCURLY DECLARE STATEMENT_LIST RCURLY 
+           | 'scan' 'identifier'
            | 'print' COMMA_LIST
            | 'println' COMMA_LIST
-           | 'if' '('EXPRESSION')' STATEMENT 'else' STATEMENT
-           | 'if' '('EXPRESSION')' STATEMENT
+ SMELL->   | 'if' '('EXPRESSION')' STATEMENT 'else' STATEMENT
+ SMELL->   | 'if' '('EXPRESSION')' STATEMENT
            | 'for' 'identifier' DIRECTION EXPRESSION 'do' STATEMENT
            | 'repeat' STATEMENT 'while' '('EXPRESSION')' 'do' STATEMENT
            | 'while' '('EXPRESSION')' 'do' STATEMENT
@@ -58,9 +57,12 @@ STATEMENT_LIST -> STATEMENT;
 DECLARE -> 'using' DECLARE_LIST 'in'
          |  EMPTY
          
-DECLARE_LIST -> TYPE 'identifier';
-              | TYPE 'identifier'; DECLARE_LIST  
-
+DECLARE_LIST -> TYPE 'identifier' DECLARE_LIST_CONTINUE
+              | DECLARE_LIST ; DECLARE_LIST
+              
+DECLARE_LIST_CONTINUE -> ;
+				  | , 'identifier' DECLARE_LIST_CONTINUE
+			  
 DIRECTION -> 'min'
 		   | 'max'
 		           

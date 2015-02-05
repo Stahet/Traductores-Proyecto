@@ -23,9 +23,6 @@ reservadas = {
    'max'    : 'MAX',
    'repeat' :  'REPEAT',
    'while'  : 'WHILE'  ,
-   'int'    : 'INT'  , 
-   'set'    : 'SET'  ,
-   'bool'   : 'BOOL' ,
    'and'    : 'AND'  ,
    'or'     : 'OR'   ,
    'not'    : 'NOT'  ,
@@ -35,6 +32,13 @@ reservadas = {
    'print'  : 'PRINT',
    'println': 'PRINTLN'
 }
+
+tipos_datos = {
+   'int'    : 'INT'  , 
+   'set'    : 'SET'  ,
+   'bool'   : 'BOOL' 
+}
+
 
 simbolos = {
    '{' :'LCURLY',
@@ -77,7 +81,7 @@ simbolos_igual = {
 }
 
 tokens = ['IDENTIFIER', 'INTEGER','DOUBLEPLUS','ARROW','STRING','INTERSECCION']  + list(reservadas.values()) + \
-         list(simbolos.values()) + list(op_mapeados.values()) + \
+         list(simbolos.values()) + list(op_mapeados.values()) +  list(tipos_datos.values()) + \
          list(unarios_conjuntos.values()) + list(simbolos_igual.values())
 
 
@@ -90,6 +94,7 @@ def t_STRING(t):
 def t_IDENTIFIER(t):
     r'[a-zA-Z_][a-zA-Z\d_]*'    
     valor = reservadas.get(t.value,'IDENTIFIER')
+    valor = tipos_datos.get(t.value, valor)
     t.type = valor    # Check for reserved words
     return t
 
