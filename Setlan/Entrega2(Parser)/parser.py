@@ -17,7 +17,7 @@ tokens = expresiones.tokens
 
 def p_program(p):
     'program : PROGRAM statement'
-    p[0] = Program(p[1],p[2])
+    p[0] = Program(p[2])
     
 
 def p_statement_assing(p):
@@ -58,113 +58,119 @@ def p_expression_op_bin(p):
                  | expression TIMES expression            
                  | expression INTDIVISION expression            
                  | expression RESTDIVISION expression            
-                 | expression '==' expression
-                 | expression '/=' expression
-                 | expression '<' expression
-                 | expression '<=' expression
-                 | expression '>' expression
-                 | expression '>=' expression
-                 | expression '@' expression
-                 | expression '++' expression
-                 | expression '\' expression
-                 | expression '><' expression
-                 | expression '<+>' expression
-                 | expression '<->' expression
-                 | expression '<*>' expression
-                 | expression '</>' expression
-                 | expression '<%>' expression
+                 | expression EQUALBOOL expression
+                 | expression UNEQUAL expression
+                 | expression LESSTHAN expression
+                 | expression LESSOREQUALTHAN expression
+                 | expression GREATERTHAN expression
+                 | expression GREATEROREQUALTHAN expression
+                 | expression BELONG expression
+                 | expression DOUBLEPLUS expression
+                 | expression COUNTERSLASH expression
+                 | expression INTERSECCION expression
+                 | expression MAPPLUS expression
+                 | expression MAPMINUS expression
+                 | expression MAPTIMES expression
+                 | expression MAPDIVIDE expression
+                 | expression MAPREST expression
     '''
     
     p[0] = BinaryOP(p[1],p[2],p[3])
-    
-def p_expression_op_unary(p):
-    '''expression : '-' expression
-                  | >? expression
-                  | <? expression
-                  | $? expression'''
+
+def p_expression_uminus(p):
+    'expression : MINUS expression %prec UMINUS'
     p[0] = UnaryOP(p[1],p[2])
     
+def p_expression_op_unary(p):
+    '''expression : MAXVALUESET expression
+                  | MINVALUESET expression
+                  | SIZESET expression'''
+    p[0] = UnaryOP(p[1],p[2])
+
 def p_comma_list_expression(p):
-    '''comma_list : expression'''
+    'comma_list : expression'
     p[0] = p[1]
     
 def p_comma_list_expression_comma_continue(p):
-    '''comma_list : expression , comma_list'''
+    'comma_list : expression COMMA comma_list'
     p[0] = SeparetedTerms(p[1],p[2],p[3])
     
 def p_statement_list(p):
-    '''statement_list : statement'''
+    'statement_list : statement SEMICOLON'
     p[0] = p[1]
     
 def p_statement_list_continue(p):
-    '''statement_list : statement ; statement_list'''
+    'statement_list : statement SEMICOLON statement_list'
     p[0] = SeparetedTerms(p[1],p[2],p[3])
 
 def p_declare_vars(p):
-    '''declare : USING declare_list IN '''
+    'declare : USING declare_list IN '
     p[0] = p[2]
 
 def p_declare_empty(p):
-    '''declare :empty'''
+    'declare : empty'
     pass
 
 def p_declare_list_type(p):
-    '''declare_list : type IDENTIFIER declare_list_continue'''
+    'declare_list : type IDENTIFIER declare_list_continue'
     p[0] = DeclareList(p[1],p[2],p[3])
 
 def p_declare_list_(p):
-    '''declare_list : declare_list ; declare_list'''
+    'declare_list : declare_list SEMICOLON declare_list'
     p[1].declared_list = p[1].declared_list + p[3].declared_list
     p[0] = p[1]
 
 def p_declare_list_continue_end(p):
-    '''declare_list_continue : ;'''
+    'declare_list_continue : SEMICOLON'
     p[0] = []
 
 def p_declare_list_continue_on(p):
-    '''declare_list_continue : , IDENTIFIER declare_list_continue'''
+    'declare_list_continue : COMMA IDENTIFIER declare_list_continue'
     p[0] = [p[2]] + [p[3]]
 
-def p_direction_all(p):
-    ''''direction : min
-                  | max
-    '''
-    p[0] = p[1]
+def p_empty(p):
+    'empty :'
+    pass
 
 def p_type_data(p):
-    '''type: 'int' 
-           | 'bool'
-           | 'set'
+    '''type : INT
+           | BOOL
+           | SET
     '''
     p[0] = p[1]
 
 # Precedence defined for expressions
 precedence = (
     # language
-    ("right", 'IF'),
+    ("right", 'IF'  ),
     ("right", 'ELSE'),
     # bool
     ("left", 'OR'),
     ("left", 'AND'),
     ("right", 'NOT'),
     # compare
+    ("nonassoc", 'LESSTHAN', 'LESSOREQUALTHAN', 'GREATERTHAN', 'GREATEROREQUALTHAN'),
+    ("nonassoc", 'EQUALBOOL', 'UNEQUAL'),
     ("nonassoc", 'BELONG'),
-    ("nonassoc", 'EQUAL', 'UNEQUAL'),
-    ("nonassoc", 'LESS', 'LESSEQ', 'GREAT', 'GREATEQ'),
-    # range
-    ("left", 'INTERSECTION'),
     # int
     ("left", 'PLUS', 'MINUS'),
-    ("left", 'TIMES', 'DIVIDE', 'MODULO'),
-    # range
-    ("nonassoc", 'FROMTO'),
+    ("left", 'TIMES', 'INTDIVISION', 'RESTDIVISION'),
+    #set
+    ('left','DOUBLEPLUS','COUNTERSLASH'),
+    ('left','INTERSECCION'),
+    #map to set
+    ('left','MAPPLUS','MAPMINUS'),
+    ('left','MAPTIMES','MAPDIVIDE','MAPREST'),
+    #unary over sets
+    ('nonassoc','MAXVALUESET','MINVALUESET','SIZESET'),
     # int
     ("right", 'UMINUS'),
 )
     
-files = open('casos_parser/caso1.txt')
+files = open('casos_lexer/caso1.txt')
 lexer = lexi.lex(module=expresiones)
 parser = yacc.yacc()
-print parser.parse(files.read())
-#a = []
+
+program = parser.parse(files.read())
+program.print_tree()
 files.close()

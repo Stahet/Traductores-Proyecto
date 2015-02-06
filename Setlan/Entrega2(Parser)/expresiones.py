@@ -54,22 +54,22 @@ simbolos = {
    '\\':'COUNTERSLASH',
    '<' :'LESSTHAN',
    '>' :'GREATERTHAN',
-   '@' :'CONCATSETS',
+   '@' :'BELONG',
    '(' :'LPARENT',
    ')' :'RPARENT'
 }
 
 op_mapeados = {
-   '<+>':'MAPSUM',
-   '<->':'MAPSUBSTRACT',
-   '<*>':'MAPMULTI',
-   '</>':'MAPINTDIVISION',
+   '<+>':'MAPPLUS',
+   '<->':'MAPMINUS',
+   '<*>':'MAPTIMES',
+   '</>':'MAPDIVIDE',
    '<%>':'MAPREST',
 }
 
 unarios_conjuntos = {
-   '>?' :'MAXVALORSET',
-   '<?' :'MINVALORSET',
+   '>?' :'MAXVALUESET',
+   '<?' :'MINVALUESET',
    '$?' :'SIZESET',
 }
 
@@ -77,7 +77,7 @@ simbolos_igual = {
    '<=' :'LESSOREQUALTHAN',
    '>=' :'GREATEROREQUALTHAN',
    '==' :'EQUALBOOL',
-   '/=' :'DIFFERENT',
+   '/=' :'UNEQUAL',
 }
 
 tokens = ['IDENTIFIER', 'INTEGER','DOUBLEPLUS','ARROW','STRING','INTERSECCION']  + list(reservadas.values()) + \

@@ -13,6 +13,9 @@ class Program(Expre):
     def __init__(self, statement):
         self.type = "PROGRAM"
         self.statement = statement
+        
+    def print_tree(self):
+        print self.statement
 
 class Assign(Expre):
     def __init__(self, identifier,expresion):
@@ -57,5 +60,3 @@ class DeclareList(Expre):
     def __init__(self,type_d,identifier,continue_l):
         self.declared_list= []
         self.declared_list.append((type_d,identifier,continue_l))
-    
-    def __add__(self,c):
