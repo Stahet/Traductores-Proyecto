@@ -9,8 +9,8 @@ STATEMENT -> IDENTIFIER ASSIGN EXPRESSION
            | 'scan' 'identifier'
            | 'print' COMMA_LIST
            | 'println' COMMA_LIST
- SMELL->   | 'if' '('EXPRESSION')' STATEMENT 'else' STATEMENT
- SMELL->   | 'if' '('EXPRESSION')' STATEMENT
+		   | 'if' '('EXPRESSION')' STATEMENT 'else' STATEMENT
+ 		   | 'if' '('EXPRESSION')' STATEMENT
            | 'for' 'identifier' DIRECTION EXPRESSION 'do' STATEMENT
            | 'repeat' STATEMENT 'while' '('EXPRESSION')' 'do' STATEMENT
            | 'while' '('EXPRESSION')' 'do' STATEMENT

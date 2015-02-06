@@ -152,9 +152,11 @@ def t_nueva_linea(t):
 def obtener_columna(token):
     'Encuentra la columna del token'
     ultimo_salto = token.lexer.lexdata.rfind('\n',0,token.lexpos)  # ultima posicion del salto de linea
+
     if ultimo_salto < 0:
-        ultimo_salto = 0
-    columna = (token.lexpos - ultimo_salto) + (token.lineno == 1)
+        ultimo_salto = -1
+        
+    columna = token.lexpos - ultimo_salto
     
     return columna
 
