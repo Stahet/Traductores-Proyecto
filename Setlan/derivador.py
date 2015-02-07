@@ -7,6 +7,8 @@ Creado el dia 27/1/2015
 Grupo 13
 
 '''
+
+
 def esTerminal(a , alfabeto):
     return a in alfabeto
 
