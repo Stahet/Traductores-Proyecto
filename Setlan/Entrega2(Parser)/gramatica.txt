@@ -63,8 +63,8 @@ DECLARE -> 'using' DECLARE_LIST 'in'
 DECLARE_LIST -> TYPE 'identifier' DECLARE_LIST_CONTINUE
               | DECLARE_LIST ; DECLARE_LIST
               
-DECLARE_LIST_CONTINUE -> ;
-				  | , 'identifier' DECLARE_LIST_CONTINUE
+DECLARE_LIST_CONTINUE -> , 'identifier' DECLARE_LIST_CONTINUE
+				 	  | ;
 			  
 DIRECTION -> 'min'
 		   | 'max'

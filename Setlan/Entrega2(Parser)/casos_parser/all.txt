@@ -1,5 +1,9 @@
 program {
-
+  using
+    int  a, b; # inicializan en 0
+    set  c, d; # inicializan en false
+    bool e, f; # inicializan en {}
+  in
   a = 10;
   scan b;
   c = {1,2,3};

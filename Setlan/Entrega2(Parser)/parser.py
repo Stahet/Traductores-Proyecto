@@ -180,7 +180,7 @@ def p_statement_list(p):
     p[0] = [p[1]]
     
 def p_declare_vars(p):
-    'declare : USING declare_list IN '
+    'declare : USING declare_list IN'
     p[0] = p[2]
 
 def p_declare_empty(p):
@@ -220,10 +220,8 @@ def p_error(p):
     
     if _error_parser: return
     
-    try:
-        print 'Error: se encontró  un caracter inesperado "%s" en la línea %d, Columna %d.' % (p.value[0] , p.lineno , expresiones.obtener_columna(p))
-    except TypeError:
-        print 'Error: se encontró  un caracter inesperado "%s" en la línea %d, Columna %d.' % (p.value , p.lineno , expresiones.obtener_columna(p))
+    print "Error de Sintaxis en la linea %d, Columna %d" %  (p.lineno , expresiones.obtener_columna(p))
+    print "Token Inesperado: ","\""+str(p.value)+"\""
     _error_parser = True
     
 # Precedence defined for expressions
