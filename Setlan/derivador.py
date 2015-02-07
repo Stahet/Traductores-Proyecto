@@ -8,6 +8,9 @@ Grupo 13
 
 '''
 
+
+
+
 def esTerminal(a , alfabeto):
     return a in alfabeto
 
