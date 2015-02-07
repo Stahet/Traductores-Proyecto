@@ -77,4 +77,4 @@ def parsear(entrada):
         
 
 parsear('(x+y)*x-y*(z)') 
-    
+parsear('(x+y)') 
