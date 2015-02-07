@@ -54,17 +54,17 @@ EXPRESSION -> 'integer'
 COMMA_LIST -> EXPRESSION
             | EXPRESSION ',' COMMA_LIST
            
-STATEMENT_LIST -> STATEMENT;
-				| STATEMENT ; STATEMENT_LIST
+STATEMENT_LIST -> STATEMENT ; STATEMENT_LIST
+				| EMPTY
 				
 DECLARE -> 'using' DECLARE_LIST 'in'
          |  EMPTY
          
-DECLARE_LIST -> TYPE 'identifier' DECLARE_LIST_CONTINUE
-              | DECLARE_LIST ; DECLARE_LIST
+DECLARE_LIST -> TYPE IDENTIFIER_LIST; DECLARE_LIST
+              | EMPTY
               
-DECLARE_LIST_CONTINUE -> , 'identifier' DECLARE_LIST_CONTINUE
-				 	  | ;
+IDENTIFIER_LIST -> 'identifier'
+				 | 'identifier', IDENTIFIER_LIST
 			  
 DIRECTION -> 'min'
 		   | 'max'

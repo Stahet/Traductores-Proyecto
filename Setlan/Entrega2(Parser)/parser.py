@@ -24,7 +24,7 @@ def p_statement_assing(p):
     p[0] = Assign(p[1],p[3])
     
 def p_statement_block(p):
-    'statement : LCURLY declare statement_list RCURLY '
+    'statement : LCURLY declare statement_list RCURLY'
     p[0] = Block(p[3],p[2])
 
 def p_statement_function_scan(p):
@@ -174,35 +174,33 @@ def p_statement_list_continue(p):
     'statement_list : statement SEMICOLON statement_list'
     p[0] = [p[1]] + p[3]
 
-
-def p_statement_list(p):
-    'statement_list : statement SEMICOLON'
-    p[0] = [p[1]]
+def p_statement_list_empty(p):
+    'statement_list : empty'
+    p[0] = []
     
 def p_declare_vars(p):
     'declare : USING declare_list IN'
-    p[0] = p[2]
+    p[0] = DeclareList(p[2])
 
 def p_declare_empty(p):
     'declare : empty'
     pass
-
+    
 def p_declare_list_type(p):
-    'declare_list : type IDENTIFIER declare_list_continue'
-    p[0] = DeclareList(p[1],p[2],p[3])
-
-def p_declare_list_(p):
-    'declare_list : declare_list SEMICOLON declare_list'
-    p[1].declared_list = p[1].declared_list + p[3].declared_list
-    p[0] = p[1]
-
-def p_declare_list_continue_end(p):
-    'declare_list_continue : SEMICOLON'
+    'declare_list : type identifier_list SEMICOLON declare_list'
+    p[0] = [TypeList(p[1],p[2])] + p[4]
+    
+def p_declare_list_type_empty(p):
+    'declare_list : empty'
     p[0] = []
 
+def p_identifier_list(p):
+    'identifier_list : IDENTIFIER'
+    p[0] = [p[1]]
+
 def p_declare_list_continue_on(p):
-    'declare_list_continue : COMMA IDENTIFIER declare_list_continue'
-    p[0] = [p[2]] + p[3]
+    'identifier_list : IDENTIFIER COMMA identifier_list'
+    p[0] = [p[1]] + p[3]
 
 def p_empty(p):
     'empty :'
@@ -210,8 +208,8 @@ def p_empty(p):
 
 def p_type_data(p):
     '''type : INT
-           | BOOL
-           | SET
+            | BOOL
+            | SET
     '''
     p[0] = p[1]
     
@@ -220,8 +218,14 @@ def p_error(p):
     
     if _error_parser: return
     
-    print "Error de Sintaxis en la linea %d, Columna %d" %  (p.lineno , expresiones.obtener_columna(p))
-    print "Token Inesperado: ","\""+str(p.value)+"\""
+    try:
+        print 'Error: se encontró  un caracter inesperado "%s" en la línea %d, Columna %d.' % (p.value[0] , p.lineno , expresiones.obtener_columna(p))
+    except TypeError:
+        print 'Error: se encontró  un caracter inesperado "%s" en la línea %d, Columna %d.' % (p.value , p.lineno , expresiones.obtener_columna(p))
+    #===========================================================================
+    # print "Error de Sintaxis en la linea %d, Columna %d" %  (p.lineno , expresiones.obtener_columna(p))
+    # print "Token Inesperado: ","\""+str(p.value)+"\""
+    #===========================================================================
     _error_parser = True
     
 # Precedence defined for expressions
@@ -256,7 +260,16 @@ lexer = lexi.lex(module=expresiones)
 parser = yacc.yacc()
 
 #file_input = open('casos_lexer/caso1.txt')
-file_input = open('casos_parser/all.txt')
+#file_input = open('casos_parser/all.txt')
+#file_input = open('casos_parser/programa_vacio.txt')
+#file_input = open('casos_parser/fibonacci.txt')
+#file_input = open('casos_parser/usingInVacio.txt')
+#file_input = open('casos_parser/holaMundo.txt')
+#file_input = open('casos_parser/operacionesConConjuntos.txt')
+#file_input = open('casos_parser/precedenciaIF.txt')
+#file_input = open('casos_parser/errorDeSintaxis.txt')  # Falta Mejorar Manejo de errores
+file_input = open('casos_parser/reglasDeAlcance.txt')
+
 content = file_input.read()
 file_input.close()
 

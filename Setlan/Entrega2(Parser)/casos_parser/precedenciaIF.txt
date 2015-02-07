@@ -1,0 +1,15 @@
+program{
+	if (false)
+		if (false)
+			print "no se debe imprimir"
+		else
+			print "tampoco se debe imprimir"
+	;
+	if (false) {
+		 if (true)
+ 			print "no se debe imprimir"
+ 		 ;
+	} else
+		print "si se debe imprimir"
+	;
+}

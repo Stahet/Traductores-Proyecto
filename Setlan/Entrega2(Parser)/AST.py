@@ -104,9 +104,8 @@ class RepeatWhileDo(Expre):
         self.statement1.print_tree(level + 1)
         
         self.print_with_indent('WHILE',level)
-        self.print_with_indent('(',level + 1)
+        self.print_with_indent('condition',level + 1)
         self.expression.print_tree(level + 2)
-        self.print_with_indent(')',level + 1)
 
         self.print_with_indent('DO',level)
         self.statement2.print_tree(level + 1)
@@ -120,9 +119,8 @@ class WhileDo(Expre):
         
     def print_tree(self,level):
         self.print_with_indent(self.type,level)
-        self.print_with_indent('(',level + 1)
+        self.print_with_indent('condition',level + 1)
         self.expression.print_tree(level + 2)
-        self.print_with_indent(')',level + 1)
 
         self.print_with_indent('DO',level)
         self.statement.print_tree(level + 1)
@@ -139,10 +137,8 @@ class RepeatWhile(Expre):
         self.statement.print_tree(level + 1)
 
         self.print_with_indent('WHILE',level)
-        self.print_with_indent('(',level + 1)
+        self.print_with_indent('condition',level + 1)
         self.expression.print_tree(level + 2)
-        self.print_with_indent(')',level + 1)
-
 
 class Print(Expre):
     
@@ -211,16 +207,26 @@ class UnaryOP(Expre):
     
 class DeclareList(Expre):
     
-    def __init__(self,type_d,identifier,continue_l):
-        self.declared_list= [(type_d , [identifier] + continue_l)]
+    def __init__(self,declared_list):
+        self.declared_list = declared_list
         
     def print_tree(self,level): 
         self.print_with_indent('USING', level)
         for declaration_vars in self.declared_list:
-            for id_ in declaration_vars[1]:
-                self.print_with_indent(declaration_vars[0] + ' ' + id_, level + 1)
+            declaration_vars.print_tree(level)
         self.print_with_indent('IN', level)
 
+class TypeList(Expre):
+    
+    def __init__(self,data_type,id_list):
+        self.data_type = data_type
+        self.id_list = id_list
+    
+    def print_tree(self,level):
+
+        for identifier in self.id_list:
+            self.print_with_indent(self.data_type + ' ' + identifier,level + 1)
+            
 class Direction(Expre):
     
     def __init__(self,value):

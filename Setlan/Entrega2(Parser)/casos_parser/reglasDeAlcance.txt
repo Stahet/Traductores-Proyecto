@@ -1,0 +1,18 @@
+program{
+	using
+		int x,y,z;
+		set a,b,c;
+	in
+	{	
+		using
+			int x,y,z;
+			set a,b,c;
+		in
+		{	
+			using
+				int x,y,zs4;
+				bool ah,hah;
+			in		
+		};
+	};
+}

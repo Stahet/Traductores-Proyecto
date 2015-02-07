@@ -166,4 +166,3 @@ def t_error(t):
     print 'Error: se encontró  un caracter inesperado "%s" en la línea %d, Columna %d.' % (t.value[0],t.lineno,obtener_columna(t)) 
     ERROR_ = True
     t.lexer.skip(1)
-
