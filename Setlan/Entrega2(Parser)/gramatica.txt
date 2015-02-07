@@ -4,8 +4,8 @@ simbolo de partida = PROGRAM
 
 PROGRAM -> PROGRAM STATEMENT
 
-STATEMENT -> IDENTIFIER ASSIGN EXPRESSION 
-		   | LCURLY DECLARE STATEMENT_LIST RCURLY 
+STATEMENT -> IDENTIFIER '=' EXPRESSION 
+		   | '{' DECLARE STATEMENT_LIST '}' 
            | 'scan' 'identifier'
            | 'print' COMMA_LIST
            | 'println' COMMA_LIST
@@ -23,11 +23,11 @@ EXPRESSION -> 'integer'
 			| 'identifier'
 			| '(' EXPRESSION ')'
 			| '{' COMMA_LIST '}'
-			| EXPRESSION '+' EXPRESSION            *
-            | EXPRESSION '-' EXPRESSION            * 
-            | EXPRESSION '*' EXPRESSION            *
-            | EXPRESSION '/' EXPRESSION            *
-            | EXPRESSION '%' EXPRESSION            *
+			| EXPRESSION '+' EXPRESSION            
+            | EXPRESSION '-' EXPRESSION             
+            | EXPRESSION '*' EXPRESSION            
+            | EXPRESSION '/' EXPRESSION            
+            | EXPRESSION '%' EXPRESSION            
             | '-'EXPRESSION
             | EXPRESSION '==' EXPRESSION
             | EXPRESSION '/=' EXPRESSION
@@ -35,6 +35,9 @@ EXPRESSION -> 'integer'
 			| EXPRESSION '<=' EXPRESSION
 			| EXPRESSION '>' EXPRESSION
 			| EXPRESSION '>=' EXPRESSION
+			| EXPRESSION 'and' EXPRESSION
+			| EXPRESSION 'or' EXPRESSION
+			| 'not' EXPRESSION
 			| EXPRESSION '@' EXPRESSION
             | EXPRESSION '++' EXPRESSION
             | EXPRESSION '\' EXPRESSION

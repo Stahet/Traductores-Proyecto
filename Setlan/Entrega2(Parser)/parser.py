@@ -19,7 +19,6 @@ def p_program(p):
     'program : PROGRAM statement'
     p[0] = Program(p[2])
     
-
 def p_statement_assing(p):
     'statement : IDENTIFIER ASSIGN expression'
     p[0] = Assign(p[1],p[3])
@@ -70,11 +69,11 @@ def p_expression_bool(p):
     '''
     p[0] = Bool(p[1])
     
-def p_expression_(p):
+def p_expression_direction(p):
     '''direction : MIN
                   | MAX
     '''
-    p[0] = Bool(p[1])
+    p[0] = Direction(p[1])
     
 def p_expression_int(p):
     'expression : INTEGER'
@@ -92,9 +91,9 @@ def p_expression_parent(p):
     ''' expression : LPARENT expression RPARENT'''
     p[0] = Parenthesis(p[2])
 
-def p_expression_curly(p):
+def p_expression_set(p):
     ''' expression : LCURLY comma_list RCURLY'''
-    p[0] = Block(p[2])
+    p[0] = Set(p[2])
 
 def p_expression_op_set(p):
     '''expression : expression DOUBLEPLUS expression
@@ -145,12 +144,20 @@ def p_expression_op_bin_integer(p):
     p[0] = BinaryOP(p[1],expresiones.simbolos[p[2]]  + ' ' + p[2]\
                     ,p[3])
 
+def p_expression_op_bin_bool(p):
+    '''expression : expression AND expression
+                  | expression OR expression '''
+    
+    p[0] = BinaryOP(p[1],expresiones.reservadas[p[2]]  + ' ' + p[2]\
+                    ,p[3])
+    
 def p_expression_uminus(p):
     'expression : MINUS expression %prec UMINUS'
     p[0] = UnaryOP(p[1],p[2])
     
 def p_expression_op_unary(p):
-    '''expression : MAXVALUESET expression
+    '''expression : NOT expression
+                  | MAXVALUESET expression
                   | MINVALUESET expression
                   | SIZESET expression'''
     p[0] = UnaryOP(p[1],p[2])
@@ -250,7 +257,8 @@ precedence = (
 lexer = lexi.lex(module=expresiones)
 parser = yacc.yacc()
 
-file_input = open('casos_lexer/caso5.txt')
+#file_input = open('casos_lexer/caso1.txt')
+file_input = open('casos_parser/all.txt')
 content = file_input.read()
 file_input.close()
 

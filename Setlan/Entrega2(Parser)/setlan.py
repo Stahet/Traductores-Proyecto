@@ -41,7 +41,7 @@ def setlan(argv = None):
 
         
     expresiones.ERROR_ = False
- 
+
 if __name__ == '__main__':
         
     setlan(['setlan','casos_parser/caso1.txt'])
