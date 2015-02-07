@@ -5,7 +5,7 @@ Created on 2/2/2015
 '''
 
 
-    
+print "hola"    
 
 def parsear(entrada):
     producciones = {'S':('S+S','1')}
