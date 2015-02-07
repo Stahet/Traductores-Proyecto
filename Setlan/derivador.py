@@ -77,5 +77,5 @@ def parsear(entrada):
         print 'Orden:',orden    
         
 
-parsear('(x+y)*x-y*(z)') 
+parsear('(x+y)*x-y') 
 parsear('(x+y)') 
