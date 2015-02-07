@@ -2,28 +2,28 @@ Gramatica Para el Parser de SetLan
 
 simbolo de partida = PROGRAM
 
-PROGRAM -> PROGRAM STATEMENT
+PROGRAM -> 'program' STATEMENT
 
 STATEMENT -> IDENTIFIER '=' EXPRESSION 
-		   | '{' DECLARE STATEMENT_LIST '}' 
+           | '{' DECLARE STATEMENT_LIST '}' 
            | 'scan' 'identifier'
            | 'print' COMMA_LIST
            | 'println' COMMA_LIST
-		   | 'if' '('EXPRESSION')' STATEMENT 'else' STATEMENT
- 		   | 'if' '('EXPRESSION')' STATEMENT
+           | 'if' '('EXPRESSION')' STATEMENT 'else' STATEMENT
+           | 'if' '('EXPRESSION')' STATEMENT
            | 'for' 'identifier' DIRECTION EXPRESSION 'do' STATEMENT
            | 'repeat' STATEMENT 'while' '('EXPRESSION')' 'do' STATEMENT
            | 'while' '('EXPRESSION')' 'do' STATEMENT
            | 'repeat' STATEMENT 'while' '('EXPRESSION')'
                        
 EXPRESSION -> 'integer'
-			| 'false'
-			| 'true'
-			| 'string'
-			| 'identifier'
-			| '(' EXPRESSION ')'
-			| '{' COMMA_LIST '}'
-			| EXPRESSION '+' EXPRESSION            
+            | 'false'
+            | 'true'
+            | 'string'
+            | 'identifier'
+            | '(' EXPRESSION ')'
+            | '{' COMMA_LIST '}'
+            | EXPRESSION '+' EXPRESSION            
             | EXPRESSION '-' EXPRESSION             
             | EXPRESSION '*' EXPRESSION            
             | EXPRESSION '/' EXPRESSION            
@@ -32,13 +32,13 @@ EXPRESSION -> 'integer'
             | EXPRESSION '==' EXPRESSION
             | EXPRESSION '/=' EXPRESSION
             | EXPRESSION '<' EXPRESSION
-			| EXPRESSION '<=' EXPRESSION
-			| EXPRESSION '>' EXPRESSION
-			| EXPRESSION '>=' EXPRESSION
-			| EXPRESSION 'and' EXPRESSION
-			| EXPRESSION 'or' EXPRESSION
-			| 'not' EXPRESSION
-			| EXPRESSION '@' EXPRESSION
+            | EXPRESSION '<=' EXPRESSION
+            | EXPRESSION '>' EXPRESSION
+            | EXPRESSION '>=' EXPRESSION
+            | EXPRESSION 'and' EXPRESSION
+            | EXPRESSION 'or' EXPRESSION
+            | 'not' EXPRESSION
+            | EXPRESSION '@' EXPRESSION
             | EXPRESSION '++' EXPRESSION
             | EXPRESSION '\' EXPRESSION
             | EXPRESSION '><' EXPRESSION
@@ -55,8 +55,8 @@ COMMA_LIST -> EXPRESSION
             | EXPRESSION ',' COMMA_LIST
            
 STATEMENT_LIST -> STATEMENT ; STATEMENT_LIST
-				| EMPTY
-				
+                | EMPTY
+
 DECLARE -> 'using' DECLARE_LIST 'in'
          |  EMPTY
          
@@ -67,8 +67,8 @@ IDENTIFIER_LIST -> 'identifier'
 				 | 'identifier', IDENTIFIER_LIST
 			  
 DIRECTION -> 'min'
-		   | 'max'
-		           
+          | 'max'
+
 TYPE -> 'int'
 	  | 'bool'
 	  | 'set'
