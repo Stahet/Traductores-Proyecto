@@ -1,13 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-'''
-from  sys import argv as argumentos_consola
 '''
 Created on 4/2/2015
 
 @author: Jonnathan Ng    11-10199
          Manuel Gonzalez 11-10399
+    
+    Archivo principal del interpretador setlan
+    
+    Posee la gramatica pasada al parser
 '''
 
+
+from  sys import argv as argumentos_consola
 
 import ply.yacc as yacc
 import ply.lex as lexi
@@ -128,17 +133,17 @@ def p_expression_string(p):
 def p_expression_id(p):
     'expression : IDENTIFIER'
     p[0] = Identifier(p[1])
+    
+def p_expression_parent(p):
+    ''' expression : LPARENT expression RPARENT'''
+    p[0] = Parenthesis(p[2])   
 
 def p_type_data(p):
     '''type : INT
             | BOOL
             | SET
     '''
-    p[0] = p[1]   
-    
-def p_expression_parent(p):
-    ''' expression : LPARENT expression RPARENT'''
-    p[0] = Parenthesis(p[2])   
+    p[0] = p[1]
     
 ##############################     SETS      #################################
 def p_expression_set(p):
@@ -187,7 +192,6 @@ def p_expression_op_bin_compare(p):
 def p_expression_op_bin_bool(p):
     '''expression : expression AND expression
                   | expression OR expression '''
-    
     p[0] = BinaryOP(p[1], expresiones.reservadas[p[2]]+' '+p[2], p[3])
     
 def p_expression_op_set(p):
@@ -306,9 +310,9 @@ def setlan(argv = None):
         salir(str(e) + "\nError: Compruebe que el archivo existe o tiene permisos de lectura")
     
     
-    
     lexer.errores  = []
     program = parser.parse(content,lexer)
+    
     if lexer.errores:
         for error in lexer.errores:
             print error

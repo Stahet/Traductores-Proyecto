@@ -4,6 +4,8 @@ Created on 4/2/2015
 
 @author: Jonathan Ng 11-10199
          Manuel Gonzalez 11-10390
+    
+    Clases para la representación de un Arbol abstracto del lenguaje setlan
 '''
 
 class Expre:
@@ -70,6 +72,8 @@ class If(Expre):
         if self.statement_else is not None:
             self.print_with_indent('ELSE',level)
             self.statement_else.print_tree(level + 1)
+            
+        self.print_with_indent('END_IF',level)
 
 class For(Expre):
     
@@ -90,6 +94,7 @@ class For(Expre):
 
         self.print_with_indent('DO',level + 1)
         self.statement.print_tree(level + 2)
+        self.print_with_indent('END_FOR',level)
 
 class RepeatWhileDo(Expre):
     
@@ -124,6 +129,7 @@ class WhileDo(Expre):
 
         self.print_with_indent('DO',level)
         self.statement.print_tree(level + 1)
+        self.print_with_indent('END_WHILE',level)
 
 class RepeatWhile(Expre):
     

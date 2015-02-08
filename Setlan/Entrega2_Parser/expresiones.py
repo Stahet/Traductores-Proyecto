@@ -4,6 +4,8 @@ Created on 19/1/2015
 
 @author: Manuel Gonzalez 11-10390
          Jonathan Ng 11-10199
+    
+    Expresiones dadas al lexer para reconocer los tokens de setlan
 '''
 
 
@@ -18,7 +20,7 @@ reservadas = {
    'do'     : 'DO' ,
    'min'    : 'MIN',
    'max'    : 'MAX',
-   'repeat' :  'REPEAT',
+   'repeat' : 'REPEAT',
    'while'  : 'WHILE'  ,
    'and'    : 'AND'  ,
    'or'     : 'OR'   ,
