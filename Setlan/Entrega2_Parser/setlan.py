@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-'''
+from  sys import argv as argumentos_consola
 '''
 Created on 4/2/2015
 
@@ -259,37 +261,47 @@ precedence = (
     ("right", 'UMINUS'),
 )
 
-lexer = lexi.lex(module=expresiones)
-parser = yacc.yacc()
+def salir(mensaje = "ERROR: Ejecute el interprete de la forma: setlan <dir_archivo>",
+                codigo = -1):
+    print mensaje
+    exit(codigo)
 
-#file_input = open('casos_lexer/caso1.txt')
-#file_input = open('casos_parser/all.txt')
-#file_input = open('casos_parser/programa_vacio.txt')
-#file_input = open('casos_parser/fibonacci.txt')
-#file_input = open('casos_parser/usingInVacio.txt')
-#file_input = open('casos_parser/holaMundo.txt')
-#file_input = open('casos_parser/operacionesConConjuntos.txt')
-#file_input = open('casos_parser/precedenciaIF.txt')
-#file_input = open('casos_parser/errorDeSintaxis.txt')  # Falta Mejorar Manejo de errores
-#file_input = open('casos_parser/reglasDeAlcance.txt')
-file_input = open('casos_lexer/caso10.txt')
-
-content = file_input.read()
-content = content.expandtabs(5)
-file_input.close()
-
-
-lexer.errores  = []
-#lexer.input(content)
-program = parser.parse(content,lexer)
-if lexer.errores:
-    for error in lexer.errores:
-        print error
+def setlan(argv = None):
     
-elif parser_errores:
-    for error in parser_errores:
-        print error
-else:
-    program.print_tree()
+    if argv is None:
+        argv = argumentos_consola
+        
+    if len(argv) != 2:
+        salir()
+        
+    ruta_archivo = argv[1]
+ 
+    lexer = lexi.lex(module=expresiones)
+    parser = yacc.yacc()
     
-file_input.close()
+    try:
+        with open(ruta_archivo) as file_input:
+            content = file_input.read()
+            content = content.expandtabs(5)
+    except IOError as e :
+        salir(str(e) + "\nError: Compruebe que el archivo existe o tiene permisos de lectura")
+    
+    
+    
+    lexer.errores  = []
+    program = parser.parse(content,lexer)
+    if lexer.errores:
+        for error in lexer.errores:
+            print error
+        
+    elif parser_errores:
+        for error in parser_errores:
+            print error
+    else:
+        program.print_tree()
+        
+    file_input.close()
+
+
+if __name__ == '__main__':        
+    setlan()
