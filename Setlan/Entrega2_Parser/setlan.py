@@ -90,7 +90,7 @@ def p_expression_parent(p):
     p[0] = Parenthesis(p[2])
 
 def p_expression_set(p):
-    ''' expression : LCURLY comma_list RCURLY'''
+    ''' expression : LCURLY set_list RCURLY'''
     p[0] = Set(p[2])
 
 def p_expression_op_set(p):
@@ -160,6 +160,14 @@ def p_expression_op_unary(p):
                   | SIZESET expression'''
     p[0] = UnaryOP(p[1],p[2])
 
+def p_set_list(p):
+    '''set_list : comma_list'''
+    p[0] = p[1]
+
+def p_set_list_empty(p):
+    'set_list : empty'
+    p[0] = []
+
 def p_comma_list_expression(p):
     'comma_list : expression'
     p[0] = [p[1]]
@@ -220,7 +228,7 @@ def p_error(p):
         msg += 'No se esperaba Token "%s".'
         value = p.value
         try:
-            value = p.value[0]
+            value = p.value
         except TypeError:
             pass
         

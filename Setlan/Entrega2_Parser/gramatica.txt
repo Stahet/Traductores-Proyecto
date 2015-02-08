@@ -51,6 +51,9 @@ EXPRESSION -> 'integer'
             | <? EXPRESSION
             | $? EXPRESSION
 
+SET -> COMMA_LIST
+     | EMPTY
+
 COMMA_LIST -> EXPRESSION
             | EXPRESSION ',' COMMA_LIST
            
@@ -64,11 +67,11 @@ DECLARE_LIST -> TYPE IDENTIFIER_LIST; DECLARE_LIST
               | EMPTY
               
 IDENTIFIER_LIST -> 'identifier'
-				 | 'identifier', IDENTIFIER_LIST
+                 | 'identifier', IDENTIFIER_LIST
 			  
 DIRECTION -> 'min'
-          | 'max'
+           | 'max'
 
 TYPE -> 'int'
 	  | 'bool'
-	  | 'set'
+      | 'set'
