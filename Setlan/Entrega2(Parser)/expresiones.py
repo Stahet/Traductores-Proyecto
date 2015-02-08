@@ -6,8 +6,6 @@ Created on 19/1/2015
          Jonathan Ng 11-10199
 '''
 
-ERROR_ = False
-LAST_FILE = ""
 
 # Palabras reservadas
 reservadas = {
@@ -30,10 +28,7 @@ reservadas = {
    'true'   : 'TRUE' ,
    'scan'   : 'SCAN' ,
    'print'  : 'PRINT',
-   'println': 'PRINTLN'
-}
-
-tipos_datos = {
+   'println': 'PRINTLN',
    'int'    : 'INT'  , 
    'set'    : 'SET'  ,
    'bool'   : 'BOOL' 
@@ -80,9 +75,9 @@ simbolos_igual = {
    '/=' :'UNEQUAL',
 }
 
-tokens = ['IDENTIFIER', 'INTEGER','DOUBLEPLUS','ARROW','STRING','INTERSECCION']  + list(reservadas.values()) + \
-         list(simbolos.values()) + list(op_mapeados.values()) +  list(tipos_datos.values()) + \
-         list(unarios_conjuntos.values()) + list(simbolos_igual.values())
+tokens = ['IDENTIFIER', 'INTEGER','DOUBLEPLUS','ARROW','STRING','INTERSECCION']  + reservadas.values() + \
+         simbolos.values() + op_mapeados.values()  + \
+         unarios_conjuntos.values() + simbolos_igual.values()
 
 
 t_ignore = ' \t'
@@ -94,7 +89,6 @@ def t_STRING(t):
 def t_IDENTIFIER(t):
     r'[a-zA-Z_][a-zA-Z\d_]*'    
     valor = reservadas.get(t.value,'IDENTIFIER')
-    valor = tipos_datos.get(t.value, valor)
     t.type = valor    # Check for reserved words
     return t
 
@@ -145,12 +139,13 @@ def t_COMMENTARIO(t):
 
 def t_nueva_linea(t):
     r'\n+'
-    t.lexer.lineno += len(t.value)    
+    t.lexer.lineno += len(t.value)
 
 # Encuentra la columna 
 #     token instancia del token    
 def obtener_columna(token):
     'Encuentra la columna del token'
+    
     ultimo_salto = token.lexer.lexdata.rfind('\n',0,token.lexpos)  # ultima posicion del salto de linea
 
     if ultimo_salto < 0:
@@ -162,7 +157,7 @@ def obtener_columna(token):
 
 # Manejador de errores
 def t_error(t):
-    global ERROR_
-    print 'Error: se encontró  un caracter inesperado "%s" en la línea %d, Columna %d.' % (t.value[0],t.lineno,obtener_columna(t)) 
-    ERROR_ = True
+    mensage = 'Error: se encontró  un caracter inesperado "%s" en la línea %d, Columna %d.' 
+    datos = (t.value[0],t.lineno,obtener_columna(t))
     t.lexer.skip(1)
+    t.lexer.errores.append(mensage % datos)

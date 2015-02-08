@@ -34,13 +34,13 @@ def setlan(argv = None):
         salir()
         
     ruta_archivo = argv[1]
-    analizar_archivo(ruta_archivo)
+    ana = analizar_archivo(ruta_archivo)
     expresiones.LAST_FILE = ruta_archivo
-    if not expresiones.ERROR_:
-        import parser
+    #if not ana.errores:
+    #   import parser
 
         
-    expresiones.ERROR_ = False
+    #expresiones.ERROR_ = False
 
 if __name__ == '__main__':
         

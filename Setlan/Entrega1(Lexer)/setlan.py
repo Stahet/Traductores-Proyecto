@@ -12,10 +12,10 @@ def setlan():
     
     if len(argumentos_consola) != 2:
         print "ERROR: Ejecute el interprete de la forma: setlan <dir_archivo>"
-        exit(-1)
+        #exit(-1)
     
     try:
-        with open(argumentos_consola[1]) as entrada:
+        with open('casos_lexer/caso10.txt') as entrada:
             analizador.input(entrada.read())
             entrada.close()
     except IOError as e :

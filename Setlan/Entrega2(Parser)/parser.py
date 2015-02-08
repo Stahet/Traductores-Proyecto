@@ -7,13 +7,12 @@ Created on 4/2/2015
 '''
 import ply.yacc as yacc
 import ply.lex as lexi
-
 import expresiones
-
 from AST import *
 
+
 tokens = expresiones.tokens
-_error_parser = False
+parser_errores = []
 
 def p_program(p):
     'program : PROGRAM statement'
@@ -214,19 +213,23 @@ def p_type_data(p):
     p[0] = p[1]
     
 def p_error(p):
-    global _error_parser
+    global parser_errores
+    if parser_errores: return
     
-    if _error_parser: return
-    
-    try:
-        print 'Error: se encontró  un caracter inesperado "%s" en la línea %d, Columna %d.' % (p.value[0] , p.lineno , expresiones.obtener_columna(p))
-    except TypeError:
-        print 'Error: se encontró  un caracter inesperado "%s" en la línea %d, Columna %d.' % (p.value , p.lineno , expresiones.obtener_columna(p))
-    #===========================================================================
-    # print "Error de Sintaxis en la linea %d, Columna %d" %  (p.lineno , expresiones.obtener_columna(p))
-    # print "Token Inesperado: ","\""+str(p.value)+"\""
-    #===========================================================================
-    _error_parser = True
+    if p:
+        msg = 'Error de síntaxis en la línea %d , columna %d. '
+        msg += 'Token inesperado "%s".'
+        value = p.value
+        try:
+            value = p.value[0]
+        except TypeError:
+            pass
+        
+        msg = msg % (p.lineno , expresiones.obtener_columna(p) , value)
+    else:
+        msg = 'Error de síntasis: Alcanzado final de archivo inesperadamente.'
+
+    parser_errores.append(msg)
     
 # Precedence defined for expressions
 precedence = (
@@ -268,16 +271,25 @@ parser = yacc.yacc()
 #file_input = open('casos_parser/operacionesConConjuntos.txt')
 #file_input = open('casos_parser/precedenciaIF.txt')
 #file_input = open('casos_parser/errorDeSintaxis.txt')  # Falta Mejorar Manejo de errores
-file_input = open('casos_parser/reglasDeAlcance.txt')
+#file_input = open('casos_parser/reglasDeAlcance.txt')
+file_input = open('casos_lexer/caso10.txt')
 
 content = file_input.read()
+content = content.expandtabs(5)
 file_input.close()
 
+
+lexer.errores  = []
 #lexer.input(content)
-if expresiones.ERROR_:
-    exit(-1)
+program = parser.parse(content,lexer)
+if lexer.errores:
+    for error in lexer.errores:
+        print error
     
-program = parser.parse(content)
-if not _error_parser:
+elif parser_errores:
+    for error in parser_errores:
+        print error
+else:
     program.print_tree()
+    
 file_input.close()
