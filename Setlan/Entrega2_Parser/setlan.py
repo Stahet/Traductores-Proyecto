@@ -223,7 +223,7 @@ def p_error(p):
         msg += 'Token inesperado "%s".'
         value = p.value
         try:
-            value = p.value[0]
+            value = p.value
         except TypeError:
             pass
         
