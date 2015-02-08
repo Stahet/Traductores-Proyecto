@@ -327,4 +327,4 @@ def setlan(argv = None):
 
 
 if __name__ == '__main__':        
-    setlan(['setlan','casos_parser/precedenciaIF.txt'])
+    setlan()
