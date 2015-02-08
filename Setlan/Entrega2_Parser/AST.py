@@ -193,13 +193,13 @@ class BinaryOP(Expre):
 
 class UnaryOP(Expre):
     
-    def __init__(self, type_op,op1):
+    def __init__(self, type_op,expre1):
         self.type_op = type_op
-        self.op1  = op1
+        self.expre1  = expre1
             
     def print_tree(self,level):   
         self.print_with_indent(self.type_op , level)
-        self.op1.print_tree(level + 1)
+        self.expre1.print_tree(level + 1)
     
 class DeclareList(Expre):
     

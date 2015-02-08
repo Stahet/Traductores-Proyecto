@@ -50,16 +50,7 @@ EXPRESSION -> 'integer'
             | >? EXPRESSION
             | <? EXPRESSION
             | $? EXPRESSION
-
-SET -> COMMA_LIST
-     | EMPTY
-
-COMMA_LIST -> EXPRESSION
-            | EXPRESSION ',' COMMA_LIST
-           
-STATEMENT_LIST -> STATEMENT ; STATEMENT_LIST
-                | EMPTY
-
+            
 DECLARE -> 'using' DECLARE_LIST 'in'
          |  EMPTY
          
@@ -69,9 +60,18 @@ DECLARE_LIST -> TYPE IDENTIFIER_LIST; DECLARE_LIST
 IDENTIFIER_LIST -> 'identifier'
                  | 'identifier', IDENTIFIER_LIST
 			  
+STATEMENT_LIST -> STATEMENT ; STATEMENT_LIST
+                | EMPTY
+                
+SET -> COMMA_LIST
+     | EMPTY
+
+COMMA_LIST -> EXPRESSION
+            | EXPRESSION ',' COMMA_LIST
+            
 DIRECTION -> 'min'
            | 'max'
 
 TYPE -> 'int'
-	  | 'bool'
+      | 'bool'
       | 'set'

@@ -13,7 +13,6 @@ reservadas = {
    'using'  : 'USING' ,
    'in'     : 'IN',
    'if'     : 'IF',
-   'then'   : 'THEN' ,
    'else'   : 'ELSE' ,
    'for'    : 'FOR'  ,
    'do'     : 'DO' ,
@@ -75,7 +74,7 @@ simbolos_igual = {
    '/=' :'UNEQUAL',
 }
 
-tokens = ['IDENTIFIER', 'INTEGER','DOUBLEPLUS','ARROW','STRING','INTERSECCION']  + reservadas.values() + \
+tokens = ['IDENTIFIER', 'INTEGER','DOUBLEPLUS','STRING','INTERSECCION']  + reservadas.values() + \
          simbolos.values() + op_mapeados.values()  + \
          unarios_conjuntos.values() + simbolos_igual.values()
 
@@ -105,10 +104,6 @@ def t_MAPEADO(t):
 
 def t_INTERSECCION(t):        
     r'><'
-    return t
-
-def t_ARROW(t):
-    r'->'
     return t
 
 def t_SIMBOLOS_CON_IGUAL(t):
