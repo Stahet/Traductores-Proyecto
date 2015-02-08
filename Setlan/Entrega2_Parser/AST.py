@@ -148,12 +148,8 @@ class Print(Expre):
         
     def print_tree(self,level): 
         self.print_with_indent(self.type, level)
-
         for var in self.lista_to_print:
-            if var[0] != '\n':
-                var[0].print_tree(level + 1)
-            
-            print " " * self.get_indent_number(level + 1)
+            var.print_tree(level + 1)
 
 class Block(Expre):
     

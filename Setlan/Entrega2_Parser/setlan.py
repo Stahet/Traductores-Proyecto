@@ -33,12 +33,9 @@ def p_statement_function_scan(p):
     p[0] = Scan(Identifier(p[2]))
     
 def p_statement_function_print(p):
-    'statement : PRINT comma_list'
-    p[0] = Print(p[1],[p[2]])
-    
-def p_statement_function_println(p):
-    'statement : PRINTLN comma_list'
-    p[0] = Print(p[1],[p[2], '\n'])
+    '''statement : PRINT comma_list
+                 | PRINTLN comma_list'''
+    p[0] = Print(p[1],p[2])
     
 def p_statement_if(p):
     '''statement : IF LPARENT expression RPARENT statement ELSE statement
@@ -220,7 +217,7 @@ def p_error(p):
     
     if p:
         msg = 'Error de síntaxis en la línea %d , columna %d. '
-        msg += 'Token inesperado "%s".'
+        msg += 'No se esperaba Token "%s".'
         value = p.value
         try:
             value = p.value[0]
@@ -229,7 +226,7 @@ def p_error(p):
         
         msg = msg % (p.lineno , expresiones.obtener_columna(p) , value)
     else:
-        msg = 'Error de síntasis: Alcanzado final de archivo inesperadamente.'
+        msg = 'Error de síntasis: No se esperaba final de archivo.'
 
     parser_errores.append(msg)
     
@@ -304,4 +301,4 @@ def setlan(argv = None):
 
 
 if __name__ == '__main__':        
-    setlan()
+    setlan(['setlan','casos_parser/caso1.txt'])
