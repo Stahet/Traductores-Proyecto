@@ -1,0 +1,8 @@
+program {
+
+	using
+ 		set s;
+		int a,b;
+ 	in
+	println "hola" , "asd",s,"\n";
+}

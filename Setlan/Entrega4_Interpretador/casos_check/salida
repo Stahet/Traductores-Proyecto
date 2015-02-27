@@ -1,0 +1,12 @@
+
+#Error en la linea 2, columna 22: La variable 'a' ya ha sido declarada en este alcance.
+#Error en la linea 2, columna 33: La variable 'b' ya ha sido declarada en este alcance.
+#Error en la linea 16, columna 9: La variable 'i' aun no ha sido declarada.
+Error en la linea -1, columna -1547: La variable 'i' aun no ha sido declarada.
+#Error en la linea 4, columna 28: 'SCAN' solo se puede usar para variables de tipo 'int' o 'bool' . 'a' es de tipo 'set'
+#Error en la linea 6, columna 16: Operando '+' no sirve con operandos de tipo 'set' y 'int'.
+#Error en la linea 10, columna 5: La expresion de un for debe ser detipo 'set' no de tipo 'int'.
+#Error en la linea 11, columna 9: La variable i es de solo lectura.
+#Error en la linea 13, columna 9: La variable i es de solo lectura.
+Error en la linea 16, columna 5: Instrucción 'if' espera expresiones de tipo 'bool', no de tipo ''.
+#Error en la linea 23, columna 19: Operando '+' no sirve con operandos de tipo 'bool' y 'int'.

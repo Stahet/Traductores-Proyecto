@@ -1,0 +1,10 @@
+program{
+    using
+        int x;
+        set s;
+        set w;
+    in
+    s = {1};
+    w = {1,2,3};
+    x = {};
+}

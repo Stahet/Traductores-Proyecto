@@ -1,0 +1,12 @@
+program{
+	using
+		set a; int s;int i;
+	in
+	 while(a)do{
+	 	i = i + a;
+	 };
+	 
+	 while(a<5)do{
+	 	a = a+1;
+	 };
+}
