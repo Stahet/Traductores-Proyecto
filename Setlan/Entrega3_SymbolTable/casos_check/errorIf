@@ -1,0 +1,13 @@
+program{
+	using
+		int i; set a;
+	in
+	if (i > 5){
+		scan a;
+		print i;
+	};
+	
+	if (4<+>a)
+		print 4<+>8
+	;
+}

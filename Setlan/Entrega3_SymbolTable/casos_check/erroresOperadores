@@ -1,0 +1,13 @@
+program{
+	using
+		set a; int s;
+	in
+	 for i min s do {
+	 	println i;
+ 		s = s ++ {i * 2}; # unión de conjuntos
+	 };
+	 while(4<5)do{
+	 	i = i + 1;
+	 };
+    
+}

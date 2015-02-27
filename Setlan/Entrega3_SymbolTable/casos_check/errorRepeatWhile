@@ -1,0 +1,20 @@
+program{
+	using
+		set a,b; 
+		int i;
+	in
+	repeat
+		a = a + i
+	while(true)do{
+		a = 4<+>a;
+		b = i;
+	};
+	
+	repeat
+		a = i
+	while(a < b)do{
+		i = i+1;
+		a = {4};
+		a = 4;
+	};
+}

@@ -1,0 +1,97 @@
+PROGRAM
+    BLOCK
+        USING
+            int i
+            int j
+            int k
+            bool b
+            bool c
+            set s
+        IN
+        IF
+            condition
+                bool
+                    true
+            THEN
+                BLOCK
+                    USING
+                        set i
+                        bool b
+                    IN
+                    ASSIGN
+                        identifier
+                            i
+                        value
+                            set
+                                int
+                                    1
+                                int
+                                    2
+                                int
+                                    3
+                    ASSIGN
+                        identifier
+                            s
+                        value
+                            MAPPLUS <+>
+                                int
+                                    2
+                                identifier
+                                    s
+                    FOR
+                        identifier
+                            i
+                        direction
+                            min
+                        IN
+                        MAPPLUS <+>
+                            int
+                                2
+                            identifier
+                                s
+                        DO
+                            BLOCK
+                                USING
+                                    bool j
+                                IN
+                                ASSIGN
+                                    identifier
+                                        j
+                                    value
+                                        EQUALBOOL ==
+                                            identifier
+                                                i
+                                            int
+                                                1
+                            BLOCK_END
+                    END_FOR
+                BLOCK_END
+        ELSE
+            BLOCK
+                USING
+                    bool i
+                IN
+            BLOCK_END
+        END_IF
+    BLOCK_END
+SCOPE
+   Variable: i | Type: int | Value: 0
+   Variable: j | Type: int | Value: 0
+   Variable: k | Type: int | Value: 0
+   Variable: b | Type: bool | Value: False
+   Variable: c | Type: bool | Value: False
+   Variable: s | Type: set | Value: {}
+   SCOPE
+      Variable: i | Type: set | Value: {}
+      Variable: b | Type: bool | Value: False
+      SCOPE
+         Variable: i | Type: int | Value: 0
+         SCOPE
+            Variable: j | Type: bool | Value: False
+         END_SCOPE
+      END_SCOPE
+   END_SCOPE
+   SCOPE
+      Variable: i | Type: bool | Value: False
+   END_SCOPE
+END_SCOPE
