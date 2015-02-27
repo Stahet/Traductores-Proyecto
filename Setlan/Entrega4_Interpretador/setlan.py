@@ -23,7 +23,6 @@ def setlan(argv = None):
     if len(argv) < 2:
         salir()
      
-
     ruta_archivo = argv[1]
     try:
         with open(ruta_archivo) as file_input:
@@ -70,4 +69,4 @@ def salir(mensaje = "ERROR: Ejecute el interprete de la forma: setlan <dir_archi
     exit(codigo)    
              
 if __name__ == '__main__':
-    setlan()
+    setlan(["setlan","casos_parser/holaMundo.txt","-t","-s","-a"])
