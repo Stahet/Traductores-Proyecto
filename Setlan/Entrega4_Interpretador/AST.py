@@ -69,7 +69,7 @@ class Scan(Expre):
                                     (self.var_to_read.name,type_var))
                                 )
         
-class Assign(Expre): ###### REvisar
+class Assign(Expre):
     
     def __init__(self, identifier,expresion):
         Expre.__init__(self)
@@ -337,7 +337,6 @@ class BinaryOP(Expre):
         self.expre1  = expre1
         self.type_op = type_op
         self.expre2  = expre2
-        self.context_parent = -1
         
     def print_tree(self,level):  
         self.print_with_indent(self.type_op, level)
@@ -381,7 +380,7 @@ class BinaryOpEquals(BinaryOP):
              
         return "bool"
 
-class BinaryOpLessGreater(BinaryOP):#######Listo
+class BinaryOpLessGreater(BinaryOP):
     '''
     Binary Compare Operator 
     ("LESSTHAN <","LESSOREQUALTHAN <=","GREATERTHAN >","GREATEROREQUALTHAN >=")
@@ -525,7 +524,7 @@ class DeclareList(Expre):
         for declaration_vars in self.declared_list:
             declaration_vars.check_types(symbolTable)
     
-class TypeList(Expre): ### REVISAR MANEJO DE ERRORES EN SYMBOL TO ADD
+class TypeList(Expre):
     
     def __init__(self,data_type,id_list):
         Expre.__init__(self)
@@ -538,9 +537,9 @@ class TypeList(Expre): ### REVISAR MANEJO DE ERRORES EN SYMBOL TO ADD
     
     def check_types(self, symbolTable):
         for var in self.id_list:
-            #symbol_to_add = Symbol(var.name,self.data_type,default,'i/o',var)
-            if symbolTable.contains(var.name):  ######################## REVISAR MANEJO DE ERRORES
-                symbol = symbolTable.lookup(var.name)# Buscar var para saber numero de linea ya declarada
+            
+            if symbolTable.contains(var.name):
+                symbol = symbolTable.lookup(var.name)
                 static_errors.append((var.lineno,var.lexpos,
                                       "La variable '%s' ya ha sido declarada en este alcance " % (var.name) + \
                                       'en la linea %d, columna %d con tipo %s.' % (symbol.ref.lineno,\
@@ -602,7 +601,6 @@ class Integer(Expre):
         Expre.__init__(self)
         self.type = 'int'
         self.value = value
-        self.context_parent = -1
         
     def print_tree(self , level):  
         self.print_with_indent(self.type, level)
@@ -625,7 +623,7 @@ class String(Expre):
     def check_types(self, symbolTable):
         return self.type
 
-class Identifier(Expre):  #### Revisar manejo de errores
+class Identifier(Expre):
     
     def __init__(self , name):        
         Expre.__init__(self)

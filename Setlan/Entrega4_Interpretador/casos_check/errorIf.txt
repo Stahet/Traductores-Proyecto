@@ -1,0 +1,3 @@
+Error en la linea 6, columna 14: 'SCAN' solo se puede usar para variables de tipo 'int' o 'bool' . 'a' es de tipo 'set'
+Error en la linea 10, columna 10: Instrucción 'if' espera expresiones de tipo 'bool', no de tipo 'set'.
+Error en la linea 11, columna 16: Operando '<+>' no sirve con operandos de tipo 'int' y 'int'.

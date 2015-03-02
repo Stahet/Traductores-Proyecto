@@ -14,7 +14,7 @@ program {
  		# nótese que al lado izquierdo del `min`, `i` es int
  		# y al lado derecho es set
 	for i min 2 <+> i do {
-		using bool i; in # una `i` más
+		using bool j; in # una `i` más
 
 	};
 	} else {

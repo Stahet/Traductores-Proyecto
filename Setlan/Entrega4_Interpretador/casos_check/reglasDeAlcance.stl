@@ -14,7 +14,7 @@ program{
 				bool ah,hah;
 			in		
 			x = ah;
-			#print as;
+			print as;
 			ah = 3;
 			ah = a;
 			scan a;
