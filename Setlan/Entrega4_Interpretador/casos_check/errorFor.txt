@@ -2,12 +2,11 @@ SCOPE
    Variable: s | Type: set | Value: {}
    SCOPE
       Variable: i | Type: int | Value: 0
-      SCOPE
-      END_SCOPE
    END_SCOPE
    SCOPE
       Variable: i | Type: int | Value: 0
       SCOPE
+         Variable: i | Type: set | Value: {}
          SCOPE
             Variable: i | Type: set | Value: {}
          END_SCOPE

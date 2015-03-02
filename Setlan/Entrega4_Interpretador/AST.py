@@ -304,14 +304,16 @@ class Block(Expre):
         self.print_with_indent("BLOCK_END", level)
     
     def check_types(self, symbolTable):    
-        symbolTable.add_scope()
-        if self.declare is not None:
-            self.declare.check_types(symbolTable)
+       
+        if self.declare: # Vemos si el bloque tiene declaraciones
+            symbolTable.add_scope() # Si el bloque tiene declaraciones, se agrega una nueva tabla
+            self.declare.check_types(symbolTable)            
         
         for stat in self.list_st:
             stat.check_types(symbolTable)
         
-        symbolTable.delete_scope() # Una vez salido del contexto del bloque, se desempila la tabla
+        if self.declare: # Si hubo declaraciones, se desempila una tabla
+            symbolTable.delete_scope()
     
 class Parenthesis(Expre):
     

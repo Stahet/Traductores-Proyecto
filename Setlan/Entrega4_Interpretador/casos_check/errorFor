@@ -6,6 +6,10 @@ program{
     	print i;
     };
     for i min s do{
+    	using 
+    		set i;
+    	in
+    	i = i ++ s;
     	{using set i; in
     		i = i++s;
     	};
