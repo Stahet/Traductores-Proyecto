@@ -1,0 +1,26 @@
+PROGRAM
+    BLOCK
+        USING
+            int a
+            int b
+            set q
+            set w
+            set e
+            set r
+            set t
+            set y
+            set u
+            int a
+            set q
+            int b
+        IN
+        ASSIGN
+            identifier
+                a
+            value
+                int
+                    1
+    BLOCK_END
+Error en la linea 5, columna 13: La variable 'a' ya ha sido declarada en este alcance.
+Error en la linea 6, columna 13: La variable 'q' ya ha sido declarada en este alcance.
+Error en la linea 7, columna 13: La variable 'b' ya ha sido declarada en este alcance.

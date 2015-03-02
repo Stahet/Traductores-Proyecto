@@ -36,7 +36,7 @@ def setlan(argv = None):
     lexer = expresiones.build_lexer()           # Construir Lexer
     tree = parse.build_parser(content,lexer) # Contruimos el Parser
     
-    tree.fetch_symbols() # Hacemos el chequeo estatico
+    tree.check_types() # Hacemos el chequeo estatico
     
     # Impresion de errores
     if expresiones.lexer_errors:
@@ -72,6 +72,8 @@ def salir(mensaje = "ERROR: Ejecute el interprete de la forma: setlan <dir_archi
     exit(codigo)    
              
 if __name__ == '__main__':
-    setlan(["setlan","casos_check/errorRepeatWhile","-t","-s","-a"])
-    #setlan(["setlan","casos_check/test1.stl","-t","-s","-a"])
+    #setlan(["setlan","casos_check/terrible.stl","-t","-s","-a"])
+    #setlan(["setlan","casos_check/errorWhile","-t","-s","-a"])
+    #setlan(["setlan","casos_check/escrituraIterador.stl","-t","-s","-a"])
+    setlan(["setlan","casos_check/3variables.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/test2EnunciadoErrorTipo.stl","-t","-s","-a"])

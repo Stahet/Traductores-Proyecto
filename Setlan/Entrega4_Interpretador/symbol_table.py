@@ -44,7 +44,7 @@ class SymbolTable:
         #Impresion para el alcance
         level = len(self.tableStack) # Nivel de alcance
         cad_indent = "   "*level
-        salida = "   "
+        salida = ""
         salida += "Variable: " + var.name
         salida += " | Type: " + var.type 
         salida += " | Value: "
@@ -87,35 +87,33 @@ class SymbolTable:
             if name in table.keys():
                 return table[name]
         
-        return None # Retorna en caso de no conseguir la variable
+        return None # Retorna None en caso de no conseguir la variable
     
-    def print_table(self, table):
-        
-        level = len(self.tableStack) # Nivel de alcance
-        cad_indent = "   "*level
-        print cad_indent + "SCOPE"
-        
-        for var in table.values():
-            salida = "   "
-            salida += "Variable: " + var.name
-            salida += " | Type: " + var.type 
-            salida += " | Value: "
-            if var.type == "int" or var.type == "bool":
-                salida += str(var.value)
-            elif var.type == "set":
-                salida += "{"
-                for i,value in enumerate(var.value):
-                    salida += str(value)
-                    if i != len(var.value) - 1:
-                        salida += ","
-                salida += "}"
-                
-            print cad_indent + salida    
-        #print cad_indent + "END_SCOPE"
-    
-    #Solo para probar no definitivo
-    def append_error(self,sms):
-        self.errors.append(sms)
+    #===========================================================================
+    # def print_table(self, table):
+    #     
+    #     level = len(self.tableStack) # Nivel de alcance
+    #     cad_indent = "   "*level
+    #     print cad_indent + "SCOPE"
+    #     
+    #     for var in table.values():
+    #         salida = "   "
+    #         salida += "Variable: " + var.name
+    #         salida += " | Type: " + var.type 
+    #         salida += " | Value: "
+    #         if var.type == "int" or var.type == "bool":
+    #             salida += str(var.value)
+    #         elif var.type == "set":
+    #             salida += "{"
+    #             for i,value in enumerate(var.value):
+    #                 salida += str(value)
+    #                 if i != len(var.value) - 1:
+    #                     salida += ","
+    #             salida += "}"
+    #             
+    #         print cad_indent + salida    
+    #     print cad_indent + "END_SCOPE"
+    #===========================================================================
           
 class Symbol:
     # Lista de valores por defecto para cada tipo

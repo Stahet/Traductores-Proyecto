@@ -29,9 +29,6 @@ class Expre:
     def print_with_indent(self,cad,level):
         print self.get_ident_str(level) + cad
     
-    def fetch_symbols(self, symbolTable):
-        pass
-    
     def check_types(self,symbols):
         pass
 
@@ -47,13 +44,9 @@ class Program(Expre):
         self.print_with_indent(self.type, level)
         self.statement.print_tree(level + 1)
     
-    def fetch_symbols(self):
-        symbolTable = SymbolTable()
-        self.symbolTable = symbolTable
-        self.statement.fetch_symbols(symbolTable)
-        
     def check_types(self):
-        self.statement.check_types(self.symbols)
+        self.symbolTable = SymbolTable()
+        self.statement.check_types(self.symbolTable)
         
 class Scan(Expre):
     
@@ -66,18 +59,17 @@ class Scan(Expre):
         self.print_with_indent(self.type,level)
         self.var_to_read.print_tree(level + 1)
 
-    def fetch_symbols(self, symbolTable):
-        self.var_to_read.fetch_symbols(symbolTable)
-    
-    def check_types(self, symbols):
-        type_var = self.var_to_read.check_types(symbols)
+    def check_types(self, symbolTable):
+        type_var = self.var_to_read.check_types(symbolTable)
         if type_var == "": return ""
         
         if type_var not in ('int','bool'):
-            symbols.append_error((self.var_to_read.lineno,self.var_to_read.lexpos,"'SCAN' solo se puede usar para variables de tipo 'int' o 'bool' . '%s' es de tipo '%s'" % \
-                            (self.var_to_read.name,type_var)))
+            static_errors.append((self.var_to_read.lineno,self.var_to_read.lexpos,
+                                "'SCAN' solo se puede usar para variables de tipo 'int' o 'bool' . '%s' es de tipo '%s'" % \
+                                    (self.var_to_read.name,type_var))
+                                )
         
-class Assign(Expre):
+class Assign(Expre): ###### REvisar
     
     def __init__(self, identifier,expresion):
         Expre.__init__(self)
@@ -95,19 +87,19 @@ class Assign(Expre):
         self.id.fetch_symbols(symbolTable)
         self.expresion.fetch_symbols(symbolTable)
     
-    def check_types(self, symbols):
-        symbol = symbols.lookup(self.id.name,self.context_parent)
+    def check_types(self, symbolTable):
+        symbol = symbolTable.lookup(self.id.name)
         if symbol is not None:
-            type_expres = self.expresion.check_types(symbols)
+            type_expres = self.expresion.check_types(symbolTable)
             
             if type_expres ==  "" : return ""
 
             if symbol.type != type_expres:
-                symbols.append_error((self.lineno,self.lexpos,
+                static_errors.append((self.lineno,self.lexpos,
                                       "No se puede asignar expresiones de tipo '%s' a la variable '%s' de tipo '%s'." % (type_expres,self.id.name,symbol.type)))
             
             if "o" not in symbol.type_edit:
-                symbols.append_error((self.id.lineno,self.id.lexpos,
+                static_errors.append((self.id.lineno,self.id.lexpos,
                                       "La variable %s es de solo lectura." % (self.id.name)))
                 
                     
@@ -135,28 +127,22 @@ class If(Expre):
         self.print_with_indent('END_IF',level)
     
         
-    def fetch_symbols(self, symbolTable):        
-        self.condition.fetch_symbols(symbolTable)
-        self.statement_if.fetch_symbols(symbolTable)
-        
-        if self.statement_else is not None:
-            self.statement_else.fetch_symbols(symbolTable)
-            
-    def check_types(self,symbols):
-        type_cond = self.condition.check_types(symbols)
+    def check_types(self, symbolTable):        
+        type_cond = self.condition.check_types(symbolTable)
+ 
         if  type_cond != "bool":
             if type_cond == "":
-                symbols.append_error((self.lineno,self.lexpos,
+                static_errors.append((self.condition.lineno,self.condition.lexpos,
                                   "Instrucción 'if' espera expresiones de tipo 'bool'."))
             else:
-                symbols.append_error((self.lineno,self.lexpos,
+                static_errors.append((self.condition.lineno,self.condition.lexpos,
                                   "Instrucción 'if' espera expresiones de tipo 'bool', no de tipo '%s'." % type_cond))
         
-        self.statement_if.check_types(symbols)
+        self.statement_if.check_types(symbolTable)
         if self.statement_else is not None:
-            self.statement_else.check_types(symbols)
+            self.statement_else.check_types(symbolTable)
 
-class For(Expre): ### REVISAR ESTA CLASE
+class For(Expre):
     
     def __init__(self,identifier,direction, expression , statement):
         Expre.__init__(self)
@@ -178,28 +164,22 @@ class For(Expre): ### REVISAR ESTA CLASE
         self.statement.print_tree(level + 2)
         self.print_with_indent('END_FOR',level)
     
-    def fetch_symbols(self, symbolTable):
+    def check_types(self, symbolTable):
         symbolTable.add_scope() # Crea un nuevo alcance
-        # Creacion de nuevo simbolo de solo lectura
-        symbolTable.insert(self.identifier.name,"int","i")
+        symbolTable.insert(self.identifier.name,"int","i") # Creacion simbolo de solo lectura
         
-        self.identifier.fetch_symbols(symbolTable) # Esto hay que hacerlo??
-        self.expression.fetch_symbols(symbolTable)
-        self.statement.fetch_symbols(symbolTable)
-        
-        symbolTable.delete_scope() # Eliminar alcance una vez salida del For
-    
-    def check_types(self, symbols):
-        type_expre = self.expression.check_types(symbols)
+        self.identifier.check_types(symbolTable) # Esto hay que hacerlo??
+        type_expre = self.expression.check_types(symbolTable)
         if type_expre != "set":
             if type_expre == "":
-                symbols.append_error((self.lineno,self.lexpos,"La expresion de un for debe ser de tipo 'set'"))
+                static_errors.append((self.expression.lineno,self.expression.lexpos,"La expresion de un for debe ser de tipo 'set'"))
             else:                          
-                symbols.append_error((self.lineno,self.lexpos,"La expresion de un for debe ser de " +\
+                static_errors.append((self.expression.lineno,self.expression.lexpos,"La expresion de un for debe ser de " +\
                                  "tipo 'set' no de tipo '%s'." % type_expre))
                 
-        self.statement.check_types(symbols)
-
+        self.statement.check_types(symbolTable)
+        symbolTable.delete_scope() # Eliminar alcance saliendo del For
+        
 class RepeatWhileDo(Expre):
     
     def __init__(self,statement1,expression,statement2):
@@ -219,24 +199,19 @@ class RepeatWhileDo(Expre):
 
         self.print_with_indent('DO',level)
         self.statement2.print_tree(level + 1)
+      
+    def check_types(self, symbolTable):
+        self.statement1.check_types(symbolTable)
         
-    def fetch_symbols(self, symbolTable):
-        self.statement1.fetch_symbols(symbolTable)
-        self.expression.fetch_symbols(symbolTable)
-        self.statement2.fetch_symbols(symbolTable)
-        
-    def check_types(self, symbols):
-        self.statement1.check_types(symbols)
-        
-        type_expre = self.expression.check_types(symbols)
+        type_expre = self.expression.check_types(symbolTable)
         if type_expre != "bool":
             if type_expre == "":
-                symbols.append_error((self.lineno,self.lexpos,"Condicion del 'while' debe ser de tipo 'bool'."))
+                static_errors.append((self.expression.lineno,self.expression.lexpos,"Condicion del 'while' debe ser de tipo 'bool'."))
             else:
-                symbols.append_error((self.lineno,self.lexpos,
+                static_errors.append((self.expression.lineno,self.expression.lexpos,
                                   "Condicion del 'while' debe ser de tipo 'bool', no de tipo '%s'." % type_expre))
         
-        self.statement2.check_types(symbols)
+        self.statement2.check_types(symbolTable)
         
 class WhileDo(Expre):
     
@@ -254,21 +229,17 @@ class WhileDo(Expre):
         self.print_with_indent('DO',level)
         self.statement.print_tree(level + 1)
         self.print_with_indent('END_WHILE',level)
-        
-    def fetch_symbols(self, symbolTable):
-        self.expression.fetch_symbols(symbolTable)
-        self.statement.fetch_symbols(symbolTable)
     
-    def check_types(self, symbols):
-        type_expre = self.expression.check_types(symbols)
+    def check_types(self, symbolTable):
+        type_expre = self.expression.check_types(symbolTable)
         if type_expre != "bool":
             if type_expre == "":
-                symbols.append_error((self.lineno,self.lexpos,"Condicion del 'while' debe ser de tipo 'bool'."))
+                static_errors.append((self.expression.lineno,self.expression.lexpos,"Condicion del 'while' debe ser de tipo 'bool'."))
             else:                          
-                symbols.append_error((self.lineno,self.lexpos,"Condicion del 'while' debe ser de" +\
+                static_errors.append((self.expression.lineno,self.expression.lexpos,"Condicion del 'while' debe ser de" +\
                                  "tipo 'bool' no de tipo '%s'." % type_expre))
         
-        self.statement.check_types(symbols)
+        self.statement.check_types(symbolTable)
     
 class RepeatWhile(Expre):
     
@@ -286,18 +257,14 @@ class RepeatWhile(Expre):
         self.print_with_indent('condition',level + 1)
         self.expression.print_tree(level + 2)
 
-    def fetch_symbols(self, symbolTable):
-        self.statement.fetch_symbols(symbolTable)
-        self.expression.fetch_symbols(symbolTable)
-
-    def check_types(self, symbols):
-        self.statement.check_types(symbols)
-        type_expre = self.expression.check_types(symbols)
+    def check_types(self, symbolTable):
+        self.statement.check_types(symbolTable)
+        type_expre = self.expression.check_types(symbolTable)
         if type_expre != "bool":
             if type_expre == "":
-                symbols.append_error((self.lineno,self.lexpos,"Condicion del 'while' debe ser de tipo 'bool'."))
+                static_errors.append((self.expression.lineno,self.expression.lexpos,"Condicion del 'while' debe ser de tipo 'bool'."))
             else:                          
-                symbols.append_error((self.lineno,self.lexpos,"Condicion del 'while' debe ser de" +\
+                static_errors.append((self.expression.lineno,self.expression.lexpos,"Condicion del 'while' debe ser de" +\
                                  "tipo 'bool' no de tipo '%s'." % type_expre))       
     
 class Print(Expre):
@@ -311,14 +278,10 @@ class Print(Expre):
         self.print_with_indent(self.type, level)
         for var in self.lista_to_print:
             var.print_tree(level + 1)
-    
-    def fetch_symbols(self, symbolTable):
-        for var in self.lista_to_print:
-            var.fetch_symbols(symbolTable)    
-     
-    def check_types(self, symbols):
+ 
+    def check_types(self, symbolTable):
         for exp in self.lista_to_print:
-            exp.check_types(symbols)
+            exp.check_types(symbolTable)
             
         return self.type
            
@@ -329,8 +292,6 @@ class Block(Expre):
         self.type = "BLOCK"
         self.list_st = list_st
         self.declare = declare
-        #self.declare.convert_identifier()
-        #self.context = -1
         
     def print_tree(self,level):
         self.print_with_indent(self.type, level)
@@ -343,19 +304,15 @@ class Block(Expre):
             
         self.print_with_indent("BLOCK_END", level)
     
-    def fetch_symbols(self, symbolTable):    
+    def check_types(self, symbolTable):    
         symbolTable.add_scope()
         if self.declare is not None:
-            self.declare.add_to_symbols(symbolTable)
+            self.declare.check_types(symbolTable)
         
         for stat in self.list_st:
-            stat.fetch_symbols(symbolTable)
+            stat.check_types(symbolTable)
         
         symbolTable.delete_scope() # Una vez salido del contexto del bloque, se desempila la tabla
-        
-    def check_types(self,symbols):
-        for stat in self.list_st:
-            stat.check_types(symbols)
     
 class Parenthesis(Expre):
     
@@ -369,11 +326,8 @@ class Parenthesis(Expre):
         self.condition.print_tree(level + 1)
         self.print_with_indent('PARENTHESIS_CLOSE', level)
     
-    def fetch_symbols(self, symbolTable):
-        self.condition.fetch_symbols(symbolTable)
-    
-    def check_types(self, symbols):
-        return self.condition.check_types(symbols)
+    def check_types(self, symbolTable):
+        return self.condition.check_types(symbolTable)
     
 class BinaryOP(Expre):
     
@@ -388,10 +342,6 @@ class BinaryOP(Expre):
         self.print_with_indent(self.type_op, level)
         self.expre1.print_tree(level + 1)
         self.expre2.print_tree(level + 1)
-      
-    def fetch_symbols(self, symbolTable):
-        self.expre1.fetch_symbols(symbolTable)
-        self.expre2.fetch_symbols(symbolTable)
             
     def check_types(self, symbols):
         #Check type for BinaryOP
@@ -408,7 +358,7 @@ class BinaryOpInteger(BinaryOP):
         if type_expre1 == "" or type_expre2 == "": return ""
         
         if not (type_expre1 == "int" and type_expre2 == "int"):
-            symbols.append_error((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
+            static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
                                 (self.type_op[-1],type_expre1,type_expre2)))
             return "" 
             
@@ -424,7 +374,7 @@ class BinaryOpEquals(BinaryOP):
         if not ((type_expre1 == "bool" and type_expre2 == "bool") or \
                 (type_expre1 == "set" and type_expre2 == "set")   or \
                 (type_expre1 == "int" and type_expre2 == "int")) : 
-            symbols.append_error((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
+            static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
                                 (self.type_op[-2:],type_expre1,type_expre2)))
             return "" 
              
@@ -441,7 +391,7 @@ class BinaryOpLessGreater(BinaryOP):#######Listo
         if type_expre1 == "" or type_expre2 == "": return ""
         
         if not (type_expre1 == "int" and type_expre2 == "int") : 
-            symbols.append_error((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
+            static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
                                 (self.type_op[-2:],type_expre1,type_expre2)))
             return "" 
             
@@ -455,7 +405,7 @@ class BinaryOpBelong(BinaryOP):
         if type_expre1 == "" or type_expre2 == "": return ""
         
         if not (type_expre1 == "int" and type_expre2 == "set") : 
-            symbols.append_error((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
+            static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
                                 (self.type_op[-1],type_expre1,type_expre2)))
             return "" 
              
@@ -469,7 +419,7 @@ class BinaryOpBool(BinaryOP):
         if type_expre1 == "" or type_expre2 == "": return ""
         
         if not (type_expre1 == "bool" and type_expre2 == "bool") :    
-            symbols.append_error((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
+            static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
                                 (self.type_op,type_expre1,type_expre2)))
             return ""
              
@@ -483,7 +433,7 @@ class BinaryOpSet(BinaryOP):
         if type_expre1 == "" or type_expre2 == "": return ""
 
         if not (type_expre1 == "set" and type_expre2 == "set") : 
-            symbols.append_error((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
+            static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
                                 (self.type_op[-2:],type_expre1,type_expre2)))
             return "" 
              
@@ -500,7 +450,7 @@ class BinaryOpMapToSet(BinaryOP):
         if type_expre1 == "" or type_expre2 == "": return ""
         
         if not (type_expre1 == "int" and type_expre2 == "set") : 
-            symbols.append_error((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
+            static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
                                 (self.type_op[-3:],type_expre1,type_expre2)))
             return "" 
              
@@ -516,10 +466,7 @@ class UnaryOP(Expre):
     def print_tree(self,level):   
         self.print_with_indent(self.type_op , level)
         self.expre1.print_tree(level + 1)
-        
-    def fetch_symbols(self, symbolTable):
-        self.expre1.fetch_symbols(symbolTable)
-        
+           
     def check_types(self, symbols):
         # For type checking
         pass
@@ -530,7 +477,7 @@ class UnaryOpUminus(UnaryOP):
         if type_expre == "": return ""
 
         if type_expre != "int":
-            symbols.append_error((self.lineno,self.lexpos,"Operador unario '-' solo se puede aplicar a enteros" +\
+            static_errors.append((self.lineno,self.lexpos,"Operador unario '-' solo se puede aplicar a enteros" +\
                                  " no ha expresiones del tipo '%s'" % type_expre))
             return ""
         
@@ -542,7 +489,7 @@ class UnaryOpNot(UnaryOP):
         if type_expre == "": return ""
         
         if type_expre != "bool":
-            symbols.append_error((self.lineno,self.lexpos,"Operador unario 'not' solo se puede aplicar a expresiones booleanas" +\
+            static_errors.append((self.lineno,self.lexpos,"Operador unario 'not' solo se puede aplicar a expresiones booleanas" +\
                                  " no ha expresiones del tipo '%s'" % type_expre))
             return ""
           
@@ -555,7 +502,7 @@ class UnaryOpSet(UnaryOP):
         if type_expre == "": return ""
         
         if type_expre != "set":
-            symbols.append_error((self.lineno,self.lexpos,"Operador unario '%s' solo se puede aplicar a conjuntos" +\
+            static_errors.append((self.lineno,self.lexpos,"Operador unario '%s' solo se puede aplicar a conjuntos" +\
                                  " no a expresiones del tipo '%s'" % (self.type_op[-2:],type_expre)))
             return ""
             
@@ -573,9 +520,9 @@ class DeclareList(Expre):
             declaration_vars.print_tree(level)
         self.print_with_indent('IN', level)
         
-    def add_to_symbols(self, symbolTable):
+    def check_types(self, symbolTable):
         for declaration_vars in self.declared_list:
-            declaration_vars.add_to_symbols(symbolTable)
+            declaration_vars.check_types(symbolTable)
     
 class TypeList(Expre): ### REVISAR MANEJO DE ERRORES EN SYMBOL TO ADD
     
@@ -588,7 +535,7 @@ class TypeList(Expre): ### REVISAR MANEJO DE ERRORES EN SYMBOL TO ADD
         for identifier in self.id_list:
             self.print_with_indent(self.data_type + ' ' + identifier.name,level + 1)
     
-    def add_to_symbols(self, symbolTable):
+    def check_types(self, symbolTable):
         for var in self.id_list:
             #symbol_to_add = Symbol(var.name,self.data_type,default,'i/o',var)
             if symbolTable.contains(var.name):  ######################## REVISAR MANEJO DE ERRORES
@@ -611,6 +558,9 @@ class Direction(Expre):
     def print_tree(self , level):
         self.print_with_indent(self.type, level)
         self.print_with_indent(self.value, level + 1)
+        
+    def check_types(self, symbolTable):
+        return self.value
 
 class Set(Expre):
     
@@ -625,9 +575,9 @@ class Set(Expre):
         for exp in self.list_st:
             exp.print_tree(level + 1)
             
-    def check_types(self, symbols):
+    def check_types(self, symbolTable):
         for exp in self.list_st:
-            exp.check_types(symbols)
+            exp.check_types(symbolTable)
             
         return self.type
             
@@ -642,7 +592,7 @@ class Bool(Expre):
         self.print_with_indent(self.type, level)
         self.print_with_indent(self.value, level + 1)
 
-    def check_types(self, symbols):
+    def check_types(self, symbolTable):
         return self.type
     
 class Integer(Expre):
@@ -657,7 +607,7 @@ class Integer(Expre):
         self.print_with_indent(self.type, level)
         self.print_with_indent(str(self.value), level + 1)
         
-    def check_types(self, symbols):
+    def check_types(self, symbolTable):
         return self.type
         
 class String(Expre):
@@ -671,7 +621,7 @@ class String(Expre):
         self.print_with_indent(self.type, level)
         self.print_with_indent(self.value, level + 1)
         
-    def check_types(self, symbols):
+    def check_types(self, symbolTable):
         return self.type
 
 class Identifier(Expre):  #### Revisar manejo de errores
@@ -684,13 +634,11 @@ class Identifier(Expre):  #### Revisar manejo de errores
     def print_tree(self , level):       
         self.print_with_indent("identifier"  , level )
         self.print_with_indent(self.name , level + 1 )
-    
-    def fetch_symbols(self, symbolTable):
+        
+    def check_types(self, symbolTable):
         symbol = symbolTable.lookup(self.name)
         if symbol is None:  ###### Manejo de errores
             static_errors.append((self.lineno,self.lexpos,"La variable '%s' aun no ha sido declarada."  % self.name))
         else:
             self.type = symbol.type
-        
-    def check_types(self,symbols):
         return self.type
