@@ -1,0 +1,59 @@
+PROGRAM
+    BLOCK
+        USING
+            set s
+            int i
+        IN
+        ASSIGN
+            identifier
+                s
+            value
+                set
+                    int
+                        2
+                    int
+                        3
+                    int
+                        1
+        FOR
+            identifier
+                i
+            direction
+                min
+            IN
+            identifier
+                s
+            DO
+                BLOCK
+                    PRINTLN
+                        identifier
+                            i
+                    ASSIGN
+                        identifier
+                            s
+                        value
+                            UNION ++
+                                identifier
+                                    s
+                                set
+                                    TIMES *
+                                        identifier
+                                            i
+                                        int
+                                            2
+                    ASSIGN
+                        identifier
+                            i
+                        value
+                            PLUS +
+                                identifier
+                                    i
+                                int
+                                    1
+                BLOCK_END
+        END_FOR
+        PRINT
+            identifier
+                s
+    BLOCK_END
+Error en la linea 10, columna 9: La variable i es de solo lectura.

@@ -1,0 +1,44 @@
+PROGRAM
+    BLOCK
+        USING
+            int i
+        IN
+        ASSIGN
+            identifier
+                i
+            value
+                int
+                    10
+        IF
+            condition
+                PLUS +
+                    identifier
+                        i
+                    int
+                        2
+            THEN
+                FOR
+                    identifier
+                        k
+                    direction
+                        min
+                    IN
+                    PLUS +
+                        set
+                            int
+                                1
+                            int
+                                2
+                            int
+                                3
+                        int
+                            1
+                    DO
+                        PRINT
+                            identifier
+                                k
+                END_FOR
+        END_IF
+    BLOCK_END
+Error en la linea 6, columna 5: Instrucción 'if' espera expresiones de tipo 'bool', no de tipo 'int'.
+Error en la linea 7, columna 23: Operando '+' no sirve con operandos de tipo 'set' y 'int'.

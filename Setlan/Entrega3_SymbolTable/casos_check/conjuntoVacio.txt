@@ -1,0 +1,14 @@
+PROGRAM
+    BLOCK
+        USING
+            set n
+        IN
+        ASSIGN
+            identifier
+                n
+            value
+                set
+    BLOCK_END
+SCOPE
+   Variable: n | Type: set | Value: {}
+END_SCOPE

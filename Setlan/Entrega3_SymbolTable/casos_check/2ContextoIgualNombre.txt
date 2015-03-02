@@ -1,0 +1,26 @@
+PROGRAM
+    BLOCK
+        USING
+            int a
+            set b
+        IN
+        IF
+            condition
+                bool
+                    true
+            THEN
+                BLOCK
+                    USING
+                        bool a
+                        int b
+                    IN
+                    ASSIGN
+                        identifier
+                            a
+                        value
+                            int
+                                3
+                BLOCK_END
+        END_IF
+    BLOCK_END
+Error en la linea 11, columna 11: No se puede asignar expresiones de tipo 'int' a la variable 'a' de tipo 'bool'.

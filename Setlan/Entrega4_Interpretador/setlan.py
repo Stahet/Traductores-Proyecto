@@ -11,6 +11,7 @@ Created on 23/2/2015
          Flags: -
 '''
 from  sys import argv as argumentos_consola
+from AST import static_errors
 import expresiones
 import parse
 import ply.lex as lexi
@@ -34,6 +35,9 @@ def setlan(argv = None):
         
     lexer = expresiones.build_lexer()           # Construir Lexer
     tree = parse.build_parser(content,lexer) # Contruimos el Parser
+    
+    tree.fetch_symbols() # Hacemos el chequeo estatico
+    
     # Impresion de errores
     if expresiones.lexer_errors:
         for error in expresiones.lexer_errors:
@@ -42,7 +46,13 @@ def setlan(argv = None):
     elif parse.parser_errors:
         for error in parse.parser_errors:
             print error
+    
+    elif static_errors:
+        for error in static_errors:
+            print "Error en la linea %d, columna %d: %s" % \
+                   (error[0],expresiones.obtener_columna_texto_lexpos(error[1]),error[2])
     else:
+        
         if "-t" in argv:
             print "####################       LISTA DE TOKENS      ####################\n" 
             expresiones.print_tokens(expresiones.build_lexer(), content)
@@ -53,15 +63,8 @@ def setlan(argv = None):
         
         if "-s" in argv:
             print "\n####################      CHEQUEO DE TIPOS       ####################\n" 
-            tree.fetch_symbols()
-            tree.check_types()
-            
-        if tree.symbols.errors:
-            for error in tree.symbols.errors:
-                print "Error en la linea %d, columna %d: %s" % \
-                       (error[0],expresiones.obtener_columna_texto_lexpos(error[1]),error[2])
-        else:
-            tree.symbols.print_context(0,0)
+            print tree.symbolTable.str
+            #tree.check_types()
 
 def salir(mensaje = "ERROR: Ejecute el interprete de la forma: setlan <dir_archivo> [-t] [-a] [-s]",
                 codigo = -1):
@@ -69,4 +72,6 @@ def salir(mensaje = "ERROR: Ejecute el interprete de la forma: setlan <dir_archi
     exit(codigo)    
              
 if __name__ == '__main__':
-    setlan(["setlan","casos_parser/holaMundo.txt","-t","-s","-a"])
+    setlan(["setlan","casos_check/errorRepeatWhile","-t","-s","-a"])
+    #setlan(["setlan","casos_check/test1.stl","-t","-s","-a"])
+    #setlan(["setlan","casos_check/test2EnunciadoErrorTipo.stl","-t","-s","-a"])

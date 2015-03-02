@@ -1,0 +1,23 @@
+program{
+	using
+		int x,y,z;
+		set a,b,c;
+	in
+	{	
+		using
+			bool x,y,z;
+            set a,b,c;
+		in
+		{	
+			using
+				int x,y,zs4;
+				bool ah,hah;
+			in		
+			x = ah;
+			#print as;
+			ah = 3;
+			ah = a;
+			scan a;
+		};
+	};
+}

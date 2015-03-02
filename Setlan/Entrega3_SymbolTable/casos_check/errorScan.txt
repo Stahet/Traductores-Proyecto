@@ -1,0 +1,1 @@
+Error de síntaxis en la línea 4 , columna 9. No se esperaba Token "bool".

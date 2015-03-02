@@ -7,7 +7,7 @@ Created on 21/2/2015
     Tabla de simbolos
 '''
 
-class SymbolTable():
+class SymbolTable:
     '''
      Administrador de una tabla de simbolos
     '''
@@ -15,62 +15,87 @@ class SymbolTable():
         '''
          Inicializa la tabla de contexto y la lista de errores.
         '''
-        self.errors = []
-        self.table = {} # Diccionario de simbolos
+        #self.errors = []
+        self.tableStack = [] # Pila de tablas (diccionarios)
+        self.str = ""
         
-    def insert(self, symbol):
+    def add_scope(self):
+        level = len(self.tableStack) # Nivel de alcance
+        cad_indent = "   "*level
+        self.str+= cad_indent + "SCOPE" + "\n"
+        
+        table = {} # Crea una tabla de simbolos para el nuevo alcance
+        self.tableStack.append(table) # Empilar nueva tabla de simbolo
+        
+    def delete_scope(self):
+        ''' Elimina el alcance actual (tope de la pila)'''
+        self.tableStack.pop()
+        
+        level = len(self.tableStack) # Nivel de alcance
+        cad_indent = "   "*level
+        self.str+= cad_indent + "END_SCOPE" + "\n"
+        
+    def insert(self, name, data_type, type_edit, ref = None):
         'Inserta un simbolo en la tabla'
-        try:
+        table = self.tableStack[-1] # Obtenemos tope de la pila
+        var = Symbol(name, data_type, type_edit, ref)
+        table[name] = var
+        
+        #Impresion para el alcance
+        level = len(self.tableStack) # Nivel de alcance
+        cad_indent = "   "*level
+        salida = "   "
+        salida += "Variable: " + var.name
+        salida += " | Type: " + var.type 
+        salida += " | Value: "
+        if var.type == "int" or var.type == "bool":
+            salida += str(var.value)
+        elif var.type == "set":
+            salida += "{"
+            for i,value in enumerate(var.value):
+                salida += str(value)
+                if i != len(var.value) - 1:
+                    salida += ","
+            salida += "}"
             
+        self.str+= cad_indent + salida + "\n" 
+        
     def delete(self,name , context):
         'Borra un elemento de la tabla'
+        pass
     
-    def update(self,name,context,value):
-        symbol = self.lookup(name, context)
+    def update(self, name, value):
+        symbol = self.lookup(name)
         if symbol is None:
+            print "No se encontro la variable"+name+" para este alcance"
             return 
         
         symbol.value = value
             
-    def contains(self,name,context):
-        'Verifica si cone'
-        if not self.context_table.exists(context): return None
-
-        for symbol_t in self.context_table.contexts[context]['vars']:
-            if symbol_t.name == name: return True
-            
-        return False
-    
-    def lookup(self,name,context):
-        if not self.context_table.exists(context): return None
-
-        for symbol_t in self.context_table.contexts[context]['vars']:
-            if symbol_t.name == name:
-                return symbol_t
+    def contains(self, name):
+        'Verifica si una variable se encuentra en el alcance actual de la tabla'
+        table = self.tableStack[-1]
+        return name in table.keys()
         
-        return self.lookup(name,self.context_table.contexts[context]['parent'])
-    
-    #===========================================================================
-    # def add_context(self):
-    #     return self.context_table.add()
-    # 
-    # def add_child(self,context, child_context):
-    #     return self.context_table.add_children(context, child_context)
-    # 
-    #===========================================================================
-    def print_table(self,level):
+    def lookup(self, name):
+        '''
+        Verifica que una variable se encuentra en el alcance actual o superior
+        Devuelve el simbolo si se consigue, None en caso de que no se encuentre
+        '''
+        # Recorre la lista desde el final (Tope de la pila) hasta el inicio
+        for table in self.tableStack[::-1]: 
+            if name in table.keys():
+                return table[name]
         
-        #=======================================================================
-        # if not self.context_table.exists(context):return
-        # 
-        # if not self.context_table.contexts[context]['vars'] and \
-        #    not self.context_table.contexts[context]['childs']:
-        #     return
-        #=======================================================================
+        return None # Retorna en caso de no conseguir la variable
+    
+    def print_table(self, table):
+        
+        level = len(self.tableStack) # Nivel de alcance
         cad_indent = "   "*level
         print cad_indent + "SCOPE"
         
-        for var in self.table.values():
+        for var in table.values():
             salida = "   "
             salida += "Variable: " + var.name
             salida += " | Type: " + var.type 
@@ -86,40 +111,21 @@ class SymbolTable():
                 salida += "}"
                 
             print cad_indent + salida    
-        print cad_indent + "END_SCOPE"
+        #print cad_indent + "END_SCOPE"
     
     #Solo para probar no definitivo
     def append_error(self,sms):
         self.errors.append(sms)
-
-#===============================================================================
-# class ContextTable:
-#     
-#     def __init__(self):
-#         self.contexts = {}
-#     
-#     def add(self):
-#         new_context = len(self.contexts)
-#         self.contexts[new_context] = {'vars':[],\
-#                                   'childs':[],
-#                                   'parent':-1}
-#         return new_context
-#     
-#     def exists(self,context):
-#         return context in self.contexts.keys()
-#     
-#     def add_children(self,context,child_context):
-#         if self.exists(context) and self.exists(child_context) and \
-#            context != child_context: # Para evitar recursion infinita
-#             self.contexts[context]['childs'].append(child_context)
-#             self.contexts[child_context]['parent'] = context
-#===============================================================================
-            
+          
 class Symbol:
-    def __init__(self,name,type_s,value,context,type_edit = "i/o",ref=None):
+    # Lista de valores por defecto para cada tipo
+    default_list = {"int"  : 0, 
+                    "bool" : False, 
+                    "set"  : {} }
+    
+    def __init__(self, name, data_type, type_edit = "i/o", ref=None):
         self.name = name
-        self.type = type_s
-        self.value = value
-        #self.context = context
+        self.type = data_type
+        self.value = Symbol.default_list[data_type]
         self.type_edit = type_edit
         self.ref = ref

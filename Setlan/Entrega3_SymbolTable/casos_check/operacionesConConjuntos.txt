@@ -1,0 +1,125 @@
+PROGRAM
+    BLOCK
+        USING
+            set x
+            set y
+            int a
+            int b
+        IN
+        SCAN
+            identifier
+                a
+        SCAN
+            identifier
+                b
+        ASSIGN
+            identifier
+                x
+            value
+                set
+                    identifier
+                        a
+                    identifier
+                        b
+                    PLUS +
+                        identifier
+                            a
+                        identifier
+                            b
+                    MINUS -
+                        identifier
+                            a
+                        identifier
+                            b
+                    TIMES *
+                        identifier
+                            a
+                        identifier
+                            b
+                    INTDIVISION /
+                        identifier
+                            a
+                        identifier
+                            b
+                    RESTDIVISION %
+                        identifier
+                            a
+                        identifier
+                            b
+        ASSIGN
+            identifier
+                y
+            value
+                set
+                    identifier
+                        a
+                    identifier
+                        b
+                    PLUS +
+                        identifier
+                            b
+                        identifier
+                            a
+                    MINUS -
+                        identifier
+                            b
+                        identifier
+                            a
+                    TIMES *
+                        identifier
+                            b
+                        identifier
+                            a
+                    INTDIVISION /
+                        identifier
+                            b
+                        identifier
+                            a
+                    RESTDIVISION %
+                        identifier
+                            b
+                        identifier
+                            a
+        FOR
+            identifier
+                i
+            direction
+                max
+            IN
+            UNION ++
+                UNION ++
+                    UNION ++
+                        MAPPLUS <+>
+                            identifier
+                                a
+                            identifier
+                                y
+                        MAPPLUS <+>
+                            identifier
+                                b
+                            identifier
+                                x
+                    identifier
+                        y
+                identifier
+                    x
+            DO
+                PRINT
+                    identifier
+                        i
+                    string
+                        ", "
+        END_FOR
+        PRINT
+            string
+                "done."
+    BLOCK_END
+SCOPE
+   Variable: x | Type: set | Value: {}
+   Variable: y | Type: set | Value: {}
+   Variable: a | Type: int | Value: 0
+   Variable: b | Type: int | Value: 0
+   SCOPE
+      Variable: i | Type: int | Value: 0
+   END_SCOPE
+END_SCOPE

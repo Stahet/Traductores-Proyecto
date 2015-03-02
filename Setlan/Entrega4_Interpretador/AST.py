@@ -8,8 +8,11 @@ Created on 4/2/2015
     Clases para la representación de un Arbol abstracto del lenguaje setlan
 '''
 
-from symbol_table import SymbolTable ,Symbol
+from symbol_table import SymbolTable
 from expresiones import obtener_columna_texto_lexpos
+
+global static_errors
+static_errors = []
 
 class Expre:
     
@@ -26,7 +29,7 @@ class Expre:
     def print_with_indent(self,cad,level):
         print self.get_ident_str(level) + cad
     
-    def fetch_symbols(self, symbolStack):
+    def fetch_symbols(self, symbolTable):
         pass
     
     def check_types(self,symbols):
@@ -38,15 +41,16 @@ class Program(Expre):
         Expre.__init__(self)
         self.type = "PROGRAM"
         self.statement = statement
-        #self.symbols = SymbolStack()
+        self.symbolTable = None
         
     def print_tree(self,level = 0):
         self.print_with_indent(self.type, level)
         self.statement.print_tree(level + 1)
     
     def fetch_symbols(self):
-        symbolStack = []
-        self.statement.fetch_symbols(symbolStack)
+        symbolTable = SymbolTable()
+        self.symbolTable = symbolTable
+        self.statement.fetch_symbols(symbolTable)
         
     def check_types(self):
         self.statement.check_types(self.symbols)
@@ -62,8 +66,8 @@ class Scan(Expre):
         self.print_with_indent(self.type,level)
         self.var_to_read.print_tree(level + 1)
 
-    def fetch_symbols(self, symbolStack):
-        self.var_to_read.fetch_symbols(symbolStack)
+    def fetch_symbols(self, symbolTable):
+        self.var_to_read.fetch_symbols(symbolTable)
     
     def check_types(self, symbols):
         type_var = self.var_to_read.check_types(symbols)
@@ -87,9 +91,9 @@ class Assign(Expre):
         self.print_with_indent('value',level + 1)
         self.expresion.print_tree(level + 2)
     
-    def fetch_symbols(self, symbolStack):
-        self.id.fetch_symbols(symbolStack)
-        self.expresion.fetch_symbols(symbolStack)
+    def fetch_symbols(self, symbolTable):
+        self.id.fetch_symbols(symbolTable)
+        self.expresion.fetch_symbols(symbolTable)
     
     def check_types(self, symbols):
         symbol = symbols.lookup(self.id.name,self.context_parent)
@@ -131,12 +135,12 @@ class If(Expre):
         self.print_with_indent('END_IF',level)
     
         
-    def fetch_symbols(self, symbolStack):        
-        self.condition.fetch_symbols(symbolStack)
-        self.statement_if.fetch_symbols(symbolStack)
+    def fetch_symbols(self, symbolTable):        
+        self.condition.fetch_symbols(symbolTable)
+        self.statement_if.fetch_symbols(symbolTable)
         
         if self.statement_else is not None:
-            self.statement_else.fetch_symbols(symbolStack)
+            self.statement_else.fetch_symbols(symbolTable)
             
     def check_types(self,symbols):
         type_cond = self.condition.check_types(symbols)
@@ -174,15 +178,16 @@ class For(Expre): ### REVISAR ESTA CLASE
         self.statement.print_tree(level + 2)
         self.print_with_indent('END_FOR',level)
     
-    def fetch_symbols(self, symbolStack):
-        table = SymbolTable() # Crea una tabla de simbolo
-        symbolStack.append(table) # Empilar tabla de simbolo
+    def fetch_symbols(self, symbolTable):
+        symbolTable.add_scope() # Crea un nuevo alcance
         # Creacion de nuevo simbolo de solo lectura
-        table.insert( Symbol(self.identifier.name,"int", 0 , "i") )
+        symbolTable.insert(self.identifier.name,"int","i")
         
-        self.identifier.fetch_symbols(symbolStack) # Esto hay que hacerlo??
-        self.expression.fetch_symbols(symbolStack)
-        self.statement.fetch_symbols(symbolStack)
+        self.identifier.fetch_symbols(symbolTable) # Esto hay que hacerlo??
+        self.expression.fetch_symbols(symbolTable)
+        self.statement.fetch_symbols(symbolTable)
+        
+        symbolTable.delete_scope() # Eliminar alcance una vez salida del For
     
     def check_types(self, symbols):
         type_expre = self.expression.check_types(symbols)
@@ -215,10 +220,10 @@ class RepeatWhileDo(Expre):
         self.print_with_indent('DO',level)
         self.statement2.print_tree(level + 1)
         
-    def fetch_symbols(self, symbolStack):
-        self.statement1.fetch_symbols(symbolStack)
-        self.expression.fetch_symbols(symbolStack)
-        self.statement2.fetch_symbols(symbolStack)
+    def fetch_symbols(self, symbolTable):
+        self.statement1.fetch_symbols(symbolTable)
+        self.expression.fetch_symbols(symbolTable)
+        self.statement2.fetch_symbols(symbolTable)
         
     def check_types(self, symbols):
         self.statement1.check_types(symbols)
@@ -250,9 +255,9 @@ class WhileDo(Expre):
         self.statement.print_tree(level + 1)
         self.print_with_indent('END_WHILE',level)
         
-    def fetch_symbols(self, symbolStack):
-        self.expression.fetch_symbols(symbolStack)
-        self.statement.fetch_symbols(symbolStack)
+    def fetch_symbols(self, symbolTable):
+        self.expression.fetch_symbols(symbolTable)
+        self.statement.fetch_symbols(symbolTable)
     
     def check_types(self, symbols):
         type_expre = self.expression.check_types(symbols)
@@ -281,9 +286,9 @@ class RepeatWhile(Expre):
         self.print_with_indent('condition',level + 1)
         self.expression.print_tree(level + 2)
 
-    def fetch_symbols(self, symbolStack):
-        self.statement.fetch_symbols(symbolStack)
-        self.expression.fetch_symbols(symbolStack)
+    def fetch_symbols(self, symbolTable):
+        self.statement.fetch_symbols(symbolTable)
+        self.expression.fetch_symbols(symbolTable)
 
     def check_types(self, symbols):
         self.statement.check_types(symbols)
@@ -307,9 +312,9 @@ class Print(Expre):
         for var in self.lista_to_print:
             var.print_tree(level + 1)
     
-    def fetch_symbols(self, symbolStack):
+    def fetch_symbols(self, symbolTable):
         for var in self.lista_to_print:
-            var.fetch_symbols(symbolStack)    
+            var.fetch_symbols(symbolTable)    
      
     def check_types(self, symbols):
         for exp in self.lista_to_print:
@@ -338,16 +343,16 @@ class Block(Expre):
             
         self.print_with_indent("BLOCK_END", level)
     
-    def fetch_symbols(self, symbolStack):    
-        table = SymbolTable() # Crea una tabla de simbolo
-        symbolStack.append(table) # Empilar tabla de simbolo
+    def fetch_symbols(self, symbolTable):    
+        symbolTable.add_scope()
         if self.declare is not None:
-            self.declare.add_to_symbols(symbolStack)
+            self.declare.add_to_symbols(symbolTable)
         
         for stat in self.list_st:
-            stat.fetch_symbols(symbolStack)
+            stat.fetch_symbols(symbolTable)
         
-        symbolStack.pop() # Una vez salido del contexto del bloque, se desempila la tabla
+        symbolTable.delete_scope() # Una vez salido del contexto del bloque, se desempila la tabla
+        
     def check_types(self,symbols):
         for stat in self.list_st:
             stat.check_types(symbols)
@@ -364,8 +369,8 @@ class Parenthesis(Expre):
         self.condition.print_tree(level + 1)
         self.print_with_indent('PARENTHESIS_CLOSE', level)
     
-    def fetch_symbols(self, symbolStack):
-        self.condition.fetch_symbols(symbolStack)
+    def fetch_symbols(self, symbolTable):
+        self.condition.fetch_symbols(symbolTable)
     
     def check_types(self, symbols):
         return self.condition.check_types(symbols)
@@ -384,9 +389,9 @@ class BinaryOP(Expre):
         self.expre1.print_tree(level + 1)
         self.expre2.print_tree(level + 1)
       
-    def fetch_symbols(self, symbolStack):
-        self.expre1.fetch_symbols(symbolStack)
-        self.expre2.fetch_symbols(symbolStack)
+    def fetch_symbols(self, symbolTable):
+        self.expre1.fetch_symbols(symbolTable)
+        self.expre2.fetch_symbols(symbolTable)
             
     def check_types(self, symbols):
         #Check type for BinaryOP
@@ -512,8 +517,8 @@ class UnaryOP(Expre):
         self.print_with_indent(self.type_op , level)
         self.expre1.print_tree(level + 1)
         
-    def fetch_symbols(self, symbolStack):
-        self.expre1.fetch_symbols(symbolStack)
+    def fetch_symbols(self, symbolTable):
+        self.expre1.fetch_symbols(symbolTable)
         
     def check_types(self, symbols):
         # For type checking
@@ -568,16 +573,11 @@ class DeclareList(Expre):
             declaration_vars.print_tree(level)
         self.print_with_indent('IN', level)
         
-    def add_to_symbols(self, symbolStack):
+    def add_to_symbols(self, symbolTable):
         for declaration_vars in self.declared_list:
-            declaration_vars.add_to_symbols(symbolStack)
+            declaration_vars.add_to_symbols(symbolTable)
     
 class TypeList(Expre): ### REVISAR MANEJO DE ERRORES EN SYMBOL TO ADD
-    
-    # Lista de valores por defecto para cada tipo
-    default_list = {"int"  : 0, 
-                    "bool" : False, 
-                    "set"  : {} }
     
     def __init__(self,data_type,id_list):
         Expre.__init__(self)
@@ -588,20 +588,18 @@ class TypeList(Expre): ### REVISAR MANEJO DE ERRORES EN SYMBOL TO ADD
         for identifier in self.id_list:
             self.print_with_indent(self.data_type + ' ' + identifier.name,level + 1)
     
-    def add_to_symbols(self, symbolStack):
-        default = TypeList.default_list[self.data_type] # Asignamos valor por defecto
-        symbolTable = symbolStack[-1] # Tabla del tope de la pila (Contexto actual)
-        for var in self.id_list:    
-            symbol_to_add = Symbol(var.name,self.data_type,default,'i/o',var)
-            symbol = symbolTable.lookup(var.name)
-            if symbol:  ######################## REVISAR MANEJO DE ERRORES
-                symbol.append_error((var.lineno,var.lexpos,
-                                      "La variable '%s' ya ha sido declarada en este alcance " % symbol_to_add.name + \
+    def add_to_symbols(self, symbolTable):
+        for var in self.id_list:
+            #symbol_to_add = Symbol(var.name,self.data_type,default,'i/o',var)
+            if symbolTable.contains(var.name):  ######################## REVISAR MANEJO DE ERRORES
+                symbol = symbolTable.lookup(var.name)# Buscar var para saber numero de linea ya declarada
+                static_errors.append((var.lineno,var.lexpos,
+                                      "La variable '%s' ya ha sido declarada en este alcance " % (var.name) + \
                                       'en la linea %d, columna %d con tipo %s.' % (symbol.ref.lineno,\
                                                                                       obtener_columna_texto_lexpos(symbol.ref.lexpos),
                                                                                       symbol.type)))
             else:
-                symbolTable.insert(symbol_to_add)
+                symbolTable.insert(var.name, self.data_type,'i/o',var)
         #return True
 class Direction(Expre):
     
@@ -687,11 +685,10 @@ class Identifier(Expre):  #### Revisar manejo de errores
         self.print_with_indent("identifier"  , level )
         self.print_with_indent(self.name , level + 1 )
     
-    def fetch_symbols(self, symbolStack):
-        symbolTable = symbolStack[-1] # Tabla del tope de la pila (Contexto actual)
-        symbol = symbolTable.lookup(self.name,self.context_parent)
+    def fetch_symbols(self, symbolTable):
+        symbol = symbolTable.lookup(self.name)
         if symbol is None:  ###### Manejo de errores
-            symbols.append_error((self.lineno,self.lexpos,"La variable '%s' aun no ha sido declarada."  % self.name))
+            static_errors.append((self.lineno,self.lexpos,"La variable '%s' aun no ha sido declarada."  % self.name))
         else:
             self.type = symbol.type
         

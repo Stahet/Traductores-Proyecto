@@ -1,0 +1,8 @@
+program {
+    using
+        bool a,b;
+        set i,k;
+    in
+    k =2 <+> (( k \ k) ++ k);
+    
+}

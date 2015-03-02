@@ -1,0 +1,371 @@
+PROGRAM
+    BLOCK
+        USING
+            int a
+            int b
+            set c
+            set d
+            bool e
+            bool f
+        IN
+        ASSIGN
+            identifier
+                a
+            value
+                int
+                    10
+        SCAN
+            identifier
+                b
+        ASSIGN
+            identifier
+                c
+            value
+                set
+                    int
+                        1
+                    int
+                        2
+                    int
+                        3
+        ASSIGN
+            identifier
+                d
+            value
+                set
+                    int
+                        2
+                    int
+                        3
+                    int
+                        4
+        ASSIGN
+            identifier
+                e
+            value
+                bool
+                    true
+        SCAN
+            identifier
+                f
+        PRINT
+            string
+                "first: "
+            identifier
+                b
+            string
+                ", "
+        PRINTLN
+            string
+                "second: "
+            identifier
+                f
+        IF
+            condition
+                BELONG @
+                    identifier
+                        b
+                    identifier
+                        c
+            THEN
+                FOR
+                    identifier
+                        i
+                    direction
+                        min
+                    IN
+                    UNION ++
+                        identifier
+                            d
+                        identifier
+                            c
+                    DO
+                        ASSIGN
+                            identifier
+                                c
+                            value
+                                MAPPLUS <+>
+                                    PARENTHESIS
+                                        TIMES *
+                                            identifier
+                                                i
+                                            int
+                                                2
+                                    PARENTHESIS_CLOSE
+                                    identifier
+                                        c
+                END_FOR
+        ELSE
+            IF
+                condition
+                    BELONG @
+                        identifier
+                            b
+                        identifier
+                            c
+                THEN
+                    BLOCK
+                        PRINTLN
+                            string
+                                "improbable"
+                    BLOCK_END
+            END_IF
+        END_IF
+        REPEAT
+            ASSIGN
+                identifier
+                    f
+                value
+                    or
+                        identifier
+                            e
+                        BELONG @
+                            PLUS +
+                                identifier
+                                    a
+                                identifier
+                                    b
+                            UNION ++
+                                identifier
+                                    c
+                                identifier
+                                    d
+        WHILE
+            condition
+                not
+                    identifier
+                        f
+        DO
+            ASSIGN
+                identifier
+                    e
+                value
+                    or
+                        LESSTHAN <
+                            identifier
+                                a
+                            identifier
+                                b
+                        identifier
+                            f
+        ASSIGN
+            identifier
+                a
+            value
+                int
+                    0
+        IF
+            condition
+                LESSTHAN <
+                    identifier
+                        b
+                    int
+                        0
+            THEN
+                ASSIGN
+                    identifier
+                        b
+                    value
+                        NEGATE -
+                            identifier
+                                b
+        END_IF
+        PRINTLN
+            PLUS +
+                identifier
+                    a
+                identifier
+                    b
+            string
+                ", "
+            MINUS -
+                identifier
+                    a
+                identifier
+                    b
+            string
+                ", "
+            TIMES *
+                identifier
+                    a
+                identifier
+                    b
+            string
+                ", "
+            INTDIVISION /
+                identifier
+                    a
+                identifier
+                    b
+            string
+                ", "
+            RESTDIVISION %
+                identifier
+                    a
+                identifier
+                    b
+            string
+                ", "
+            NEGATE -
+                identifier
+                    a
+        PRINTLN
+            UNION ++
+                identifier
+                    c
+                identifier
+                    d
+            string
+                ", "
+            INTERSECTION ><
+                identifier
+                    c
+                identifier
+                    d
+            string
+                ", "
+            DIFFERENCE \
+                identifier
+                    c
+                identifier
+                    d
+            string
+                ", "
+            MAXVALUESET >?
+                identifier
+                    c
+            string
+                ", "
+            MINVALUESET <?
+                identifier
+                    c
+            string
+                ", "
+            SIZESET $?
+                identifier
+                    c
+        PRINTLN
+            MAPPLUS <+>
+                identifier
+                    a
+                identifier
+                    c
+            string
+                ", "
+            MAPMINUS <->
+                identifier
+                    c
+                identifier
+                    a
+            string
+                ", "
+            MAPTIMES <*>
+                identifier
+                    a
+                identifier
+                    c
+            string
+                ", "
+            MAPDIVIDE </>
+                identifier
+                    c
+                identifier
+                    a
+            string
+                ", "
+            MAPREST <%>
+                identifier
+                    c
+                identifier
+                    a
+            string
+                ", "
+            BELONG @
+                identifier
+                    a
+                identifier
+                    c
+        PRINTLN
+            or
+                identifier
+                    e
+                identifier
+                    f
+            string
+                ", "
+            and
+                identifier
+                    e
+                identifier
+                    f
+            string
+                ", "
+            not
+                identifier
+                    e
+        PRINTLN
+            LESSTHAN <
+                identifier
+                    a
+                identifier
+                    b
+            LESSOREQUALTHAN <=
+                identifier
+                    a
+                identifier
+                    b
+            GREATERTHAN >
+                identifier
+                    a
+                identifier
+                    b
+            GREATEROREQUALTHAN >=
+                identifier
+                    a
+                identifier
+                    b
+        PRINTLN
+            EQUALBOOL ==
+                identifier
+                    a
+                identifier
+                    b
+            UNEQUAL /=
+                identifier
+                    a
+                identifier
+                    b
+        PRINTLN
+            EQUALBOOL ==
+                identifier
+                    c
+                identifier
+                    d
+            UNEQUAL /=
+                identifier
+                    c
+                identifier
+                    d
+        PRINT
+            EQUALBOOL ==
+                identifier
+                    e
+                identifier
+                    f
+            UNEQUAL /=
+                identifier
+                    e
+                identifier
+                    f
+    BLOCK_END
+SCOPE
+   Variable: a | Type: int | Value: 0
+   Variable: b | Type: int | Value: 0
+   Variable: c | Type: set | Value: {}
+   Variable: d | Type: set | Value: {}
+   Variable: e | Type: bool | Value: False
+   Variable: f | Type: bool | Value: False
+   SCOPE
+      Variable: i | Type: int | Value: 0
+   END_SCOPE
+END_SCOPE
