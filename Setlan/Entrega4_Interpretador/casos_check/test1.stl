@@ -1,24 +1,23 @@
 program {
-    using
-        int i,j,k;
-        bool b,c;
-        set s;
-    in
-    if(true) {
-        using
-            set i;
-            bool b;
-        in
-        i = {1,2,3};
-        s = 2 <+> s;
-        # nótese que al lado izquierdo del `min`, `i` es int 
-        # y al lado derecho es set
-        for i min 2 <+> s do {
-          using bool j; in          # una `i` más
-          j = i ==1;
-        };
-    } else {
-       using bool i; in
-       
-    };
+	using
+ 		int i,j,k;
+ 		bool b,c;
+ 		set s;
+ 	in
+
+	if(true) {
+		using
+			set i;
+			bool b;
+		in
+		i = {1,2,3};
+ 		# nótese que al lado izquierdo del `min`, `i` es int
+ 		# y al lado derecho es set
+	for i min 2 <+> i do {
+		using bool i; in # una `i` más
+
+	};
+	} else {
+		using bool i; in
+	};
 }

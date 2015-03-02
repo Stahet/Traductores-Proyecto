@@ -1,0 +1,59 @@
+PROGRAM
+    BLOCK
+        USING
+            int x
+            int y
+            int z
+            set a
+            set b
+            set c
+        IN
+        BLOCK
+            USING
+                bool x
+                bool y
+                bool z
+                set a
+                set b
+                set c
+            IN
+            BLOCK
+                USING
+                    int x
+                    int y
+                    int zs4
+                    bool ah
+                    bool hah
+                IN
+                ASSIGN
+                    identifier
+                        x
+                    value
+                        identifier
+                            ah
+                PRINT
+                    identifier
+                        as
+                ASSIGN
+                    identifier
+                        ah
+                    value
+                        int
+                            3
+                ASSIGN
+                    identifier
+                        ah
+                    value
+                        identifier
+                            a
+                SCAN
+                    identifier
+                        a
+            BLOCK_END
+        BLOCK_END
+    BLOCK_END
+Error en la linea 17, columna 19: La variable 'as' aun no ha sido declarada.
+Error en la linea 16, columna 15: No se puede asignar expresiones de tipo 'bool' a la variable 'x' de tipo 'int'.
+Error en la linea 18, columna 16: No se puede asignar expresiones de tipo 'int' a la variable 'ah' de tipo 'bool'.
+Error en la linea 19, columna 16: No se puede asignar expresiones de tipo 'set' a la variable 'ah' de tipo 'bool'.
+Error en la linea 20, columna 18: 'SCAN' solo se puede usar para variables de tipo 'int' o 'bool' . 'a' es de tipo 'set'

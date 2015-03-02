@@ -1,0 +1,13 @@
+program{
+    using
+    	set s;
+    in
+    for i max s do{
+    	print i;
+    };
+    for i min s do{
+    	{using set i; in
+    		i = i++s;
+    	};
+    };
+}

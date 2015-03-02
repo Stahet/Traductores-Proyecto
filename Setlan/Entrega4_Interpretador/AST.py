@@ -165,11 +165,8 @@ class For(Expre):
         self.print_with_indent('END_FOR',level)
     
     def check_types(self, symbolTable):
-        symbolTable.add_scope() # Crea un nuevo alcance
-        symbolTable.insert(self.identifier.name,"int","i") # Creacion simbolo de solo lectura
-        
-        self.identifier.check_types(symbolTable) # Esto hay que hacerlo??
         type_expre = self.expression.check_types(symbolTable)
+        #self.identifier.check_types(symbolTable) # Esto hay que hacerlo??
         if type_expre != "set":
             if type_expre == "":
                 static_errors.append((self.expression.lineno,self.expression.lexpos,"La expresion de un for debe ser de tipo 'set'"))
@@ -177,6 +174,8 @@ class For(Expre):
                 static_errors.append((self.expression.lineno,self.expression.lexpos,"La expresion de un for debe ser de " +\
                                  "tipo 'set' no de tipo '%s'." % type_expre))
                 
+        symbolTable.add_scope() # Crea un nuevo alcance
+        symbolTable.insert(self.identifier.name,"int","i") # Creacion simbolo de solo lectura
         self.statement.check_types(symbolTable)
         symbolTable.delete_scope() # Eliminar alcance saliendo del For
         
@@ -637,7 +636,7 @@ class Identifier(Expre):  #### Revisar manejo de errores
         
     def check_types(self, symbolTable):
         symbol = symbolTable.lookup(self.name)
-        if symbol is None:  ###### Manejo de errores
+        if symbol is None:
             static_errors.append((self.lineno,self.lexpos,"La variable '%s' aun no ha sido declarada."  % self.name))
         else:
             self.type = symbol.type

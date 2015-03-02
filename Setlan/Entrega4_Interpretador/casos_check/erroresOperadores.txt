@@ -1,0 +1,2 @@
+Error en la linea 5, columna 16: La expresion de un for debe ser de tipo 'set' no de tipo 'int'.
+Error en la linea 7, columna 15: Operando '++' no sirve con operandos de tipo 'int' y 'set'.

@@ -1,0 +1,10 @@
+program{
+    using
+        int a;
+        bool b;
+        set c;
+    in
+    scan a;
+    scan b;
+    scan c;
+}

@@ -1,0 +1,34 @@
+PROGRAM
+    BLOCK
+        USING
+            bool a
+            bool b
+            set i
+            set k
+        IN
+        ASSIGN
+            identifier
+                k
+            value
+                MAPPLUS <+>
+                    int
+                        2
+                    PARENTHESIS
+                        UNION ++
+                            PARENTHESIS
+                                DIFFERENCE \
+                                    identifier
+                                        k
+                                    identifier
+                                        k
+                            PARENTHESIS_CLOSE
+                            identifier
+                                k
+                    PARENTHESIS_CLOSE
+    BLOCK_END
+SCOPE
+   Variable: a | Type: bool | Value: False
+   Variable: b | Type: bool | Value: False
+   Variable: i | Type: set | Value: {}
+   Variable: k | Type: set | Value: {}
+END_SCOPE
