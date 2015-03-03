@@ -84,7 +84,7 @@ if __name__ == '__main__':
     #setlan(["setlan","casos_check/erroresOperadores","-t","-s","-a"])
     #setlan(["setlan","casos_check/errorFor","-t","-s","-a"])
     #setlan(["setlan","casos_check/errorIf","-t","-s","-a"])
-    setlan(["setlan","casos_check/errorRepeatWhile","-t","-s","-a"])
+    #setlan(["setlan","casos_check/errorRepeatWhile","-t","-s","-a"])
     #setlan(["setlan","casos_check/errorScan.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/errorWhile","-t","-s","-a"])
     #setlan(["setlan","casos_check/escrituraIterador.stl","-t","-s","-a"])
