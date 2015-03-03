@@ -75,7 +75,7 @@ def salir(mensaje = "ERROR: Ejecute el interprete de la forma: setlan <dir_archi
     exit(codigo)    
              
 if __name__ == '__main__':
-    setlan()
+    #setlan()
     #setlan(["setlan","casos_check/2ContextoIgualNombre.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/3variables.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/all.stl","-t","-s","-a"])
@@ -84,11 +84,12 @@ if __name__ == '__main__':
     #setlan(["setlan","casos_check/erroresOperadores","-t","-s","-a"])
     #setlan(["setlan","casos_check/errorFor","-t","-s","-a"])
     #setlan(["setlan","casos_check/errorIf","-t","-s","-a"])
-    #setlan(["setlan","casos_check/errorRepeatWhile","-t","-s","-a"])
+    setlan(["setlan","casos_check/errorRepeatWhile","-t","-s","-a"])
     #setlan(["setlan","casos_check/errorScan.stl","-t","-s","-a"])
+    #setlan(["setlan","casos_check/errorWhile","-t","-s","-a"])
     #setlan(["setlan","casos_check/escrituraIterador.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/operacionesConConjuntos.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/reglasDeAlcance.stl","-t","-s","-a"])
-    #setlan(["setlan","casos_check/test2EnunciadoErrorTipo.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/terrible.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/test1.stl","-t","-s","-a"])
+    #setlan(["setlan","casos_check/test2EnunciadoErrorTipo.stl","-t","-s","-a"])

@@ -10,8 +10,10 @@ program{
 		b = i;
 	};
 	
-	repeat
-		a = i
+	repeat{
+		using set i; in
+		a = i;
+	}
 	while(a < b)do{
 		i = i+1;
 		a = {4};
