@@ -67,7 +67,7 @@ class SymbolTable:
     def update(self, name, value):
         symbol = self.lookup(name)
         if symbol is None:
-            print "No se encontro la variable"+name+" para este alcance"
+            print "No se encontro la variable "+name+" para este alcance"
             return 
         
         symbol.value = value

@@ -68,7 +68,8 @@ def setlan(argv = None):
     if "-s" in argv:
         print "\n####################      CHEQUEO DE TIPOS       ####################\n" 
         print tree.symbolTable.str
-
+    
+    tree.execute()
 def salir(mensaje = "ERROR: Ejecute el interprete de la forma: setlan <dir_archivo> [-t] [-a] [-s]",
                 codigo = -1):
     print mensaje
@@ -93,3 +94,7 @@ if __name__ == '__main__':
     #setlan(["setlan","casos_check/terrible.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/test1.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/test2EnunciadoErrorTipo.stl","-t","-s","-a"])
+    #setlan(["setlan","casos_check/variableNoDeclarada","-t","-s","-a"])
+    
+    ####### Interpretador
+    setlan(["setlan","casos_interpretador/operadores","-t","-s","-a"])

@@ -10,6 +10,7 @@ Created on 4/2/2015
 
 from symbol_table import SymbolTable
 from expresiones import obtener_columna_texto_lexpos
+from functions import *
 
 global static_errors
 static_errors = []
@@ -31,6 +32,9 @@ class Expre:
     
     def check_types(self,symbols):
         pass
+    
+    def execute(self,symbols):
+        pass
 
 class Program(Expre):
     
@@ -47,6 +51,10 @@ class Program(Expre):
     def check_types(self):
         self.symbolTable = SymbolTable()
         self.statement.check_types(self.symbolTable)
+        
+    def execute(self):
+        self.symbolTable = SymbolTable()
+        self.statement.execute(self.symbolTable)
         
 class Scan(Expre):
     
@@ -71,26 +79,29 @@ class Scan(Expre):
         
 class Assign(Expre):
     
-    def __init__(self, identifier,expresion):
+    def __init__(self, identifier, expression):
         Expre.__init__(self)
         self.type = "ASSIGN"
         self.id = identifier
-        self.expresion = expresion
+        self.expression = expression
         
     def print_tree(self,level):
         self.print_with_indent(self.type,level)
         self.id.print_tree(level + 1)
         self.print_with_indent('value',level + 1)
-        self.expresion.print_tree(level + 2)
+        self.expression.print_tree(level + 2)
     
-    def fetch_symbols(self, symbolTable):
-        self.id.fetch_symbols(symbolTable)
-        self.expresion.fetch_symbols(symbolTable)
-    
+    #===========================================================================
+    # def fetch_symbols(self, symbolTable):
+    #     self.id.fetch_symbols(symbolTable)
+    #     self.expression.fetch_symbols(symbolTable)
+    # 
+    #===========================================================================
     def check_types(self, symbolTable):
+        self.id.check_types(symbolTable)
         symbol = symbolTable.lookup(self.id.name)
         if symbol is not None:
-            type_expres = self.expresion.check_types(symbolTable)
+            type_expres = self.expression.check_types(symbolTable)
             
             if type_expres ==  "" : return ""
 
@@ -102,7 +113,10 @@ class Assign(Expre):
                 static_errors.append((self.id.lineno,self.id.lexpos,
                                       "La variable %s es de solo lectura." % (self.id.name)))
                 
-                    
+    def execute(self, symbolTable):
+        value = self.expression.evaluate(symbolTable)
+        symbolTable.update(self.id.name, value)
+                  
 class If(Expre):
     
     def __init__(self,condition,statement_if, statement_else = None):
@@ -169,9 +183,9 @@ class For(Expre):
         #self.identifier.check_types(symbolTable) # Esto hay que hacerlo??
         if type_expre != "set":
             if type_expre == "":
-                static_errors.append((self.expression.lineno,self.expression.lexpos,"La expresion de un for debe ser de tipo 'set'"))
+                static_errors.append((self.expression.lineno,self.expression.lexpos,"La expression de un for debe ser de tipo 'set'"))
             else:                          
-                static_errors.append((self.expression.lineno,self.expression.lexpos,"La expresion de un for debe ser de " +\
+                static_errors.append((self.expression.lineno,self.expression.lexpos,"La expression de un for debe ser de " +\
                                  "tipo 'set' no de tipo '%s'." % type_expre))
                 
         symbolTable.add_scope() # Crea un nuevo alcance
@@ -283,7 +297,13 @@ class Print(Expre):
             exp.check_types(symbolTable)
             
         return self.type
-           
+    
+    def execute(self, symbolTable):
+        out = ""
+        for exp in self.lista_to_print:
+            out = out + str(exp.evaluate(symbolTable))
+        print out
+              
 class Block(Expre):
     
     def __init__(self, list_st,declare = None): 
@@ -315,6 +335,18 @@ class Block(Expre):
         if self.declare: # Si hubo declaraciones, se desempila una tabla
             symbolTable.delete_scope()
     
+    def execute(self, symbolTable):
+        
+        if self.declare: # Vemos si el bloque tiene declaraciones
+            symbolTable.add_scope() # Si el bloque tiene declaraciones, se agrega una nueva tabla
+            self.declare.execute(SymbolTable)            
+        
+        for stat in self.list_st:
+            stat.execute(symbolTable)
+        
+        if self.declare: # Si hubo declaraciones, se desempila una tabla
+            symbolTable.delete_scope()
+            
 class Parenthesis(Expre):
     
     def __init__(self, expre):
@@ -331,6 +363,35 @@ class Parenthesis(Expre):
         return self.condition.check_types(symbolTable)
     
 class BinaryOP(Expre):
+    bin_operators = {   
+        # Int Operators
+         "PLUS +"         : sum1,
+         "MINUS -"        : minus,
+         "TIMES *"        : times,
+         "INTDIVISION /"  : int_division,
+         "RESTDIVISION %" : rest_division,
+         # Bool Operators
+         "UNEQUAL /="        : unequal,
+         "EQUALBOOL =="      : equal,
+         "LESSTHAN <"        : less,
+         "LESSOREQUALTHAN <=": less_equal,
+         "GREATERTHAN >"     : greater,
+         "GREATEROREQUALTHAN >=" : greater_equal,
+         
+         "and"    : binary_and,
+         "or"     : binary_or,
+         # Set Operators
+         "UNION ++"        : union,
+         "DIFFERENCE \\"   : difference,
+         "INTERSECTION ><" : intersection,
+         # int and set Operators
+         "MAPPLUS <+>"     : map_plus,
+         "MAPMINUS <->"    : map_minus,
+         "MAPTIMES <*>"    : map_times, 
+         "MAPDIVIDE </>"   : map_divide,
+         "MAPREST <%>"     : map_rest,
+         "BELONG @"        : belong
+    }
     
     def __init__(self,expre1,type_op,expre2):
         Expre.__init__(self)
@@ -347,6 +408,11 @@ class BinaryOP(Expre):
         #Check type for BinaryOP
         pass
     
+    def evaluate(self, symbolTable):
+        value1 = self.expre1.evaluate(symbolTable)
+        value2 = self.expre2.evaluate(symbolTable)
+        return BinaryOP.bin_operators[self.type_op](value1, value2)
+    
 class BinaryOpInteger(BinaryOP):
     ''' 
     Integer Binary Operator
@@ -361,9 +427,9 @@ class BinaryOpInteger(BinaryOP):
             static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
                                 (self.type_op[-1],type_expre1,type_expre2)))
             return "" 
-            
-        return "int" 
-
+          
+        return "int"
+        
 class BinaryOpEquals(BinaryOP):
     ''' Equals Binary Operator ("UNEQUAL /=","EQUALBOOL ==") '''
     def check_types(self,symbols):
@@ -458,6 +524,14 @@ class BinaryOpMapToSet(BinaryOP):
     
 class UnaryOP(Expre):
     ''' Unary Operator for Inheritance'''
+    unary_operators = {   
+        "not"      : bool_not,   # Bool not
+        "NEGATE -" : int_negate, # Integer negate
+        #Unary set Operator 
+        "MAXVALUESET >?" : max_value_set,
+        "MINVALUESET <?" : min_value_set,
+        "SIZESET $?"     : size_set,
+    }
     def __init__(self, type_op,expre1):
         Expre.__init__(self)
         self.type_op = type_op
@@ -471,6 +545,10 @@ class UnaryOP(Expre):
         # For type checking
         pass
     
+    def evaluate(self, symbolTable):
+        value = self.expre1.evaluate(symbolTable)
+        return UnaryOP.unary_operators[self.type_op](value)
+        
 class UnaryOpUminus(UnaryOP):
     def check_types(self, symbols):
         type_expre = self.expre1.check_types(symbols)
@@ -523,6 +601,10 @@ class DeclareList(Expre):
     def check_types(self, symbolTable):
         for declaration_vars in self.declared_list:
             declaration_vars.check_types(symbolTable)
+            
+    def execute(self, symbolTable):
+        for declaration_vars in self.declared_list:
+            declaration_vars.execute(symbolTable)
     
 class TypeList(Expre):
     
@@ -548,6 +630,11 @@ class TypeList(Expre):
             else:
                 symbolTable.insert(var.name, self.data_type,'i/o',var)
         #return True
+        
+    def execute(self, symbolTable):
+        for var in self.id_list:
+            symbolTable.insert(var.name, self.data_type,'i/o',var)
+            
 class Direction(Expre):
     
     def __init__(self,value):
@@ -580,7 +667,7 @@ class Set(Expre):
             exp.check_types(symbolTable)
             
         return self.type
-            
+    
 class Bool(Expre):
     
     def __init__(self , value):
@@ -595,6 +682,9 @@ class Bool(Expre):
     def check_types(self, symbolTable):
         return self.type
     
+    def evaluate(self, symbolTable):
+        return self.value
+    
 class Integer(Expre):
     
     def __init__(self , value):
@@ -608,7 +698,10 @@ class Integer(Expre):
         
     def check_types(self, symbolTable):
         return self.type
-        
+    
+    def evaluate(self, symbolTable):
+        return self.value
+    
 class String(Expre):
     
     def __init__(self , value):
@@ -622,7 +715,10 @@ class String(Expre):
         
     def check_types(self, symbolTable):
         return self.type
-
+    
+    def evaluate(self, symbolTable):
+        return self.value
+    
 class Identifier(Expre):
     
     def __init__(self , name):        
@@ -641,3 +737,7 @@ class Identifier(Expre):
         else:
             self.type = symbol.type
         return self.type
+    
+    def evaluate(self, symbolTable):
+        symbol = symbolTable.lookup(self.name) 
+        return symbol.value
