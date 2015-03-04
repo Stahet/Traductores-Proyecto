@@ -1,0 +1,11 @@
+program{
+    using
+        int a,b;
+    in
+    a = 2;
+    b = 3;
+    b = (b + a)*2; 
+    a = b*50+b/10;       
+    print "a = ", a; # a == 501
+    print "b = ", b; # b == 10
+}

@@ -97,4 +97,4 @@ if __name__ == '__main__':
     #setlan(["setlan","casos_check/variableNoDeclarada","-t","-s","-a"])
     
     ####### Interpretador
-    setlan(["setlan","casos_interpretador/operadores","-t","-s","-a"])
+    setlan(["setlan","casos_interpretador/guardar_variables","-t","-s","-a"])

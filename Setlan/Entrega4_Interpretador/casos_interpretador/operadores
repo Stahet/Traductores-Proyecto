@@ -1,10 +1,12 @@
 program{
 	using
 		int a,b;
-		set s;
+		bool s;
 	in
-	a = 45*9/10;  # Mayor precedencia /
-	b = 4/6%2;    # Mayor precedencia %
-	print a;
-	print b;
+	a = 4+6*2-10; # 6
+	b = 4%5+10;  # 14
+	print a, b;
+	s = a >= b;
+	print s;
+	print b == a,s;
 }
