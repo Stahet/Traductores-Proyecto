@@ -3,6 +3,8 @@ program{
 		int a,b;
 		set s;
 	in
-	a = 45+10/10;
+	a = 45*9/10;  # Mayor precedencia /
+	b = 4/6%2;    # Mayor precedencia %
 	print a;
+	print b;
 }
