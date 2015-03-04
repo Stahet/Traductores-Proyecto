@@ -1,7 +1,8 @@
 program{
 	using
-		int a;
+		int a,b;
+		set s;
 	in
-	a = a + 4;
+	a = 45+10/10;
 	print a;
 }

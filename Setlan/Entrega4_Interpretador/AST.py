@@ -339,7 +339,7 @@ class Block(Expre):
         
         if self.declare: # Vemos si el bloque tiene declaraciones
             symbolTable.add_scope() # Si el bloque tiene declaraciones, se agrega una nueva tabla
-            self.declare.execute(SymbolTable)            
+            self.declare.execute(symbolTable)            
         
         for stat in self.list_st:
             stat.execute(symbolTable)
@@ -361,6 +361,9 @@ class Parenthesis(Expre):
     
     def check_types(self, symbolTable):
         return self.condition.check_types(symbolTable)
+    
+    def evaluate(self, symbolTable):
+        return self.condition.evaluate(symbolTable)
     
 class BinaryOP(Expre):
     bin_operators = {   
@@ -634,7 +637,7 @@ class TypeList(Expre):
     def execute(self, symbolTable):
         for var in self.id_list:
             symbolTable.insert(var.name, self.data_type,'i/o',var)
-            
+        
 class Direction(Expre):
     
     def __init__(self,value):

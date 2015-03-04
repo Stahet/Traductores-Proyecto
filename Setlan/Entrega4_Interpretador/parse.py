@@ -293,18 +293,18 @@ precedence = (
     ("left", 'AND'),
     ("right", 'NOT'),
     # compare
-    ("nonassoc", 'LESSTHAN', 'LESSOREQUALTHAN', 'GREATERTHAN', 'GREATEROREQUALTHAN'),
-    ("left", 'EQUALBOOL', 'UNEQUAL'),
+    ("nonassoc", 'GREATEROREQUALTHAN','GREATERTHAN','LESSOREQUALTHAN','LESSTHAN' ),
+    ("left",  'UNEQUAL','EQUALBOOL'),
     ("nonassoc", 'BELONG'),
     # int
-    ("left", 'PLUS', 'MINUS'),
-    ("left", 'TIMES', 'INTDIVISION', 'RESTDIVISION'),
+    ("left", 'MINUS', 'PLUS'),
+    ("left", 'RESTDIVISION','INTDIVISION','TIMES'),
     #set
-    ('left','DOUBLEPLUS','COUNTERSLASH'),
+    ('left','COUNTERSLASH','DOUBLEPLUS'),
     ('left','INTERSECCION'),
     #map to set
-    ('left','MAPPLUS','MAPMINUS'),
-    ('left','MAPTIMES','MAPDIVIDE','MAPREST'),
+    ('left','MAPMINUS','MAPPLUS'),
+    ('left','MAPREST','MAPDIVIDE','MAPTIMES'),
     #unary over sets
     ('right','MAXVALUESET','MINVALUESET','SIZESET'),
     # int
