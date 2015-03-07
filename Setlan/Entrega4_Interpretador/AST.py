@@ -15,6 +15,25 @@ from functions import *
 global static_errors
 static_errors = []
 
+def to_string(elem):
+    out = ""
+    if type(elem) is set:
+        if len(elem) == 0:
+            out = "{}"
+        else:
+            out += "{"
+            for x in elem:
+                out += " %d," % x
+            
+            out = out[:-1]+" }" # Remover ultima "," y cerrar el conjunto
+    elif type(elem) is bool:
+        if elem:
+            out = "true"
+        else:
+            out = "false"
+            
+    return out
+
 class Expre:
     
     def __init__(self):
@@ -155,7 +174,9 @@ class If(Expre):
         self.statement_if.check_types(symbolTable)
         if self.statement_else is not None:
             self.statement_else.check_types(symbolTable)
-
+    
+    def execute(self, symbolTable):
+        pass
 class For(Expre):
     
     def __init__(self,identifier,direction, expression , statement):
@@ -301,7 +322,7 @@ class Print(Expre):
     def execute(self, symbolTable):
         out = ""
         for exp in self.lista_to_print:
-            out = out + str(exp.evaluate(symbolTable))
+            out = out + to_string(exp.evaluate(symbolTable))
         print out
               
 class Block(Expre):
@@ -414,7 +435,7 @@ class BinaryOP(Expre):
     def evaluate(self, symbolTable):
         value1 = self.expre1.evaluate(symbolTable)
         value2 = self.expre2.evaluate(symbolTable)
-        return BinaryOP.bin_operators[self.type_op](value1, value2)
+        return BinaryOP.bin_operators[self.type_op](value1, value2) # Evaluar utilizando funciones
     
 class BinaryOpInteger(BinaryOP):
     ''' 
@@ -656,7 +677,7 @@ class Set(Expre):
     
     def __init__(self, list_st): 
         Expre.__init__(self)
-        self.type = 'set'
+        self.type = "set"
         self.list_st = list_st
         
     def print_tree(self,level):
@@ -666,16 +687,37 @@ class Set(Expre):
             exp.print_tree(level + 1)
             
     def check_types(self, symbolTable):
+        error = False
         for exp in self.list_st:
-            exp.check_types(symbolTable)
-            
-        return self.type
+            type_expre = exp.check_types(symbolTable)
+            if type_expre != "int":
+                if type_expre != "":
+                    static_errors.append((exp.lineno,exp.lexpos,
+                          "Los conjuntos solamente pueden contener elementos de tipo 'int' " + \
+                          "se obtuvo un elemento de tipo '%s'" %(type_expre)))
+                else:
+                    static_errors.append((exp.lineno,exp.lexpos,
+                          "Los conjuntos solamente pueden contener elementos de tipo 'int' "))
+                error = True
+        
+        if error:
+            return ""
+        else:      
+            return self.type
+        
+    def evaluate(self, symbolTable):
+        set_list = []
+        for elem in self.list_st:
+            value = elem.evaluate(symbolTable)
+            set_list.append(value)
+        
+        return set(set_list)
     
 class Bool(Expre):
     
     def __init__(self , value):
         Expre.__init__(self)
-        self.type = 'bool'
+        self.type = "bool"
         self.value = value
     
     def print_tree(self , level):
@@ -686,13 +728,16 @@ class Bool(Expre):
         return self.type
     
     def evaluate(self, symbolTable):
-        return self.value
+        if self.value == "true":
+            return True
+        else:
+            return False
     
 class Integer(Expre):
     
     def __init__(self , value):
         Expre.__init__(self)
-        self.type = 'int'
+        self.type = "int"
         self.value = value
         
     def print_tree(self , level):  
@@ -709,7 +754,7 @@ class String(Expre):
     
     def __init__(self , value):
         Expre.__init__(self)
-        self.type = 'string'
+        self.type = "string"
         self.value = value
     
     def print_tree(self , level):  

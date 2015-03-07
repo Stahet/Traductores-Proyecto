@@ -119,7 +119,7 @@ class Symbol:
     # Lista de valores por defecto para cada tipo
     default_list = {"int"  : 0, 
                     "bool" : False, 
-                    "set"  : {} }
+                    "set"  : set() }
     
     def __init__(self, name, data_type, type_edit = "i/o", ref=None):
         self.name = name

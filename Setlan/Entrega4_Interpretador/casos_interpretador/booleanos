@@ -1,0 +1,10 @@
+program{
+    using
+        bool a,b;
+    in
+    a = true;
+    b = 5 < 7;
+    print a == b," ", a /=b;#True, False
+    a = a or not a;
+    print a;
+}
