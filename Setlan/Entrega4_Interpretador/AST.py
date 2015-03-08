@@ -5,9 +5,9 @@ Created on 4/2/2015
 @author: Jonathan Ng 11-10199
          Manuel Gonzalez 11-10390
     
-    Clases para la representación de un Arbol abstracto del lenguaje setlan
+    Clases para la representaciÃ³n de un Arbol abstracto del lenguaje setlan
 '''
-
+import sys
 from symbol_table import SymbolTable
 from expresiones import obtener_columna_texto_lexpos
 from functions import *
@@ -172,10 +172,10 @@ class If(Expre):
         if  type_cond != "bool":
             if type_cond == "":
                 static_error(self.condition.lineno, self.condition.lexpos,
-                                  "Instrucción 'if' espera expresiones de tipo 'bool'.")
+                                  "InstrucciÃ³n 'if' espera expresiones de tipo 'bool'.")
             else:
                 static_error(self.condition.lineno,self.condition.lexpos,
-                                  "Instrucción 'if' espera expresiones de tipo 'bool', no de tipo '%s'." % type_cond)
+                                  "InstrucciÃ³n 'if' espera expresiones de tipo 'bool', no de tipo '%s'." % type_cond)
         
         self.statement_if.check_types(symbolTable)
         if self.statement_else is not None:
@@ -380,10 +380,10 @@ class Print(Expre):
         
         if self.type == "print":
             interpreter_result.append(out+" ")
-            print out,
+            sys.stdout.write(out)
         else:
             interpreter_result.append(out +"\n")
-            print out
+            sys.stdout.write(out +"\n")
     
 class Block(Expre):
     
