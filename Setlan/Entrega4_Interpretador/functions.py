@@ -19,6 +19,7 @@ def max_value_set(set1):
 
 def min_value_set(set1):
     return min(set1)
+
 def size_set(set1):
     return len(set1)
 

@@ -56,20 +56,24 @@ def setlan(argv = None):
                        (error[0],expresiones.obtener_columna_texto_lexpos(error[1]),error[2])
             return
     
-    # Pasan los errores pasamos a interpretar    
+    # Flags   
     if "-t" in argv:
         print "####################       LISTA DE TOKENS      ####################\n" 
         expresiones.print_tokens(expresiones.build_lexer(), content)
+        print
     
     if "-a" in argv:
         print "\n#################### ARBOL SINTACTICO ABSTRACTO ####################\n" 
         tree.print_tree()
-    
+        print
+        
     if "-s" in argv:
         print "\n####################      CHEQUEO DE TIPOS       ####################\n" 
         print tree.symbolTable.str
+        print
+        
+    tree.execute() # Ejecutar el interpretador
     
-    tree.execute()
 def salir(mensaje = "ERROR: Ejecute el interprete de la forma: setlan <dir_archivo> [-t] [-a] [-s]",
                 codigo = -1):
     print mensaje
@@ -104,4 +108,4 @@ if __name__ == '__main__':
     #setlan(["setlan","casos_interpretador/pruebaIf","-t","-s","-a"])
     #setlan(["setlan","casos_interpretador/pruebaFor","-t","-s","-a"])
     #setlan(["setlan","casos_interpretador/pruebaMaliciaFor","-t","-s","-a"])
-    setlan(["setlan","casos_interpretador/pruebaWhileDo","-t","-s","-a"])
+    setlan(["setlan","casos_interpretador/pruebaWhileDo","-a"])

@@ -417,8 +417,8 @@ class Block(Expre):
     
     def execute(self, symbolTable):
         
-        if self.declare: # Vemos si el bloque tiene declaraciones
-            symbolTable.add_scope() # Si el bloque tiene declaraciones, se agrega una nueva tabla
+        if self.declare:            # Vemos si el bloque tiene declaraciones
+            symbolTable.add_scope() # Si posee declaraciones, se agrega una nueva tabla
             self.declare.execute(symbolTable)            
         
         for stat in self.list_st:
@@ -494,7 +494,7 @@ class BinaryOP(Expre):
     def evaluate(self, symbolTable):
         value1 = self.expre1.evaluate(symbolTable)
         value2 = self.expre2.evaluate(symbolTable)
-        return BinaryOP.bin_operators[self.type_op](value1, value2) # Evaluar utilizando funciones
+        return BinaryOP.bin_operators[self.type_op](value1, value2) # Evaluacion de funciones
     
 class BinaryOpInteger(BinaryOP):
     ''' 
@@ -607,9 +607,9 @@ class BinaryOpMapToSet(BinaryOP):
     
 class UnaryOP(Expre):
     ''' Unary Operator for Inheritance'''
-    unary_operators = {   
-        "not"      : bool_not,   # Bool not
-        "NEGATE -" : int_negate, # Integer negate
+    unary_operators = {
+        "not"      : bool_not,   # Bool Operator
+        "NEGATE -" : int_negate, # Integer Operator
         #Unary set Operator 
         "MAXVALUESET >?" : max_value_set,
         "MINVALUESET <?" : min_value_set,
@@ -712,7 +712,6 @@ class TypeList(Expre):
                                                                                       symbol.type)))
             else:
                 symbolTable.insert(var.name, self.data_type,'i/o',var)
-        #return True
         
     def execute(self, symbolTable):
         for var in self.id_list:

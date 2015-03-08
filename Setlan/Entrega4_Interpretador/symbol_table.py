@@ -15,7 +15,6 @@ class SymbolTable:
         '''
          Inicializa la tabla de contexto y la lista de errores.
         '''
-        #self.errors = []
         self.tableStack = [] # Pila de tablas (diccionarios)
         self.str = ""
         
@@ -88,32 +87,6 @@ class SymbolTable:
                 return table[name]
         
         return None # Retorna None en caso de no conseguir la variable
-    
-    #===========================================================================
-    # def print_table(self, table):
-    #     
-    #     level = len(self.tableStack) # Nivel de alcance
-    #     cad_indent = "   "*level
-    #     print cad_indent + "SCOPE"
-    #     
-    #     for var in table.values():
-    #         salida = "   "
-    #         salida += "Variable: " + var.name
-    #         salida += " | Type: " + var.type 
-    #         salida += " | Value: "
-    #         if var.type == "int" or var.type == "bool":
-    #             salida += str(var.value)
-    #         elif var.type == "set":
-    #             salida += "{"
-    #             for i,value in enumerate(var.value):
-    #                 salida += str(value)
-    #                 if i != len(var.value) - 1:
-    #                     salida += ","
-    #             salida += "}"
-    #             
-    #         print cad_indent + salida    
-    #     print cad_indent + "END_SCOPE"
-    #===========================================================================
           
 class Symbol:
     # Lista de valores por defecto para cada tipo
