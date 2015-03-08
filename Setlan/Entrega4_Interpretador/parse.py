@@ -170,6 +170,8 @@ def p_type_data(p):
 def p_expression_set(p):
     ''' expression : LCURLY set_list RCURLY'''
     p[0] = Set(p[2])
+    p[0].lineno = p.lineno(1)
+    p[0].lexpos = p.lexpos(1)
 
 def p_set_list(p):
     '''set_list : comma_list'''

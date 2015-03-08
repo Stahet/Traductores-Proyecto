@@ -82,7 +82,7 @@ def salir(mensaje = "ERROR: Ejecute el interprete de la forma: setlan <dir_archi
     exit(codigo)    
              
 if __name__ == '__main__':
-    #setlan()
+    setlan()
     #setlan(["setlan","casos_check/2ContextoIgualNombre.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/3variables.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/all.stl","-t","-s","-a"])
@@ -125,4 +125,4 @@ if __name__ == '__main__':
     #setlan(["setlan","casos_interpretador/fibonacci","-a"])
     #setlan(["setlan","casos_interpretador/holaMundo","-a"])
     #setlan(["setlan","casos_interpretador/sets","-a"])
-    setlan(["setlan","casos_interpretador/precedenciaOperadores","-a"])
+    #setlan(["setlan","casos_interpretador/precedenciaOperadores","-a"])
