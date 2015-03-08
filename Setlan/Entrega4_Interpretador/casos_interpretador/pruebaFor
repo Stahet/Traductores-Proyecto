@@ -1,0 +1,21 @@
+program {
+    using
+        set s, t;
+    in
+    s = {-1,0,1,2,3,4};
+    for i min s do {
+        print i," ";
+        s = s ++ {i * 2}; # unión de conjuntos
+    };
+    println "";
+    print s;
+    
+    println "";println "";
+    t = {10,1,4,7};
+    for i max t do {
+        print i," ";
+        t = t ++ {i + 2}; # unión de conjuntos
+    };
+    println "";
+    print t;
+}

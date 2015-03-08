@@ -1,0 +1,30 @@
+program{
+    using
+        set s;
+        int a,b;
+    in
+    if (4<=4){
+        println "4 es menor igual que 4";
+        if (true){
+            println "Entra en true";
+        }else
+            println "No entra!"
+        ;
+        
+        if (false){
+            println "Aqui no deberia entrar! ";
+        };
+        
+    }else
+        println "Aqui no debe entrar tampoco!"
+    ;
+    
+    a = 4; b = 5;
+    if (a == b)
+        println "No debe Entrar"
+    else{
+        println "Entrando en else";
+        a = a + 4;
+        println "Imprimiendo instruccion de else " ,a;
+    };
+}

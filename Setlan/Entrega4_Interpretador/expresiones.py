@@ -9,7 +9,9 @@ Created on 19/1/2015
 '''
 import ply.lex as lex
 
-lexer_errors  = []
+global lexer_errors
+lexer_errors = []
+
 # Palabras reservadas
 reservadas = {
    'program':'PROGRAM',
@@ -94,9 +96,12 @@ def t_IDENTIFIER(t):
     t.type = valor    # Check for reserved words
     return t
 
+# Mayor entero representable es 2^31 - 1
 def t_INTEGER(t):
     r'[0-9]+'
     t.value = int(t.value)
+    if (t.value > 2147483647): #2^31 - 1
+        overflow_error(t)
     return t
 
 def t_MAPEADO(t):
@@ -168,11 +173,17 @@ def obtener_columna_texto_lexpos(lexpos,texto = None):
 
 # Manejador de errores
 def t_error(t):
-    global lexer_errors
     mensage = "Error: se encontro  un caracter inesperado '%s' en la linea %d, Columna %d."
     datos = (t.value[0],t.lineno,obtener_columna(t))
     t.lexer.skip(1)
     if t.value[0] == '\r': return
+    lexer_errors.append(mensage % datos)
+
+# Error de overflow para los enteros
+def overflow_error(t):
+    mensage = "Error: overflow para el entero '%s' en la linea %d, Columna %d."
+    datos = (t.value,t.lineno,obtener_columna(t))
+    t.lexer.skip(1)
     lexer_errors.append(mensage % datos)
 
 def print_tokens(lexer,input):

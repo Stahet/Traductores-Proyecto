@@ -1,0 +1,8 @@
+program{
+    using
+        set a;
+    in
+    a = {};
+    print >? a;
+    print <? a;
+} 

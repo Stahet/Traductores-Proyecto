@@ -1,0 +1,12 @@
+program{
+	using
+		int a,b;
+		bool s;
+	in
+	a = 4+6*2-10; # 6
+	b = 4%5+10;  # 14
+	print a, b;
+	s = a >= b;
+	print s;
+	print b == a,s;
+}

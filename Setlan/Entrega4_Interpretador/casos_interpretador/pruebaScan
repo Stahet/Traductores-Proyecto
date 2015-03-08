@@ -1,0 +1,14 @@
+program{
+    using
+        set s;
+        int a,b;
+        bool c;
+    in
+    a = 4;
+    scan a;
+    println "El entero es: ", a;
+    
+    c = true;
+    scan c;
+    println "El booleano es: ",c;
+}

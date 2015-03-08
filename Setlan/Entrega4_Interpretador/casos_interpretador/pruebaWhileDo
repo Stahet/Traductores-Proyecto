@@ -1,0 +1,10 @@
+program{
+    using 
+        int a,b ;
+    in
+    b = 10;
+    while (a < b) do{
+        print a;
+        a = a + 1;
+    };
+}

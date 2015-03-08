@@ -1,0 +1,5 @@
+Error en la linea 7, columna 15: Operando '+' no sirve con operandos de tipo 'set' y 'int'.
+Error en la linea 10, columna 11: No se puede asignar expresiones de tipo 'int' a la variable 'b' de tipo 'set'.
+Error en la linea 17, columna 13: Operando ' <' no sirve con operandos de tipo 'set' y 'set'.
+Error en la linea 17, columna 13: Condicion del 'while' debe ser de tipo 'bool'.
+Error en la linea 20, columna 11: No se puede asignar expresiones de tipo 'int' a la variable 'a' de tipo 'set'.

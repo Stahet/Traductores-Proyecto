@@ -1,0 +1,31 @@
+program{
+    using
+        int i,j;
+    in
+    i = 8;
+    repeat{
+        print i;  # Debe imprimir el numero 8, 5 veces 
+    }
+    while(j < 4) do{
+        using
+            int i;
+        in
+        i = i+1;
+        j = j+1;
+    };
+    println "";
+    
+    i = 0;
+    j = 0;
+    repeat{
+        print i;
+        i = i + 1; 
+    }
+    while(i <5) do{  # Debe imprimir 0..4
+        print i;
+        i = i + 1;
+    };
+    println "";
+    println i; # La variable queda en 5
+    
+}

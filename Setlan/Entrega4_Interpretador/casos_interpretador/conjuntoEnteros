@@ -1,0 +1,13 @@
+program{
+    using
+        set s, d, f;
+        int a;
+    in
+    s = {1+5,5,4,6};
+    println s;
+    d = {};
+    println d;
+    print f ++ {1};
+    #s = {true, d}; ## Error solo pueden haber enteros
+    #s = {a+d};
+}

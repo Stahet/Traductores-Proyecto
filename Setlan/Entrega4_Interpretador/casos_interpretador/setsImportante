@@ -1,0 +1,23 @@
+program {
+    using
+        set x, y, aux1, aux2;
+        int a, b;
+    in
+
+    scan a;
+    scan b;
+
+    x = {a, b, a + b, a - b, a * b, a / b, a % b};
+    y = {a, b, b + a, b - a, b * a, b / a, b % a};
+    
+    # esto se asocia: (a <+> y) ++ (b <+> x) ++ y ++ x
+    for i max a <+> y ++ b <+> x ++ y ++ x do
+        print i, ", "
+    ;
+    println "";
+    aux1 = (a <+> y) ++ (b <+> x) ++ y ++ x;
+    aux2 = a <+> y ++ b <+> x ++ y ++ x;
+    println aux1 == aux2;
+    println (a <+> y) ++ (b <+> x) ++ y ++ x == a <+> y ++ b <+> x ++ y ++ x;
+    print "done.";
+}

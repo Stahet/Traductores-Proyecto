@@ -142,10 +142,12 @@ def p_expression_bool(p):
                   | TRUE
     '''
     p[0] = Bool(p[1])
+    p[0].lineno = p.lineno(1)
+    p[0].lexpos = p.lexpos(1)
     
 def p_expression_string(p):
     'expression : STRING'
-    p[0] = String(p[1])
+    p[0] = String(p[1][1:-1]) # [1:-1] Sirve para eliminar comillas " " del string
 
 def p_expression_id(p):
     'expression : IDENTIFIER'

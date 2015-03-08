@@ -11,7 +11,7 @@ Created on 23/2/2015
          Flags: -
 '''
 from  sys import argv as argumentos_consola
-from AST import static_errors
+from AST import static_errors, interpreter_result
 import expresiones
 import parse
 import ply.lex as lexi
@@ -40,34 +40,41 @@ def setlan(argv = None):
     if expresiones.lexer_errors:
         for error in expresiones.lexer_errors:
             print error
-            return
+        return
         
     elif parse.parser_errors:
         for error in parse.parser_errors:
             print error
-            return
+        return
     
     else: # Pasa el lexer y el parser
         tree.check_types() # Hacemos el chequeo estatico 
         # Impresion de errores
         if static_errors:
             for error in static_errors:
-                print "Error en la linea %d, columna %d: %s" % \
-                       (error[0],expresiones.obtener_columna_texto_lexpos(error[1]),error[2])
+                print error
             return
     
-    # Pasan los errores pasamos a interpretar    
+    # Flags   
     if "-t" in argv:
-        print "####################       LISTA DE TOKENS      ####################\n" 
-        expresiones.print_tokens(expresiones.build_lexer(), content)
+        print "####################       LISTA DE TOKENS      ####################\n"
+        # Construir el lexer denuevo, ya que el parser cambia el n° de lineas 
+        expresiones.print_tokens(expresiones.build_lexer(), content) 
+        print
     
     if "-a" in argv:
         print "\n#################### ARBOL SINTACTICO ABSTRACTO ####################\n" 
         tree.print_tree()
-    
+        print
+        
     if "-s" in argv:
         print "\n####################      CHEQUEO DE TIPOS       ####################\n" 
         print tree.symbolTable.str
+        print
+        
+    tree.execute() # Ejecutar el interpretador
+    result = "".join(interpreter_result)
+    return result
 
 def salir(mensaje = "ERROR: Ejecute el interprete de la forma: setlan <dir_archivo> [-t] [-a] [-s]",
                 codigo = -1):
@@ -84,7 +91,7 @@ if __name__ == '__main__':
     #setlan(["setlan","casos_check/erroresOperadores","-t","-s","-a"])
     #setlan(["setlan","casos_check/errorFor","-t","-s","-a"])
     #setlan(["setlan","casos_check/errorIf","-t","-s","-a"])
-    setlan(["setlan","casos_check/errorRepeatWhile","-t","-s","-a"])
+    #setlan(["setlan","casos_check/errorRepeatWhile","-t","-s","-a"])
     #setlan(["setlan","casos_check/errorScan.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/errorWhile","-t","-s","-a"])
     #setlan(["setlan","casos_check/escrituraIterador.stl","-t","-s","-a"])
@@ -93,3 +100,29 @@ if __name__ == '__main__':
     #setlan(["setlan","casos_check/terrible.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/test1.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/test2EnunciadoErrorTipo.stl","-t","-s","-a"])
+    #setlan(["setlan","casos_check/variableNoDeclarada","-t","-s","-a"])
+    
+    ####### Interpretador
+    #setlan(["setlan","casos_interpretador/all","-t","-s","-a"])
+    #setlan(["setlan","casos_interpretador/guardar_variables","-t","-s","-a"])
+    #setlan(["setlan","casos_interpretador/conjuntoEnteros","-t","-s","-a"])
+    #setlan(["setlan","casos_interpretador/booleanos","-t","-s","-a"])
+    #setlan(["setlan","casos_interpretador/pruebaScan","-t","-s","-a"])
+    #setlan(["setlan","casos_interpretador/pruebaIf","-t","-s","-a"])
+    #setlan(["setlan","casos_interpretador/pruebaFor","-t","-s","-a"])
+    #setlan(["setlan","casos_interpretador/pruebaMaliciaFor","-t","-s","-a"])
+    #setlan(["setlan","casos_interpretador/pruebaWhileDo","-a"])
+    #setlan(["setlan","casos_interpretador/testForMalicia","-a"])
+    #setlan(["setlan","casos_interpretador/testOperadores","-a"])
+    #setlan(["setlan","casos_interpretador/testOverflow","-a"])
+    #setlan(["setlan","casos_interpretador/testMaxConjuntoVacio","-a"])
+    #setlan(["setlan","casos_interpretador/testEnunciado","-a"])
+    #setlan(["setlan","casos_interpretador/reglasDeAlcance","-a"])
+    #setlan(["setlan","casos_interpretador/testOperacionesConjuntos","-a"])
+    #setlan(["setlan","casos_interpretador/testRepeatWhileDo","-a"])
+    #setlan(["setlan","casos_interpretador/testDivisionCero","-a"])
+    #setlan(["setlan","casos_interpretador/testOverFlowConjuntos","-a"])
+    #setlan(["setlan","casos_interpretador/fibonacci","-a"])
+    #setlan(["setlan","casos_interpretador/holaMundo","-a"])
+    #setlan(["setlan","casos_interpretador/sets","-a"])
+    setlan(["setlan","casos_interpretador/precedenciaOperadores","-a"])

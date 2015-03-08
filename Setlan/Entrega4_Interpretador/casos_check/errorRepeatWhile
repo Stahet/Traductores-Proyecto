@@ -6,7 +6,7 @@ program{
 	repeat
 		a = a + i
 	while(true)do{
-		a = 4<+>a;
+		a = -2147488<+>a;
 		b = i;
 	};
 	

@@ -1,0 +1,4 @@
+4 es menor igual que 4
+Entra en true
+Entrando en else
+Imprimiendo instruccion de else 8
