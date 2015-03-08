@@ -103,4 +103,5 @@ if __name__ == '__main__':
     #setlan(["setlan","casos_interpretador/pruebaScan","-t","-s","-a"])
     #setlan(["setlan","casos_interpretador/pruebaIf","-t","-s","-a"])
     #setlan(["setlan","casos_interpretador/pruebaFor","-t","-s","-a"])
-    setlan(["setlan","casos_interpretador/pruebaMaliciaFor","-t","-s","-a"])
+    #setlan(["setlan","casos_interpretador/pruebaMaliciaFor","-t","-s","-a"])
+    setlan(["setlan","casos_interpretador/pruebaWhileDo","-t","-s","-a"])

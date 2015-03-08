@@ -50,10 +50,10 @@ class Expre:
     def print_with_indent(self,cad,level):
         print self.get_ident_str(level) + cad
     
-    def check_types(self,symbols):
+    def check_types(self,symbolTable):
         pass
     
-    def execute(self,symbols):
+    def execute(self,symbolTable):
         pass
 
 class Program(Expre):
@@ -236,20 +236,20 @@ class For(Expre):
     
     def execute(self, symbolTable):
         symbolTable.add_scope() # Crea un nuevo alcance
-        symbolTable.insert(self.identifier.name,"int","i") # Creacion simbolo de solo lectura
-        var = symbolTable.lookup(self.identifier.name) # Variable de iteracion 
         
-        set_iterator = self.expression.evaluate(symbolTable)
-        direction = self.direction.evaluate(symbolTable)
+        symbolTable.insert(self.identifier.name,"int","i")   # Creacion simbolo de solo lectura
+        var = symbolTable.lookup(self.identifier.name)       # Variable de iteracion  
+        set_iterator = self.expression.evaluate(symbolTable) # Conjunto a iterar
+        direction = self.direction.evaluate(symbolTable)     # Direccion
+        
+        # Si es min, se ordena de forma ascendente. Si es max, en forma descendente
         if direction == "min":
-            # Si es min, se ordena de forma ascendente
             set_iterator = sorted(set_iterator)
         else: 
-            # Si es max, se ordena de forma descendente
             set_iterator = sorted(set_iterator, reverse=True) 
         
         for i in set_iterator:
-            symbolTable.update(var.name, i) # Actualiza el valor de la variable del for
+            symbolTable.update(var.name, i)     # Actualiza valor tabla simbolos
             self.statement.execute(symbolTable)
             
         symbolTable.delete_scope() # Eliminar alcance saliendo del For
@@ -286,7 +286,13 @@ class RepeatWhileDo(Expre):
                                   "Condicion del 'while' debe ser de tipo 'bool', no de tipo '%s'." % type_expre))
         
         self.statement2.check_types(symbolTable)
-        
+    
+    def execute(self, symbolTable):
+        self.statement1.execute(symbolTable)
+        while(self.expression.evaluate(symbolTable)):
+            self.statement2.execute(symbolTable)
+            self.statement1.execute(symbolTable) 
+               
 class WhileDo(Expre):
     
     def __init__(self,expression,statement):
@@ -315,6 +321,10 @@ class WhileDo(Expre):
         
         self.statement.check_types(symbolTable)
     
+    def execute(self, symbolTable):
+        while(self.expression.evaluate(symbolTable)):
+            self.statement.execute(symbolTable)
+            
 class RepeatWhile(Expre):
     
     def __init__(self,statement,expression):
@@ -341,6 +351,11 @@ class RepeatWhile(Expre):
                 static_errors.append((self.expression.lineno,self.expression.lexpos,"Condicion del 'while' debe ser de" +\
                                  "tipo 'bool' no de tipo '%s'." % type_expre))       
     
+    def execute(self, symbolTable):
+        self.statement.execute(symbolTable)
+        while(self.expression.evaluate(symbolTable)):
+            self.statement.execute(symbolTable)
+        
 class Print(Expre):
     
     def __init__(self,type_print,lista_to_print):
