@@ -4,10 +4,10 @@ program{
         int a;
     in
     s = {1+5,5,4,6};
-    print s;
+    println s;
     d = {};
-    print d;
-    #print f ++ {1};
+    println d;
+    print f ++ {1};
     #s = {true, d}; ## Error solo pueden haber enteros
     #s = {a+d};
 }

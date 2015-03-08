@@ -11,7 +11,7 @@ Created on 23/2/2015
          Flags: -
 '''
 from  sys import argv as argumentos_consola
-from AST import static_errors
+from AST import static_errors, interpreter_result
 import expresiones
 import parse
 import ply.lex as lexi
@@ -73,14 +73,16 @@ def setlan(argv = None):
         print
         
     tree.execute() # Ejecutar el interpretador
-    
+    result = "".join(interpreter_result)
+    return result
+
 def salir(mensaje = "ERROR: Ejecute el interprete de la forma: setlan <dir_archivo> [-t] [-a] [-s]",
                 codigo = -1):
     print mensaje
     exit(codigo)    
              
 if __name__ == '__main__':
-    #setlan()
+    setlan()
     #setlan(["setlan","casos_check/2ContextoIgualNombre.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/3variables.stl","-t","-s","-a"])
     #setlan(["setlan","casos_check/all.stl","-t","-s","-a"])
@@ -101,6 +103,7 @@ if __name__ == '__main__':
     #setlan(["setlan","casos_check/variableNoDeclarada","-t","-s","-a"])
     
     ####### Interpretador
+    #setlan(["setlan","casos_interpretador/all","-t","-s","-a"])
     #setlan(["setlan","casos_interpretador/guardar_variables","-t","-s","-a"])
     #setlan(["setlan","casos_interpretador/conjuntoEnteros","-t","-s","-a"])
     #setlan(["setlan","casos_interpretador/booleanos","-t","-s","-a"])
@@ -109,4 +112,11 @@ if __name__ == '__main__':
     #setlan(["setlan","casos_interpretador/pruebaFor","-t","-s","-a"])
     #setlan(["setlan","casos_interpretador/pruebaMaliciaFor","-t","-s","-a"])
     #setlan(["setlan","casos_interpretador/pruebaWhileDo","-a"])
-    setlan(["setlan","casos_interpretador/testForMalicia","-a"])
+    #setlan(["setlan","casos_interpretador/testForMalicia","-a"])
+    #setlan(["setlan","casos_interpretador/testOperadores","-a"])
+    #setlan(["setlan","casos_interpretador/testOverflow","-a"])
+    #setlan(["setlan","casos_interpretador/testMaxConjuntoVacio","-a"])
+    #setlan(["setlan","casos_interpretador/testEnunciado","-a"])
+    #setlan(["setlan","casos_interpretador/reglasDeAlcance","-a"])
+    #setlan(["setlan","casos_interpretador/testOperacionesConjuntos","-a"])
+    #setlan(["setlan","casos_interpretador/testRepeatWhileDo","-a"])

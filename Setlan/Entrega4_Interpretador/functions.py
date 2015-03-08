@@ -21,23 +21,34 @@ def min_value_set(set1):
     return min(set1)
 
 def size_set(set1):
-    return len(set1)
+    value = len(set1)
+    assert(value <= 2147483647)
+    return value
 
 # Binary set Operator
 def sum1(int1, int2):
-    return int1 + int2
+    value = int1 + int2
+    assert(-2147483648 <= value <= 2147483647)
+    return value
 
 def minus(int1, int2):
-    return int1 - int2
+    value = int1 - int2
+    assert(-2147483648 <= value <= 2147483647)
+    return value
 
 def times(int1, int2):
-    return int1 * int2
+    value = int1 * int2
+    assert(-2147483648 <= value <= 2147483647)
+    return value
 
 def int_division(int1, int2):
-    return int1 / int2
+    value = int1 / int2
+    assert(-2147483648 <= value <= 2147483647)
+    return value
 
 def rest_division(int1, int2):
-    return int1 % int2
+    value = int1 % int2
+    return value
 
 # Bool Operators
 def unequal(bool1, bool2):
@@ -76,19 +87,43 @@ def intersection(set1, set2):
 
 # Int and Set Operators    
 def map_plus(int1, set1):
-    return {int1+x for x in set1}
+    set1 = list(set1)
+    for i in range(len(set1)):
+        set1[i] = int1 + set1[i]
+        assert(-2147483648 <= set1[i] <= 2147483647)  
+    
+    return set(set1)
 
 def map_minus(int1, set1):
-    return {int1-x for x in set1}
+    set1 = list(set1)
+    for i in range(len(set1)):
+        set1[i] = int1 - set1[i]
+        assert(-2147483648 <= set1[i] <= 2147483647)  
+    
+    return set(set1)
 
 def map_times(int1, set1):
-    return {int1*x for x in set1}
+    set1 = list(set1)
+    for i in range(len(set1)):
+        set1[i] = int1 * set1[i]
+        assert(-2147483648 <= set1[i] <= 2147483647)  
+    
+    return set(set1)
 
 def map_divide(int1, set1):
-    return {int1/x for x in set1}
+    set1 = list(set1)
+    for i in range(len(set1)):
+        set1[i] = int1 / set1[i]
+        assert(-2147483648 <= set1[i] <= 2147483647)  
+    
+    return set(set1)
 
 def map_rest(int1, set1):
-    return {int1%x for x in set1}
+    set1 = list(set1)
+    for i in range(len(set1)):
+        set1[i] = int1 % set1[i]
+    
+    return set(set1)
 
 def belong(int1, set1):
     return (int1 in set1)

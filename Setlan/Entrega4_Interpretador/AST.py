@@ -12,37 +12,9 @@ from symbol_table import SymbolTable
 from expresiones import obtener_columna_texto_lexpos
 from functions import *
 
-global static_errors
+global static_errors, interpreter_result
 static_errors = []
-
-def static_error(lineno,lexpos,message):
-    error =  "Error en la linea %d, columna %d: %s" % \
-                (lineno, obtener_columna_texto_lexpos(lexpos),message)
-    
-    static_errors.append(error)
-        
-def overflow_error(expre):
-    print("")
-    
-def to_string(elem):
-    out = str(elem)
-    if type(elem) is set:
-        if len(elem) == 0:
-            out = "{}"
-        else:
-            out = "{"
-            for x in sorted(elem): # Imprimir elementos en orden ascendente
-                out += " %d," % x
-            
-            out = out[:-1]+" }" # Remover ultima "," y cerrar el conjunto
-            
-    elif type(elem) is bool:
-        if elem:
-            out = "true"
-        else:
-            out = "false"
-    
-    return out
+interpreter_result = []
 
 class Expre:
     
@@ -108,6 +80,7 @@ class Scan(Expre):
     def execute(self, symbolTable):
         var = symbolTable.lookup(self.var_to_read.name) # Buscamos la variable en la tabla de simbolos
         in_type = "" # Tipo de valor de la entrada
+        print "Ingrese una variable de tipo '%s':"%var.type
         while(in_type != var.type):
             in_str = raw_input()
             in_str = in_str.strip() # Eliminamos espacios al inicio y al final
@@ -118,11 +91,21 @@ class Scan(Expre):
             elif in_str == "false":
                 in_type = "bool"
                 in_value = False
-                
-            elif in_str.isdigit():
-                in_type = "int"
+            
+            # Comprobamos transformando el valor a entero
+            try:
                 in_value = int(in_str)
-        
+                in_type = "int"
+            except(ValueError):
+                in_type = ""
+                      
+            if (in_type != var.type):
+                print "Error el valor tiene que ser de tipo '%s' intente nuevamente: "%var.type
+            else:
+                if (in_type == "int") and not (-2147483648 <= in_value <= 2147483647):
+                    print "Error entero muy grande, intente nuevamente: "
+                    in_type = "" 
+                    
         var.value = in_value # Actualiz.el valor de la var. en la tabla de simbolos
     
 class Assign(Expre):
@@ -394,12 +377,14 @@ class Print(Expre):
         out = ""
         for exp in self.lista_to_print:
             out = out + to_string(exp.evaluate(symbolTable))
-            
+        
         if self.type == "print":
-            print out, # Impresion sin salto de linea
+            interpreter_result.append(out+" ")
+            print out,
         else:
+            interpreter_result.append(out +"\n")
             print out
-              
+    
 class Block(Expre):
     
     def __init__(self, list_st,declare = None): 
@@ -510,7 +495,15 @@ class BinaryOP(Expre):
     def evaluate(self, symbolTable):
         value1 = self.expre1.evaluate(symbolTable)
         value2 = self.expre2.evaluate(symbolTable)
-        return BinaryOP.bin_operators[self.type_op](value1, value2) # Evaluacion de funciones
+        try:
+            result = BinaryOP.bin_operators[self.type_op](value1, value2) # Evaluacion de funciones
+        
+        except(AssertionError):
+            overflow_error(self.lineno, self.lexpos)
+        except(ZeroDivisionError):
+            zero_division_error(self.lineno, self.lexpos)
+        
+        return result
     
 class BinaryOpInteger(BinaryOP):
     ''' 
@@ -653,7 +646,14 @@ class UnaryOP(Expre):
     
     def evaluate(self, symbolTable):
         value = self.expre1.evaluate(symbolTable)
-        return UnaryOP.unary_operators[self.type_op](value)
+        try:
+            result = UnaryOP.unary_operators[self.type_op](value)
+        
+        except(AssertionError):
+            overflow_error(self.lineno, self.lexpos)
+        except(ValueError):
+            empty_set_error(self.lineno, self.lexpos)
+        return result
         
 class UnaryOpUminus(UnaryOP):
     def check_types(self, symbols):
@@ -733,7 +733,7 @@ class TypeList(Expre):
                 symbol = symbolTable.lookup(var.name)
                 static_error(var.lineno, var.lexpos,
                                   "La variable '%s' ya ha sido declarada en este alcance " % (var.name) + \
-                                    'en la linea %d, columna %d con tipo %s.' % 
+                                    'en la linea %d, columna %d con tipo %s.' % \
                                         (symbol.ref.lineno,
                                             obtener_columna_texto_lexpos(symbol.ref.lexpos),
                                                 symbol.type) )
@@ -878,3 +878,46 @@ class Identifier(Expre):
     def evaluate(self, symbolTable):
         symbol = symbolTable.lookup(self.name) 
         return symbol.value
+    
+############################  ERROR_HANDLING  ################################
+
+def static_error(lineno,lexpos,message):
+    error =  "Error en la linea %d, columna %d: %s" % \
+                (lineno, obtener_columna_texto_lexpos(lexpos),message)
+    
+    static_errors.append(error)
+        
+def overflow_error(lineno, lexpos):
+    print "Error en la linea %d, columna %d: Error Overflow" %\
+                (lineno, obtener_columna_texto_lexpos(lexpos))
+    exit()
+    
+def empty_set_error(lineno, lexpos):
+    print "Error en la linea %d, columna %d: Error conjunto vacio" %\
+                (lineno, obtener_columna_texto_lexpos(lexpos))
+    exit()
+
+def zero_division_error(lineno, lexpos):
+    print "Error en la linea %d, columna %d: Error de division por cero" %\
+            (lineno, obtener_columna_texto_lexpos(lexpos))
+    exit()
+    
+def to_string(elem):
+    out = str(elem)
+    if type(elem) is set:
+        if len(elem) == 0:
+            out = "{}"
+        else:
+            out = "{"
+            for x in sorted(elem): # Imprimir elementos en orden ascendente
+                out += "%d," % x
+            
+            out = out[:-1]+"}" # Remover ultima "," y cerrar el conjunto
+            
+    elif type(elem) is bool:
+        if elem:
+            out = "true"
+        else:
+            out = "false"
+    
+    return out

@@ -5,13 +5,10 @@ program{
         bool c;
     in
     a = 4;
-    print a;
-    print "Introduzca un entero porfavor";
     scan a;
-    print "El entero es: ", a;
+    println "El entero es: ", a;
     
     c = true;
-    print "Introduzca un booleano porfavor";
     scan c;
-    print "El booleano es: ",c;
+    println "El booleano es: ",c;
 }

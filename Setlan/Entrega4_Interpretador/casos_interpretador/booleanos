@@ -4,7 +4,7 @@ program{
     in
     a = true;
     b = 5 < 7;
-    print a == b," ", a /=b;# imprimir True, False
-    a = a or not a;         # imprimir true
+    print a == b, a /=b;# imprimir True, False
+    a = a or not a;              # imprimir true
     print a;
 }
