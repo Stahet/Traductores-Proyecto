@@ -99,4 +99,5 @@ if __name__ == '__main__':
     ####### Interpretador
     #setlan(["setlan","casos_interpretador/guardar_variables","-t","-s","-a"])
     #setlan(["setlan","casos_interpretador/conjuntoEnteros","-t","-s","-a"])
-    setlan(["setlan","casos_interpretador/booleanos","-t","-s","-a"])
+    #setlan(["setlan","casos_interpretador/booleanos","-t","-s","-a"])
+    setlan(["setlan","casos_interpretador/pruebaScan","-t","-s","-a"])
