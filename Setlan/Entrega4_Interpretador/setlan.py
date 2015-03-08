@@ -124,4 +124,5 @@ if __name__ == '__main__':
     #setlan(["setlan","casos_interpretador/testOverFlowConjuntos","-a"])
     #setlan(["setlan","casos_interpretador/fibonacci","-a"])
     #setlan(["setlan","casos_interpretador/holaMundo","-a"])
-    setlan(["setlan","casos_interpretador/sets","-a"])
+    #setlan(["setlan","casos_interpretador/sets","-a"])
+    setlan(["setlan","casos_interpretador/precedenciaOperadores","-a"])
