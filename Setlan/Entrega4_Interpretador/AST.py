@@ -156,14 +156,14 @@ class If(Expre):
     def __init__(self,condition,statement_if, statement_else = None):
         Expre.__init__(self)
         self.type = 'IF'
-        self.expresion = condition
+        self.condition = condition
         self.statement_if   = statement_if
         self.statement_else = statement_else
         
     def print_tree(self,level):
         self.print_with_indent(self.type,level)
-        self.print_with_indent("expresion",level+1)
-        self.expresion.print_tree(level + 2)
+        self.print_with_indent("condition",level+1)
+        self.condition.print_tree(level + 2)
         
         self.print_with_indent('THEN', level+1)
         self.statement_if.print_tree(level + 2)
@@ -174,16 +174,15 @@ class If(Expre):
             
         self.print_with_indent('END_IF',level)
     
-        
     def check_types(self, symbolTable):        
-        type_cond = self.expresion.check_types(symbolTable)
+        type_cond = self.condition.check_types(symbolTable)
  
         if  type_cond != "bool":
             if type_cond == "":
-                static_errors.append((self.expresion.lineno,self.expresion.lexpos,
+                static_errors.append((self.condition.lineno,self.condition.lexpos,
                                   "Instrucción 'if' espera expresiones de tipo 'bool'."))
             else:
-                static_errors.append((self.expresion.lineno,self.expresion.lexpos,
+                static_errors.append((self.condition.lineno,self.condition.lexpos,
                                   "Instrucción 'if' espera expresiones de tipo 'bool', no de tipo '%s'." % type_cond))
         
         self.statement_if.check_types(symbolTable)
@@ -191,8 +190,12 @@ class If(Expre):
             self.statement_else.check_types(symbolTable)
     
     def execute(self, symbolTable):
-        
-        pass
+        condition = self.condition.evaluate(symbolTable)
+        if condition:
+            self.statement_if.execute(symbolTable)
+        else:
+            if self.statement_else is not None:
+                self.statement_else.execute(symbolTable)
     
 class For(Expre):
     
@@ -230,6 +233,26 @@ class For(Expre):
         symbolTable.insert(self.identifier.name,"int","i") # Creacion simbolo de solo lectura
         self.statement.check_types(symbolTable)
         symbolTable.delete_scope() # Eliminar alcance saliendo del For
+    
+    def execute(self, symbolTable):
+        symbolTable.add_scope() # Crea un nuevo alcance
+        symbolTable.insert(self.identifier.name,"int","i") # Creacion simbolo de solo lectura
+        var = symbolTable.lookup(self.identifier.name) # Variable de iteracion 
+        
+        set_iterator = self.expression.evaluate(symbolTable)
+        direction = self.direction.evaluate(symbolTable)
+        if direction == "min":
+            # Si es min, se ordena de forma ascendente
+            set_iterator = sorted(set_iterator)
+        else: 
+            # Si es max, se ordena de forma descendente
+            set_iterator = sorted(set_iterator, reverse=True) 
+        
+        for i in set_iterator:
+            symbolTable.update(var.name, i) # Actualiza el valor de la variable del for
+            self.statement.execute(symbolTable)
+            
+        symbolTable.delete_scope() # Eliminar alcance saliendo del For
         
 class RepeatWhileDo(Expre):
     
@@ -245,7 +268,7 @@ class RepeatWhileDo(Expre):
         self.statement1.print_tree(level + 1)
         
         self.print_with_indent('WHILE',level)
-        self.print_with_indent('expresion',level + 1)
+        self.print_with_indent('condition',level + 1)
         self.expression.print_tree(level + 2)
 
         self.print_with_indent('DO',level)
@@ -274,7 +297,7 @@ class WhileDo(Expre):
         
     def print_tree(self,level):
         self.print_with_indent(self.type,level)
-        self.print_with_indent('expresion',level + 1)
+        self.print_with_indent('condition',level + 1)
         self.expression.print_tree(level + 2)
 
         self.print_with_indent('DO',level)
@@ -305,7 +328,7 @@ class RepeatWhile(Expre):
         self.statement.print_tree(level + 1)
 
         self.print_with_indent('WHILE',level)
-        self.print_with_indent('expresion',level + 1)
+        self.print_with_indent('condition',level + 1)
         self.expression.print_tree(level + 2)
 
     def check_types(self, symbolTable):
@@ -322,11 +345,11 @@ class Print(Expre):
     
     def __init__(self,type_print,lista_to_print):
         Expre.__init__(self)
-        self.type = type_print.upper()
+        self.type = type_print
         self.lista_to_print = lista_to_print
         
     def print_tree(self,level): 
-        self.print_with_indent(self.type, level)
+        self.print_with_indent(self.type.upper(), level)
         for var in self.lista_to_print:
             var.print_tree(level + 1)
  
@@ -340,7 +363,11 @@ class Print(Expre):
         out = ""
         for exp in self.lista_to_print:
             out = out + to_string(exp.evaluate(symbolTable))
-        print out
+            
+        if self.type == "print":
+            print out, # Impresion sin salto de linea
+        else:
+            print out
               
 class Block(Expre):
     
@@ -390,18 +417,18 @@ class Parenthesis(Expre):
     def __init__(self, expre):
         Expre.__init__(self)
         self.type = 'PARENTHESIS'
-        self.expresion = expre   
+        self.condition = expre   
             
     def print_tree(self,level):  
         self.print_with_indent(self.type , level)
-        self.expresion.print_tree(level + 1)
+        self.condition.print_tree(level + 1)
         self.print_with_indent('PARENTHESIS_CLOSE', level)
     
     def check_types(self, symbolTable):
-        return self.expresion.check_types(symbolTable)
+        return self.condition.check_types(symbolTable)
     
     def evaluate(self, symbolTable):
-        return self.expresion.evaluate(symbolTable)
+        return self.condition.evaluate(symbolTable)
     
 class BinaryOP(Expre):
     bin_operators = {   
@@ -688,6 +715,9 @@ class Direction(Expre):
         self.print_with_indent(self.value, level + 1)
         
     def check_types(self, symbolTable):
+        return self.value
+    
+    def evaluate(self, symbolTable):
         return self.value
 
 class Set(Expre):
