@@ -1,1 +1,1 @@
-Error de síntaxis en la línea 4 , columna 9. No se esperaba Token "bool".
+Error en la linea 9, columna 10: 'SCAN' solo se puede usar para variables de tipo 'int' o 'bool' . 'c' es de tipo 'set'

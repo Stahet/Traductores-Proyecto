@@ -15,6 +15,15 @@ from functions import *
 global static_errors
 static_errors = []
 
+def static_error(lineno,lexpos,message):
+    error =  "Error en la linea %d, columna %d: %s" % \
+                (lineno, obtener_columna_texto_lexpos(lexpos),message)
+    
+    static_errors.append(error)
+        
+def overflow_error(expre):
+    print("")
+    
 def to_string(elem):
     out = str(elem)
     if type(elem) is set:
@@ -92,10 +101,9 @@ class Scan(Expre):
         if type_var == "": return ""
         
         if type_var not in ("int","bool"):
-            static_errors.append((self.var_to_read.lineno,self.var_to_read.lexpos,
-                                "'SCAN' solo se puede usar para variables de tipo 'int' o 'bool' . '%s' es de tipo '%s'" % \
-                                    (self.var_to_read.name,type_var))
-                                )
+            static_error(self.var_to_read.lineno, self.var_to_read.lexpos,
+                            "'SCAN' solo se puede usar para variables de tipo 'int' o 'bool' . '%s' es de tipo '%s'" % \
+                                (self.var_to_read.name,type_var) )
     
     def execute(self, symbolTable):
         var = symbolTable.lookup(self.var_to_read.name) # Buscamos la variable en la tabla de simbolos
@@ -140,12 +148,13 @@ class Assign(Expre):
             if type_expres ==  "" : return ""
 
             if symbol.type != type_expres:
-                static_errors.append((self.lineno,self.lexpos,
-                                      "No se puede asignar expresiones de tipo '%s' a la variable '%s' de tipo '%s'." % (type_expres,self.id.name,symbol.type)))
+                static_error(self.lineno, self.lexpos,
+                                "No se puede asignar expresiones de tipo '%s' a la variable '%s' de tipo '%s'." \
+                                     % (type_expres,self.id.name,symbol.type) )
             
             if "o" not in symbol.type_edit:
-                static_errors.append((self.id.lineno,self.id.lexpos,
-                                      "La variable %s es de solo lectura." % (self.id.name)))
+                static_error(self.id.lineno,self.id.lexpos,
+                                 "La variable %s es de solo lectura." % (self.id.name) )
                 
     def execute(self, symbolTable):
         value = self.expression.evaluate(symbolTable)
@@ -179,11 +188,11 @@ class If(Expre):
  
         if  type_cond != "bool":
             if type_cond == "":
-                static_errors.append((self.condition.lineno,self.condition.lexpos,
-                                  "Instrucción 'if' espera expresiones de tipo 'bool'."))
+                static_error(self.condition.lineno, self.condition.lexpos,
+                                  "Instrucción 'if' espera expresiones de tipo 'bool'.")
             else:
-                static_errors.append((self.condition.lineno,self.condition.lexpos,
-                                  "Instrucción 'if' espera expresiones de tipo 'bool', no de tipo '%s'." % type_cond))
+                static_error(self.condition.lineno,self.condition.lexpos,
+                                  "Instrucción 'if' espera expresiones de tipo 'bool', no de tipo '%s'." % type_cond)
         
         self.statement_if.check_types(symbolTable)
         if self.statement_else is not None:
@@ -224,10 +233,12 @@ class For(Expre):
         #self.identifier.check_types(symbolTable) # Esto hay que hacerlo??
         if type_expre != "set":
             if type_expre == "":
-                static_errors.append((self.expression.lineno,self.expression.lexpos,"La expression de un for debe ser de tipo 'set'"))
+                static_error(self.expression.lineno,self.expression.lexpos,
+                               "La expression de un for debe ser de tipo 'set'")
             else:                          
-                static_errors.append((self.expression.lineno,self.expression.lexpos,"La expression de un for debe ser de " +\
-                                 "tipo 'set' no de tipo '%s'." % type_expre))
+                static_error(self.expression.lineno,self.expression.lexpos,
+                                "La expression de un for debe ser de " +\
+                                   "tipo 'set' no de tipo '%s'." % type_expre)
                 
         symbolTable.add_scope() # Crea un nuevo alcance
         symbolTable.insert(self.identifier.name,"int","i") # Creacion simbolo de solo lectura
@@ -235,10 +246,6 @@ class For(Expre):
         symbolTable.delete_scope() # Eliminar alcance saliendo del For
     
     def execute(self, symbolTable):
-        symbolTable.add_scope() # Crea un nuevo alcance
-        
-        symbolTable.insert(self.identifier.name,"int","i")   # Creacion simbolo de solo lectura
-        var = symbolTable.lookup(self.identifier.name)       # Variable de iteracion  
         set_iterator = self.expression.evaluate(symbolTable) # Conjunto a iterar
         direction = self.direction.evaluate(symbolTable)     # Direccion
         
@@ -247,6 +254,10 @@ class For(Expre):
             set_iterator = sorted(set_iterator)
         else: 
             set_iterator = sorted(set_iterator, reverse=True) 
+        
+        symbolTable.add_scope() # Crea un nuevo alcance
+        symbolTable.insert(self.identifier.name,"int","i")   # Creacion simbolo de solo lectura
+        var = symbolTable.lookup(self.identifier.name)       # Variable de iteracion  
         
         for i in set_iterator:
             symbolTable.update(var.name, i)     # Actualiza valor tabla simbolos
@@ -280,10 +291,11 @@ class RepeatWhileDo(Expre):
         type_expre = self.expression.check_types(symbolTable)
         if type_expre != "bool":
             if type_expre == "":
-                static_errors.append((self.expression.lineno,self.expression.lexpos,"Condicion del 'while' debe ser de tipo 'bool'."))
+                static_error(self.expression.lineno,self.expression.lexpos,
+                                "Condicion del 'while' debe ser de tipo 'bool'.")
             else:
-                static_errors.append((self.expression.lineno,self.expression.lexpos,
-                                  "Condicion del 'while' debe ser de tipo 'bool', no de tipo '%s'." % type_expre))
+                static_error(self.expression.lineno,self.expression.lexpos,
+                                  "Condicion del 'while' debe ser de tipo 'bool', no de tipo '%s'." % type_expre)
         
         self.statement2.check_types(symbolTable)
     
@@ -314,10 +326,12 @@ class WhileDo(Expre):
         type_expre = self.expression.check_types(symbolTable)
         if type_expre != "bool":
             if type_expre == "":
-                static_errors.append((self.expression.lineno,self.expression.lexpos,"Condicion del 'while' debe ser de tipo 'bool'."))
+                static_error(self.expression.lineno, self.expression.lexpos,
+                                "Condicion del 'while' debe ser de tipo 'bool'.")
             else:                          
-                static_errors.append((self.expression.lineno,self.expression.lexpos,"Condicion del 'while' debe ser de" +\
-                                 "tipo 'bool' no de tipo '%s'." % type_expre))
+                static_error(self.expression.lineno,self.expression.lexpos,
+                                "Condicion del 'while' debe ser de " +\
+                                    "tipo 'bool' no de tipo '%s'." % type_expre)
         
         self.statement.check_types(symbolTable)
     
@@ -346,10 +360,12 @@ class RepeatWhile(Expre):
         type_expre = self.expression.check_types(symbolTable)
         if type_expre != "bool":
             if type_expre == "":
-                static_errors.append((self.expression.lineno,self.expression.lexpos,"Condicion del 'while' debe ser de tipo 'bool'."))
+                static_error(self.expression.lineno,self.expression.lexpos,
+                                "Condicion del 'while' debe ser de tipo 'bool'.")
             else:                          
-                static_errors.append((self.expression.lineno,self.expression.lexpos,"Condicion del 'while' debe ser de" +\
-                                 "tipo 'bool' no de tipo '%s'." % type_expre))       
+                static_error(self.expression.lineno,self.expression.lexpos,
+                                "Condicion del 'while' debe ser de" +\
+                                    "tipo 'bool' no de tipo '%s'." % type_expre)
     
     def execute(self, symbolTable):
         self.statement.execute(symbolTable)
@@ -507,8 +523,9 @@ class BinaryOpInteger(BinaryOP):
         if type_expre1 == "" or type_expre2 == "": return ""
         
         if not (type_expre1 == "int" and type_expre2 == "int"):
-            static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
-                                (self.type_op[-1],type_expre1,type_expre2)))
+            static_error(self.lineno,self.lexpos,
+                            "Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
+                                (self.type_op[-1],type_expre1,type_expre2) )
             return "" 
           
         return "int"
@@ -523,8 +540,9 @@ class BinaryOpEquals(BinaryOP):
         if not ((type_expre1 == "bool" and type_expre2 == "bool") or \
                 (type_expre1 == "set" and type_expre2 == "set")   or \
                 (type_expre1 == "int" and type_expre2 == "int")) : 
-            static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
-                                (self.type_op[-2:],type_expre1,type_expre2)))
+            static_error(self.lineno,self.lexpos,
+                            "Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
+                                (self.type_op[-2:],type_expre1,type_expre2))
             return "" 
              
         return "bool"
@@ -540,8 +558,9 @@ class BinaryOpLessGreater(BinaryOP):
         if type_expre1 == "" or type_expre2 == "": return ""
         
         if not (type_expre1 == "int" and type_expre2 == "int") : 
-            static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
-                                (self.type_op[-2:],type_expre1,type_expre2)))
+            static_error(self.lineno,self.lexpos,
+                            "Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
+                                (self.type_op[-2:],type_expre1,type_expre2) )
             return "" 
             
         return "bool"
@@ -554,8 +573,9 @@ class BinaryOpBelong(BinaryOP):
         if type_expre1 == "" or type_expre2 == "": return ""
         
         if not (type_expre1 == "int" and type_expre2 == "set") : 
-            static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
-                                (self.type_op[-1],type_expre1,type_expre2)))
+            static_error(self.lineno,self.lexpos,
+                            "Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
+                                (self.type_op[-1],type_expre1,type_expre2) )
             return "" 
              
         return "bool" 
@@ -568,8 +588,9 @@ class BinaryOpBool(BinaryOP):
         if type_expre1 == "" or type_expre2 == "": return ""
         
         if not (type_expre1 == "bool" and type_expre2 == "bool") :    
-            static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
-                                (self.type_op,type_expre1,type_expre2)))
+            static_error(self.lineno, self.lexpos,
+                          "Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
+                                (self.type_op,type_expre1,type_expre2) )
             return ""
              
         return "bool"       
@@ -582,8 +603,9 @@ class BinaryOpSet(BinaryOP):
         if type_expre1 == "" or type_expre2 == "": return ""
 
         if not (type_expre1 == "set" and type_expre2 == "set") : 
-            static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
-                                (self.type_op[-2:],type_expre1,type_expre2)))
+            static_error(self.lineno ,self.lexpos, 
+                            "Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
+                                (self.type_op[-2:],type_expre1,type_expre2))
             return "" 
              
         return "set"
@@ -599,8 +621,9 @@ class BinaryOpMapToSet(BinaryOP):
         if type_expre1 == "" or type_expre2 == "": return ""
         
         if not (type_expre1 == "int" and type_expre2 == "set") : 
-            static_errors.append((self.lineno,self.lexpos,"Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
-                                (self.type_op[-3:],type_expre1,type_expre2)))
+            static_error(self.lineno,self.lexpos,
+                            "Operando '%s' no sirve con operandos de tipo '%s' y '%s'." % \
+                                (self.type_op[-3:],type_expre1,type_expre2))
             return "" 
              
         return "set" 
@@ -638,8 +661,9 @@ class UnaryOpUminus(UnaryOP):
         if type_expre == "": return ""
 
         if type_expre != "int":
-            static_errors.append((self.lineno,self.lexpos,"Operador unario '-' solo se puede aplicar a enteros" +\
-                                 " no ha expresiones del tipo '%s'" % type_expre))
+            static_error(self.lineno, self.lexpos,
+                            "Operador unario '-' solo se puede aplicar a enteros" +\
+                                 " no a expresiones del tipo '%s'" % type_expre)
             return ""
         
         return "int"
@@ -650,8 +674,9 @@ class UnaryOpNot(UnaryOP):
         if type_expre == "": return ""
         
         if type_expre != "bool":
-            static_errors.append((self.lineno,self.lexpos,"Operador unario 'not' solo se puede aplicar a expresiones booleanas" +\
-                                 " no ha expresiones del tipo '%s'" % type_expre))
+            static_error(self.lineno, self.lexpos,
+                            "Operador unario 'not' solo se puede aplicar a expresiones booleanas" +\
+                                 " no a expresiones del tipo '%s'" % type_expre)
             return ""
           
         return "bool"
@@ -663,8 +688,9 @@ class UnaryOpSet(UnaryOP):
         if type_expre == "": return ""
         
         if type_expre != "set":
-            static_errors.append((self.lineno,self.lexpos,"Operador unario '%s' solo se puede aplicar a conjuntos" +\
-                                 " no a expresiones del tipo '%s'" % (self.type_op[-2:],type_expre)))
+            static_error(self.lineno, self.lexpos,
+                            "Operador unario '%s' solo se puede aplicar a conjuntos" +\
+                                 " no a expresiones del tipo '%s'" % (self.type_op[-2:],type_expre))
             return ""
             
         return "int"
@@ -705,11 +731,12 @@ class TypeList(Expre):
             
             if symbolTable.contains(var.name):
                 symbol = symbolTable.lookup(var.name)
-                static_errors.append((var.lineno,var.lexpos,
-                                      "La variable '%s' ya ha sido declarada en este alcance " % (var.name) + \
-                                      'en la linea %d, columna %d con tipo %s.' % (symbol.ref.lineno,\
-                                                                                      obtener_columna_texto_lexpos(symbol.ref.lexpos),
-                                                                                      symbol.type)))
+                static_error(var.lineno, var.lexpos,
+                                  "La variable '%s' ya ha sido declarada en este alcance " % (var.name) + \
+                                    'en la linea %d, columna %d con tipo %s.' % 
+                                        (symbol.ref.lineno,
+                                            obtener_columna_texto_lexpos(symbol.ref.lexpos),
+                                                symbol.type) )
             else:
                 symbolTable.insert(var.name, self.data_type,'i/o',var)
         
@@ -753,12 +780,12 @@ class Set(Expre):
             type_expre = exp.check_types(symbolTable)
             if type_expre != "int":
                 if type_expre != "":
-                    static_errors.append((exp.lineno,exp.lexpos,
+                    static_error(exp.lineno, exp.lexpos,
                           "Los conjuntos solamente pueden contener elementos de tipo 'int' " + \
-                          "se obtuvo un elemento de tipo '%s'" %(type_expre)))
+                          "se obtuvo un elemento de tipo '%s'" %(type_expre))
                 else:
-                    static_errors.append((exp.lineno,exp.lexpos,
-                          "Los conjuntos solamente pueden contener elementos de tipo 'int' "))
+                    static_error(exp.lineno, exp.lexpos,
+                          "Los conjuntos solamente pueden contener elementos de tipo 'int' ")
                 error = True
         
         if error:
@@ -842,7 +869,8 @@ class Identifier(Expre):
     def check_types(self, symbolTable):
         symbol = symbolTable.lookup(self.name)
         if symbol is None:
-            static_errors.append((self.lineno,self.lexpos,"La variable '%s' aun no ha sido declarada."  % self.name))
+            static_error(self.lineno, self.lexpos,
+                            "La variable '%s' aun no ha sido declarada."  % self.name)
         else:
             self.type = symbol.type
         return self.type

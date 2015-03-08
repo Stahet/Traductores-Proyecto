@@ -40,26 +40,26 @@ def setlan(argv = None):
     if expresiones.lexer_errors:
         for error in expresiones.lexer_errors:
             print error
-            return
+        return
         
     elif parse.parser_errors:
         for error in parse.parser_errors:
             print error
-            return
+        return
     
     else: # Pasa el lexer y el parser
         tree.check_types() # Hacemos el chequeo estatico 
         # Impresion de errores
         if static_errors:
             for error in static_errors:
-                print "Error en la linea %d, columna %d: %s" % \
-                       (error[0],expresiones.obtener_columna_texto_lexpos(error[1]),error[2])
+                print error
             return
     
     # Flags   
     if "-t" in argv:
-        print "####################       LISTA DE TOKENS      ####################\n" 
-        expresiones.print_tokens(expresiones.build_lexer(), content)
+        print "####################       LISTA DE TOKENS      ####################\n"
+        # Construir el lexer denuevo, ya que el parser cambia el n° de lineas 
+        expresiones.print_tokens(expresiones.build_lexer(), content) 
         print
     
     if "-a" in argv:
@@ -108,4 +108,5 @@ if __name__ == '__main__':
     #setlan(["setlan","casos_interpretador/pruebaIf","-t","-s","-a"])
     #setlan(["setlan","casos_interpretador/pruebaFor","-t","-s","-a"])
     #setlan(["setlan","casos_interpretador/pruebaMaliciaFor","-t","-s","-a"])
-    setlan(["setlan","casos_interpretador/pruebaWhileDo","-a"])
+    #setlan(["setlan","casos_interpretador/pruebaWhileDo","-a"])
+    setlan(["setlan","casos_interpretador/testForMalicia","-a"])
