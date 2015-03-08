@@ -888,17 +888,17 @@ def static_error(lineno,lexpos,message):
     static_errors.append(error)
         
 def overflow_error(lineno, lexpos):
-    print "Error en la linea %d, columna %d: Error Overflow" %\
+    print "\nError en la linea %d, columna %d: Error Overflow" %\
                 (lineno, obtener_columna_texto_lexpos(lexpos))
     exit()
     
 def empty_set_error(lineno, lexpos):
-    print "Error en la linea %d, columna %d: Error conjunto vacio" %\
+    print "\nError en la linea %d, columna %d: Error conjunto vacio" %\
                 (lineno, obtener_columna_texto_lexpos(lexpos))
     exit()
 
 def zero_division_error(lineno, lexpos):
-    print "Error en la linea %d, columna %d: Error de division por cero" %\
+    print "\nError en la linea %d, columna %d: Error de division por cero" %\
             (lineno, obtener_columna_texto_lexpos(lexpos))
     exit()
     
