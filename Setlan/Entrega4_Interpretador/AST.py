@@ -9,15 +9,11 @@ Created on 4/2/2015
 '''
 import sys
 from symbol_table import SymbolTable
-from expresiones import obtener_columna_texto_lexpos
+from expressions import get_column_text_lexpos
 from functions import *
 
-#===============================================================================
-# global static_errors, interpreter_result
-#===============================================================================
 static_errors = []
 interpreter_result = []
-MAX_INT = 2147483647
 
 class Expre:
     
@@ -107,13 +103,11 @@ class Scan(Expre):
                 mensaje= "Error el valor tiene que ser de tipo '%s' intente nuevamente: "%var.type
             else:
                 if  in_type == "int" : 
-                    if  in_value > MAX_INT :
-                        mensaje = "Error entero muy grande, intente nuevamente: "
-                    elif in_value < - MAX_INT :
-                        mensaje = "Error entero muy pequeño, intente nuevamente: "
+                    if  in_value > MAX_INT or  in_value < - MAX_INT :
+                        overflow_error(self.var_to_read.lineno, self.var_to_read.lexpos)
                 
             if mensaje: in_type = "" 
-                
+        
         var.value = in_value # Actualiz.el valor de la var. en la tabla de simbolos
     
 class Assign(Expre):
@@ -389,10 +383,11 @@ class Print(Expre):
         
         if self.type == "print":
             interpreter_result.append(out+" ")
-            sys.stdout.write(out)
         else:
             interpreter_result.append(out +"\n")
-            sys.stdout.write(out +"\n")
+            out += "\n"
+        sys.stdout.write(out)
+        sys.stdout.flush() # Para que los muestre inmediatamente si aun no lo ha hecho
     
 class Block(Expre):
     
@@ -744,7 +739,7 @@ class TypeList(Expre):
                                   "La variable '%s' ya ha sido declarada en este alcance " % (var.name) + \
                                     'en la linea %d, columna %d con tipo %s.' % \
                                         (symbol.ref.lineno,
-                                            obtener_columna_texto_lexpos(symbol.ref.lexpos),
+                                            get_column_text_lexpos(symbol.ref.lexpos),
                                                 symbol.type) )
             else:
                 symbolTable.insert(var.name, self.data_type,'i/o',var)
@@ -892,23 +887,23 @@ class Identifier(Expre):
 
 def static_error(lineno,lexpos,message):
     error =  "Error en la linea %d, columna %d: %s" % \
-                (lineno, obtener_columna_texto_lexpos(lexpos),message)
+                (lineno, get_column_text_lexpos(lexpos),message)
     
     static_errors.append(error)
         
 def overflow_error(lineno, lexpos):
-    print "\nError en la linea %d, columna %d: Error Overflow" %\
-                (lineno, obtener_columna_texto_lexpos(lexpos))
+    print "Error en la linea %d, columna %d: Overflow." %\
+                (lineno, get_column_text_lexpos(lexpos))
     exit()
     
 def empty_set_error(lineno, lexpos):
-    print "\nError en la linea %d, columna %d: Error conjunto vacio" %\
-                (lineno, obtener_columna_texto_lexpos(lexpos))
+    print "Error en la linea %d, columna %d: conjunto vacio." %\
+                (lineno, get_column_text_lexpos(lexpos))
     exit()
 
 def zero_division_error(lineno, lexpos):
-    print "\nError en la linea %d, columna %d: Error de division por cero" %\
-            (lineno, obtener_columna_texto_lexpos(lexpos))
+    print "Error en la linea %d, columna %d: Division por cero." %\
+            (lineno, get_column_text_lexpos(lexpos))
     exit()
     
 def parsear_string(string_raw):

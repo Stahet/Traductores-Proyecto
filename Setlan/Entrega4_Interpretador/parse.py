@@ -9,7 +9,7 @@ Created on 4/2/2015
     Posee la gramatica pasada al parser
 '''
 import ply.yacc as yacc
-from expresiones import tokens,simbolos, simbolos_igual, op_mapeados, unarios_conjuntos, obtener_columna
+from expressions import tokens,simbolos, simbolos_igual, op_mapeados, unarios_conjuntos, get_column
 from AST import *
 
 parser_errors = []
@@ -329,7 +329,7 @@ def p_error(p):
         except TypeError:
             pass
         
-        msg = msg % (p.lineno , obtener_columna(p) , value)
+        msg = msg % (p.lineno , get_column(p) , value)
     else:
         msg = 'Error de síntasis: No se esperaba final de archivo.'
 

@@ -1,10 +1,39 @@
 program {
-    using int x; in
+    using
+        int x;              # incializado en 0
+        set y;              # incializado en {}
+        bool z;             # inicalizado en false
+    in
 
-    repeat              # primer caso, atípico pero cómodo
-        scan x
-    while (x > 0) do
-        println x
-    ;
-	
+    println "start";
+
+    {
+        using
+            set x;          # inicializado en {}
+        in
+        x = {0,1};
+        y = x ++ {2,3,4};
+        println 1, x;       # x es de tipo `set`
+        println 2, y;       # y es de tipo `set`
+        println 3, z;       # b es de tipo `bool`
+    };
+
+    {
+        using
+            bool y;         # inicializado en false;
+            int z;          # inicializado en 0
+        in
+        x = 10;
+        println 1, x;       # x es de tipo `int`
+        println 2, y;       # y es de tipo `bool`
+        println 3, z;       # z es de tipo `int`
+    };
+
+    for i max y do 
+        print (i+x), " ";   # usa `i` del for y `x` del bloque principal
+    println "";             # sólo para el salto de línea
+
+    for i max {7-1, 5-1,8-1, 3-1, 9-1, 6-18, 4-1, 2-1, 1-1, 0-1} do {
+    	println(i);
+    };
 }

@@ -7,14 +7,18 @@ Created on 23/2/2015
          Manuel Gonzalez 11-10399
          
          Archivo principal de Setlan
-         Para Ejecutar:  setlan <nombre archivo> <flags>
-         Flags: -
+
+Para Ejecutar:  setlan <nombre archivo> <flags>
+
+Flags:
+    -t Imprime la lista de tokens del analizador lexicografico
+    -a Imprime la estructura del Arbol de Sintaxis Abstracto
+    -s Imprime las reglas de alcance de las variables, asi como sus tipos y valores
 '''
 from  sys import argv as argumentos_consola
 from AST import static_errors, interpreter_result
-import expresiones
+import expressions
 import parse
-import ply.lex as lexi
 
 def setlan(argv = None):
     # Abrir ruta del archivo   
@@ -29,16 +33,16 @@ def setlan(argv = None):
         with open(ruta_archivo) as file_input:
             content = file_input.read()
             content = content.expandtabs(4)
-            expresiones.cont_archivo = content
+            expressions.cont_archivo = content
     except IOError as e :
         salir(str(e) + "\nError: Compruebe que el archivo existe o tiene permisos de lectura")
         
-    lexer = expresiones.build_lexer()           # Construir Lexer
-    tree = parse.build_parser(content,lexer) # Contruimos el Parser
+    lexer = expressions.build_lexer()           # Construir Lexer
+    tree = parse.build_parser(content,lexer) # Contruimos el parser
     
     # Impresion de errores
-    if expresiones.lexer_errors:
-        for error in expresiones.lexer_errors:
+    if expressions.lexer_errors:
+        for error in expressions.lexer_errors:
             print error
         return
         
@@ -47,7 +51,7 @@ def setlan(argv = None):
             print error
         return
     
-    else: # Pasa el lexer y el parser
+    else: # Pasa el lexer y el parserr
         tree.check_types() # Hacemos el chequeo estatico 
         # Impresion de errores
         if static_errors:
@@ -59,7 +63,7 @@ def setlan(argv = None):
     if "-t" in argv:
         print "####################       LISTA DE TOKENS      ####################\n"
         # Construir el lexer denuevo, ya que el parser cambia el n° de lineas 
-        expresiones.print_tokens(expresiones.build_lexer(), content) 
+        expressions.print_tokens(expressions.build_lexer(), content) 
         print
     
     if "-a" in argv:
@@ -76,53 +80,10 @@ def setlan(argv = None):
     result = "".join(interpreter_result)
     return result
 
-def salir(mensaje = "ERROR: Ejecute el interprete de la forma: setlan <dir_archivo> [-t] [-a] [-s]",
-                codigo = -1):
-    print mensaje
-    exit(codigo)    
+def salir(mensage = "ERROR: Ejecute el interprete de la forma: setlan <dir_archivo> [-t] [-a] [-s]",
+                code = -1):
+    print mensage
+    exit(code)
              
 if __name__ == '__main__':
-    #setlan()
-    #setlan(["setlan","casos_check/2ContextoIgualNombre.stl","-t","-s","-a"])
-    #setlan(["setlan","casos_check/3variables.stl","-t","-s","-a"])
-    #setlan(["setlan","casos_check/all.stl","-t","-s","-a"])
-    #setlan(["setlan","casos_check/conjuntoVacio.stl","-t","-s","-a"])
-    #setlan(["setlan","casos_check/enunciadoError2.stl","-t","-s","-a"])
-    #setlan(["setlan","casos_check/erroresOperadores","-t","-s","-a"])
-    #setlan(["setlan","casos_check/errorFor","-t","-s","-a"])
-    #setlan(["setlan","casos_check/errorIf","-t","-s","-a"])
-    #setlan(["setlan","casos_check/errorRepeatWhile","-t","-s","-a"])
-    #setlan(["setlan","casos_check/errorScan.stl","-t","-s","-a"])
-    #setlan(["setlan","casos_check/errorWhile","-t","-s","-a"])
-    #setlan(["setlan","casos_check/escrituraIterador.stl","-t","-s","-a"])
-    #setlan(["setlan","casos_check/operacionesConConjuntos.stl","-t","-s","-a"])
-    #setlan(["setlan","casos_check/reglasDeAlcance.stl","-t","-s","-a"])
-    #setlan(["setlan","casos_check/terrible.stl","-t","-s","-a"])
-    #setlan(["setlan","casos_check/test1.stl","-t","-s","-a"])
-    #setlan(["setlan","casos_check/test2EnunciadoErrorTipo.stl","-t","-s","-a"])
-    #setlan(["setlan","casos_check/variableNoDeclarada","-t","-s","-a"])
-    
-    ####### Interpretador
-    #setlan(["setlan","casos_interpretador/all","-t","-s","-a"])
-    #setlan(["setlan","casos_interpretador/guardar_variables","-t","-s","-a"])
-    #setlan(["setlan","casos_interpretador/conjuntoEnteros","-t","-s","-a"])
-    #setlan(["setlan","casos_interpretador/booleanos","-t","-s","-a"])
-    #setlan(["setlan","casos_interpretador/pruebaScan","-t","-s","-a"])
-    #setlan(["setlan","casos_interpretador/pruebaIf","-t","-s","-a"])
-    #setlan(["setlan","casos_interpretador/pruebaFor","-t","-s","-a"])
-    #setlan(["setlan","casos_interpretador/pruebaMaliciaFor","-t","-s","-a"])
-    #setlan(["setlan","casos_interpretador/pruebaWhileDo","-a"])
-    #setlan(["setlan","casos_interpretador/testForMalicia","-a"])
-    #setlan(["setlan","casos_interpretador/testOperadores","-a"])
-    #setlan(["setlan","casos_interpretador/testOverflow","-a"])
-    #setlan(["setlan","casos_interpretador/testMaxConjuntoVacio","-a"])
-    #setlan(["setlan","casos_interpretador/testEnunciado","-a"])
-    #setlan(["setlan","casos_interpretador/reglasDeAlcance","-a"])
-    #setlan(["setlan","casos_interpretador/testOperacionesConjuntos","-a"])
-    #setlan(["setlan","casos_interpretador/testRepeatWhileDo","-a"])
-    #setlan(["setlan","casos_interpretador/testDivisionCero","-a"])
-    #setlan(["setlan","casos_interpretador/testOverFlowConjuntos","-a"])
-    #setlan(["setlan","casos_interpretador/fibonacci","-a"])
-    #setlan(["setlan","casos_interpretador/holaMundo","-a"])
-    #setlan(["setlan","casos_interpretador/sets","-a"])
-    setlan(["setlan","casos_interpretador/precedenciaOperadores"])
+    setlan(["setlan.py","casos_parser/operacionesConConjuntos.txt"])

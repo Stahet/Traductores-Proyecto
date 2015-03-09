@@ -8,7 +8,7 @@ Created on 19/1/2015
     Expresiones dadas al lexer para reconocer los tokens de setlan
 '''
 import ply.lex as lex
-
+from functions import MAX_INT
 global lexer_errors
 lexer_errors = []
 
@@ -100,7 +100,7 @@ def t_IDENTIFIER(t):
 def t_INTEGER(t):
     r'[0-9]+'
     t.value = int(t.value)
-    if (t.value > 2147483647): #2^31 - 1
+    if (t.value > MAX_INT): #2^31 - 1
         overflow_error(t)
     return t
 
@@ -146,16 +146,16 @@ def t_nueva_linea(t):
 
 # Encuentra la columna 
 #     token instancia del token    
-def obtener_columna(token):
+def get_column(token):
     'Encuentra la columna del token'
     
-    return obtener_columna_texto_lexpos(token.lexpos,token.lexer.lexdata)
+    return get_column_text_lexpos(token.lexpos,token.lexer.lexdata)
 
 # Encuentra la columna segun un lexpos
 #     token instancia del token    
 
 cont_archivo = None
-def obtener_columna_texto_lexpos(lexpos,texto = None):
+def get_column_text_lexpos(lexpos,texto = None):
     'Encuentra la columna de u token dado su texto y su lexpos'    
     if cont_archivo is None: return
     
@@ -174,7 +174,7 @@ def obtener_columna_texto_lexpos(lexpos,texto = None):
 # Manejador de errores
 def t_error(t):
     mensage = "Error: se encontro  un caracter inesperado '%s' en la linea %d, Columna %d."
-    datos = (t.value[0],t.lineno,obtener_columna(t))
+    datos = (t.value[0],t.lineno,get_column(t))
     t.lexer.skip(1)
     if t.value[0] == '\r': return
     lexer_errors.append(mensage % datos)
@@ -182,20 +182,20 @@ def t_error(t):
 # Error de overflow para los enteros
 def overflow_error(t):
     mensage = "Error: overflow para el entero '%s' en la linea %d, Columna %d."
-    datos = (t.value,t.lineno,obtener_columna(t))
+    datos = (t.value,t.lineno,get_column(t))
     t.lexer.skip(1)
     lexer_errors.append(mensage % datos)
 
-def print_tokens(lexer,input):
-    lexer.input(input)
+def print_tokens(lexer,input_t):
+    lexer.input(input_t)
     tokens = []
     for token in lexer:
         tokens.append(token)
     
     for token in tokens:
-        print 'token',token.type,' '*(20 - len(token.type)),
-        print "value (" + str(token.value) + ") at line ",token.lineno,\
-             ", column " , obtener_columna(token)
+        print 'Token',token.type,' '*(20 - len(token.type)),
+        print "Valor (" + str(token.value) + ") en la linea ",token.lineno,\
+             ", Column " , get_column(token)
              
 def build_lexer():
     lexer = lex.lex()

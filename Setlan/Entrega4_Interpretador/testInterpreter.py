@@ -1,7 +1,8 @@
 '''
 Created on 8/3/2015
 
-@author: Jonnathan
+@author: Jonathan Ng 11-10199
+         Manuel Gonzalez 11-10390
 '''
 import unittest
 
@@ -45,5 +46,4 @@ class InterpreterTestSuite(unittest.TestCase):
     def testRepeatWhileDo(self):
         self.assertEqual(setlan(["setlan","casos_interpretador/testRepeatWhileDo"]).strip(), open('casos_interpretador/respuestas/testRepeatWhileDo.txt','r').read().strip()) 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
