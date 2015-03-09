@@ -5,6 +5,8 @@ Funciones para el interpretador
 @author: Jonnathan Ng
          Manuel Gonzalez
 '''
+MAX_INT = 2147483647
+
 
 # Unary bool Operator
 def bool_not(bool1):
@@ -22,28 +24,28 @@ def min_value_set(set1):
 
 def size_set(set1):
     value = len(set1)
-    assert(value <= 2147483647)
+    assert(value <= MAX_INT)
     return value
 
 # Binary set Operator
 def sum1(int1, int2):
     value = int1 + int2
-    assert(-2147483648 <= value <= 2147483647)
+    assert(abs(value) <= MAX_INT)
     return value
 
 def minus(int1, int2):
     value = int1 - int2
-    assert(-2147483648 <= value <= 2147483647)
+    assert(abs(value) <= MAX_INT)
     return value
 
 def times(int1, int2):
     value = int1 * int2
-    assert(-2147483648 <= value <= 2147483647)
+    assert(abs(value) <= MAX_INT)
     return value
 
 def int_division(int1, int2):
     value = int1 / int2
-    assert(-2147483648 <= value <= 2147483647)
+    assert(abs(value) <= MAX_INT)
     return value
 
 def rest_division(int1, int2):
@@ -90,7 +92,7 @@ def map_plus(int1, set1):
     set1 = list(set1)
     for i in range(len(set1)):
         set1[i] = int1 + set1[i]
-        assert(-2147483648 <= set1[i] <= 2147483647)  
+        assert(abs(set1[i]) <= MAX_INT)
     
     return set(set1)
 
@@ -98,7 +100,7 @@ def map_minus(int1, set1):
     set1 = list(set1)
     for i in range(len(set1)):
         set1[i] = int1 - set1[i]
-        assert(-2147483648 <= set1[i] <= 2147483647)  
+        assert(abs(set1[i]) <= MAX_INT)
     
     return set(set1)
 
@@ -106,7 +108,7 @@ def map_times(int1, set1):
     set1 = list(set1)
     for i in range(len(set1)):
         set1[i] = int1 * set1[i]
-        assert(-2147483648 <= set1[i] <= 2147483647)  
+        assert(abs(set1[i]) <= MAX_INT)
     
     return set(set1)
 
@@ -114,7 +116,7 @@ def map_divide(int1, set1):
     set1 = list(set1)
     for i in range(len(set1)):
         set1[i] = int1 / set1[i]
-        assert(-2147483648 <= set1[i] <= 2147483647)  
+        assert(abs(set1[i]) <= MAX_INT)
     
     return set(set1)
 

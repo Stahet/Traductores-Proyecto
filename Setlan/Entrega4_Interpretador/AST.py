@@ -12,9 +12,12 @@ from symbol_table import SymbolTable
 from expresiones import obtener_columna_texto_lexpos
 from functions import *
 
-global static_errors, interpreter_result
+#===============================================================================
+# global static_errors, interpreter_result
+#===============================================================================
 static_errors = []
 interpreter_result = []
+MAX_INT = 2147483647
 
 class Expre:
     
@@ -80,9 +83,14 @@ class Scan(Expre):
     def execute(self, symbolTable):
         var = symbolTable.lookup(self.var_to_read.name) # Buscamos la variable en la tabla de simbolos
         in_type = "" # Tipo de valor de la entrada
-        print "Ingrese una variable de tipo '%s':"%var.type
+        mensaje = "Ingrese una variable de tipo '%s':"%var.type 
         while(in_type != var.type):
-            in_str = raw_input()
+            print "a"
+            sys.stdout.flush()
+            print sys.stdin.tell()
+            print sys.stdout.tell()
+            in_str = raw_input(mensaje)
+            mensaje = ""
             in_str = in_str.strip() # Eliminamos espacios al inicio y al final
             if in_str == "true":
                 in_type = "bool"
@@ -97,15 +105,19 @@ class Scan(Expre):
                 in_value = int(in_str)
                 in_type = "int"
             except(ValueError):
-                in_type = ""
+                pass
                       
             if (in_type != var.type):
-                print "Error el valor tiene que ser de tipo '%s' intente nuevamente: "%var.type
+                mensaje= "Error el valor tiene que ser de tipo '%s' intente nuevamente: "%var.type
             else:
-                if (in_type == "int") and not (-2147483648 <= in_value <= 2147483647):
-                    print "Error entero muy grande, intente nuevamente: "
-                    in_type = "" 
-                    
+                if  in_type == "int" : 
+                    if  in_value > MAX_INT :
+                        mensaje = "Error entero muy grande, intente nuevamente: "
+                    elif in_value < - MAX_INT :
+                        mensaje = "Error entero muy pequeño, intente nuevamente: "
+                
+            if mensaje: in_type = "" 
+                
         var.value = in_value # Actualiz.el valor de la var. en la tabla de simbolos
     
 class Assign(Expre):
@@ -946,7 +958,9 @@ def to_string(elem):
             out = "true"
         else:
             out = "false"
-    else:
+    elif type(elem) is str:
         out = parsear_string(elem)
+    elif type(elem) is int:
+        out = str(elem)
 
     return out
