@@ -15,7 +15,7 @@ para todas las expresiones del lenguaje SetLan.
 utilizo una estructura de arbol estatica. Para esta version fue utilizada una tabla
 de simbolos usando una implementacion de Pila, lo cual facilito en gran medida el codigo
 del programa, y ademas esta es una estructura dinamica, que almacena solo lo necesario, de acuerdo
-a los bloques y alcances que necesite el programa lo cual mejora el rendimiento de nuestro proyecto.
+a los bloques y alcances que necesite, lo cual mejora el rendimiento del interpretador.
 
     Para esta cuarta y ultima entrega se implemento el interpretador final de SetLan.
 El programa realiza las operaciones indicadas en el archivo de entrada, y da las salidas previamente
@@ -26,7 +26,7 @@ el programa se detiene y aborta inmediatamente.
 como los diccionarios de funciones, para el caso de los operadores Binarios y Unarios
 
     Para el manejo de errores,se utilizaron las aserciones de Python para mantener los valores enteros
-entre un intervalo representable para el lenguaje [-2^31 + 1 ..2^31-1]. Esto sumado al
+entre un intervalo representable para el lenguaje [-2^31+1 .. 2^31-1]. Esto sumado al
 uso de bloques try..except, permitio manejar dichos errores de desbordamiento y  los errores
 de division entre cero.
 

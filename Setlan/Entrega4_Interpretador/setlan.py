@@ -86,4 +86,4 @@ def salir(mensage = "ERROR: Ejecute el interprete de la forma: setlan <dir_archi
     exit(code)
              
 if __name__ == '__main__':
-    setlan(["setlan.py","casos_parser/operacionesConConjuntos.txt"])
+    setlan()
