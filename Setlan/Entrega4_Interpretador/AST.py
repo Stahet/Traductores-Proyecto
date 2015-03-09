@@ -918,29 +918,29 @@ def zero_division_error(lineno, lexpos):
 def parsear_string(string_raw):
     i=0
     start_scape = False 
-    parseado = ""
+    out = ""
     
     while i < len(string_raw):
         if string_raw[i] == "\\" : # Si es el comienzo de un backlslash
             if start_scape: # Si resultaba ser el final de un backlslash
-                parseado += "\\"
+                out += "\\"
             start_scape = not start_scape
         elif start_scape: # Si este es un segundo caracter despues de un backslash
             if string_raw[i] == "\"": # Si es una comilla
-                parseado += "\""
+                out += "\""
                 
             elif string_raw[i] == "n": # Si es un salto de linea
-                parseado += "\n"
+                out += "\n"
             
-            else: # Sie s un caracter no especial
-                parseado += "\%c" % string_raw[i]
+            else: # Sie es un caracter no especial
+                out += "\%c" % string_raw[i]
             
-            start_scape = False # se deja de esperar por un caracteres escapados
+            start_scape = False # se deja de esperar por caracteres escapados
         else:
-            parseado += string_raw[i]
+            out += string_raw[i]
         i += 1
     
-    return parseado
+    return out
 
 def to_string(elem):
     if type(elem) is set:

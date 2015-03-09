@@ -1,4 +1,21 @@
 program {
-    using int age; in
-	print "¡Hola, mun\'do!\n\n\nEsto es una comilla escapada \" y un backslash \\\n\"asdads\a\a\n\n\"";
+    using int x; in
+
+    repeat              # primer caso, atípico pero cómodo
+        scan x
+    while (x > 0) do
+        print x
+    ;
+
+    scan x;
+    while (x > 0) do {     # segundo caso, un `while do {...}` típico
+        print x;
+        scan x;
+    };
+
+    scan x;
+    repeat {            # tercer caso, parecido a un `do {...} while` de C
+        print x;
+        scan x;
+    } while (x > 0);
 }
