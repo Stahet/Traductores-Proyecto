@@ -85,10 +85,6 @@ class Scan(Expre):
         in_type = "" # Tipo de valor de la entrada
         mensaje = "Ingrese una variable de tipo '%s':"%var.type 
         while(in_type != var.type):
-            print "a"
-            sys.stdout.flush()
-            print sys.stdin.tell()
-            print sys.stdout.tell()
             in_str = raw_input(mensaje)
             mensaje = ""
             in_str = in_str.strip() # Eliminamos espacios al inicio y al final
