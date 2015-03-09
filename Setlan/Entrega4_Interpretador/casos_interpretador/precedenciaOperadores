@@ -1,8 +1,4 @@
-program{
-    using
-        int i,j;
-    in
-    i = 20*96*87/120+45*955/751%454*55/1001/4102-45*454+47/12*2+23-95-511+69; # Probado en Python -19546
-    j = (23)*23+(45/1%357*0+(4+9-6/5)); #541
-    print i," ", j;
+program {
+    using int age; in
+	print "¡Hola, mun\'do!\n\n\nEsto es una comilla escapada \" y un backslash \\\n\"asdads\a\a\n\n\"";
 }

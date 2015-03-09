@@ -377,6 +377,7 @@ class Print(Expre):
         out = ""
         for exp in self.lista_to_print:
             out = out + to_string(exp.evaluate(symbolTable))
+            
         
         if self.type == "print":
             interpreter_result.append(out+" ")
@@ -902,8 +903,34 @@ def zero_division_error(lineno, lexpos):
             (lineno, obtener_columna_texto_lexpos(lexpos))
     exit()
     
+def parsear_string(string_raw):
+    i=0
+    start_scape = False 
+    parseado = ""
+    
+    while i < len(string_raw):
+        if string_raw[i] == "\\" : # Si es el comienzo de un backlslash
+            if start_scape: # Si resultaba ser el final de un backlslash
+                parseado += "\\"
+            start_scape = not start_scape
+        elif start_scape: # Si este es un segundo caracter despues de un backslash
+            if string_raw[i] == "\"": # Si es una comilla
+                parseado += "\""
+                
+            elif string_raw[i] == "n": # Si es un salto de linea
+                parseado += "\n"
+            
+            else: # Sie s un caracter no especial
+                parseado += "\%c" % string_raw[i]
+            
+            start_scape = False # se deja de esperar por un caracteres escapados
+        else:
+            parseado += string_raw[i]
+        i += 1
+    
+    return parseado
+
 def to_string(elem):
-    out = str(elem)
     if type(elem) is set:
         if len(elem) == 0:
             out = "{}"
@@ -920,4 +947,7 @@ def to_string(elem):
         else:
             out = "false"
     
+    out = parsear_string(elem)
+
+        
     return out
