@@ -946,8 +946,7 @@ def to_string(elem):
             out = "true"
         else:
             out = "false"
-    
-    out = parsear_string(elem)
+    else:
+        out = parsear_string(elem)
 
-        
     return out
